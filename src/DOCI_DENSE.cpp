@@ -4,7 +4,7 @@
 
 #include "DOCI_DENSE.h"
 
-DOCI_DENSE::DOCI_DENSE(StaticWrapper &calculator) : DOCI(calculator) {
+DOCI_DENSE::DOCI_DENSE(CI_basis calculator) : DOCI(calculator) {
     hamiltonian = Eigen::MatrixXd::Zero(nbf,nbf);
     calculateDoci(0,1);
     symmatu(hamiltonian);

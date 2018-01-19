@@ -6,7 +6,7 @@ foreach(TEST_SOURCE ${PROJECT_TEST_SOURCE_FILES})
     get_filename_component(TEST_NAME ${TEST_SOURCE} NAME_WE)
 
     # ... add an executable based on the test source ...
-    add_executable(${TEST_NAME} ${TEST_SOURCE} RHF_test.cpp)
+    add_executable(${TEST_NAME} ${TEST_SOURCE})
 
     # ... configure (include headers and link libraries) the test ...
     include(${CMAKE_SOURCE_DIR}/cmake/ConfigureTest.cmake)

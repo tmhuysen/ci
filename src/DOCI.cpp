@@ -3,11 +3,12 @@
 //
 
 
+#include <DOCI_utility.hpp>
 #include "DOCI.h"
 
-DOCI::DOCI(StaticWrapper& calculator) {
-    this->sites = calculator.getN_bf();
-    this->electrons =  calculator.getN_electrons()/2;
+DOCI::DOCI(CI_basis ciBasis) {
+    this->sites = ciBasis.n_bf;
+    this->electrons =  ciBasis.n_electrons/2;
 
     if (sites < electrons) {
         throw std::overflow_error("Invalid argument: to many electrons");
@@ -22,7 +23,7 @@ DOCI::DOCI(StaticWrapper& calculator) {
 
     ad_mat = AddressingMatrix(sites,electrons);
     groundstates = { State {std::numeric_limits<double>::max(),Eigen::VectorXd()} };
-    integralCalculator = &calculator;
+    basis = ciBasis;
 
 
 }
@@ -32,30 +33,31 @@ DOCI::DOCI(StaticWrapper& calculator) {
 
 void DOCI::calculateDoci(double start, double end) {
     boost::dynamic_bitset<> basic_bit = ad_mat.generateBinaryVector(start * nbf);
-    for (unsigned long i = 0; i < nbf * end; i++) {
-        for (unsigned long j = 0; j < sites; j++) {
+    for (size_t i = 0; i < nbf * end; i++) {
+        for (size_t j = 0; j < sites; j++) {
             if (basic_bit[j]){
-                double overlap = integralCalculator->calculateOverlap(j,j);
-                addToHamiltonian(2*overlap,i,i);
+                double one_int = basis.one_int(j,j);
+                addToHamiltonian(2*one_int,i,i);
             }
-            for(unsigned long l = j; l < sites; l++){
+            for(size_t l = j; l < sites; l++){
                 if(j!=l){
                     boost::dynamic_bitset<> two_target_dia = basic_bit;
                     if (annihilation(two_target_dia, j) && annihilation(two_target_dia, l)){
-                        //Overlap parameters are entered in chemical notation!
+                        //integral parameters are entered in chemical notation!
                         //This means that first 2 parameters are for the first electrons and subsequent ones are for the second
-                        double overlap1 = integralCalculator->calculateOverlap(j,j,l,l);
-                        double overlap4 = integralCalculator->calculateOverlap(j,l,l,j);
-                        overlap4 *= -1;
-                        addToHamiltonian((4*overlap1+2*overlap4),i,i);
+                        double same_spin_two_int = basis.two_int(j,j,l,l);
+                        double mix_spin_two_int = same_spin_two_int; //just illustrative
+                        double same_spin_two_int_negative = -1*basis.two_int(j,l,l,j);
+                        same_spin_two_int_negative *= -1;
+                        addToHamiltonian((4*same_spin_two_int+2*same_spin_two_int_negative),i,i);
                     }
                 }
                 boost::dynamic_bitset<> two_target = basic_bit;
                 if (annihilation(two_target, j) && creation(two_target, l)){
-                    unsigned long address = ad_mat.fetchAddress(two_target);
-                    //Overlap parameters are entered in chemical notation!
-                    double overlap = integralCalculator->calculateOverlap(j,l,j,l);
-                    addToHamiltonian(overlap,i,address);
+                    size_t address = ad_mat.fetchAddress(two_target);
+                    //integrals parameters are entered in chemical notation!
+                    double mix_spin_two_int = basis.two_int(j,l,j,l);
+                    addToHamiltonian(mix_spin_two_int,i,address);
                 }
             }
         }
@@ -86,15 +88,3 @@ const std::vector<State> &DOCI::getGroundstates() const {
 
 
 
-bool compareState(const State &o1, const State &o2) {
-    return o1.eigenValue < o2.eigenValue;
-}
-
-
-bool areSame(const State &o1, const State &o2) {
-    double precision = 10000000; //
-
-    double ELIPSON = (o1.eigenValue > o2.eigenValue) ?  o2.eigenValue/precision : o1.eigenValue/precision   ;
-
-    return fabs(o1.eigenValue - o2.eigenValue) < fabs(ELIPSON);
-}

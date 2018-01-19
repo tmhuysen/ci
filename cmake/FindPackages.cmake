@@ -8,7 +8,7 @@ find_package(Boost REQUIRED)
 find_package(Armadillo REQUIRED)
 
 # Find Eigen3
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 REQUIRED NO_MODULE)
 
 # Find hf for HF calculations
 find_package(hf 2.0.0 REQUIRED)

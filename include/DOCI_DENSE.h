@@ -10,11 +10,11 @@
 
 class DOCI_DENSE : public DOCI {
 public:
-    DOCI_DENSE(StaticWrapper &calculator);
+    DOCI_DENSE(CI_basis basis);
 private:
     Eigen::MatrixXd hamiltonian;
 protected:
-    void addToHamiltonian(double value, unsigned long index1, unsigned long index2) override;
+    void addToHamiltonian(double value, size_t index1, size_t index2) override;
 
 public:
     Eigen::MatrixXd getHam();

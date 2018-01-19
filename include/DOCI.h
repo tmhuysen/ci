@@ -6,19 +6,17 @@
 #define DOCIPROJECT_DOCI_H
 
 
-#include <StaticWrapper.h>
+
 #include <iostream>
 #include "AddressingMatrix.h"
 #include <Eigen/Dense>
 #include "Extras.h"
-struct State {
-    double eigenValue;          // The energy of the solution, a.k.a. the eigenvalue
-    Eigen::VectorXd eigenVector; // The coefficients of the solution with respect to the given basis, a.k.a. the eigenvector corresponding to the eigenvalue
-};
+#include "DOCI_utility.hpp"
+
 
 class DOCI {
 public:
-    explicit DOCI(StaticWrapper& calculator);
+    explicit DOCI(CI_basis ciBasis);
     const std::vector<State> &getGroundstates() const;
     //Virtuals
     virtual void print()=0;
@@ -26,8 +24,8 @@ protected:
     unsigned long sites;
     unsigned long electrons;
     unsigned long nbf;
+    CI_basis basis;
     AddressingMatrix ad_mat;
-    StaticWrapper* integralCalculator;
     std::vector<State> groundstates;
 
 protected:
@@ -36,10 +34,8 @@ protected:
     void calculateDoci(double start, double end);
     void groundStates(State state);
     //Virtuals
-    virtual void addToHamiltonian(double value, unsigned long index1, unsigned long index2)=0;
+    virtual void addToHamiltonian(double value, size_t index1, size_t index2)=0;
 };
 
-bool compareState(const State &o1, const State &o2);
-bool areSame(const State &o1, const State &o2);
 
 #endif //DOCIPROJECT_DOCI_H

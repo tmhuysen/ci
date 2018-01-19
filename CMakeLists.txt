@@ -4,7 +4,7 @@ project(DOCI_Head VERSION 0.0.1
 
 set(CMAKE_CXX_STANDARD 11)
 
-# Use level-2 compiler optimization, since Armadillo really benefits from this
+# does this set complier options
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include")
 
 # Set CMake variables
