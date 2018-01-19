@@ -39,7 +39,7 @@ void DOCI::calculateDoci(double start, double end) {
                 double one_int = basis.one_int(j,j);
                 addToHamiltonian(2*one_int,i,i);
             }
-            for(size_t l = j; l < sites; l++){
+            for(size_t l = 0; l < j+1; l++){
                 if(j!=l){
                     boost::dynamic_bitset<> two_target_dia = basic_bit;
                     if (annihilation(two_target_dia, j) && annihilation(two_target_dia, l)){
@@ -48,7 +48,6 @@ void DOCI::calculateDoci(double start, double end) {
                         double same_spin_two_int = basis.two_int(j,j,l,l);
                         double mix_spin_two_int = same_spin_two_int; //just illustrative
                         double same_spin_two_int_negative = -1*basis.two_int(j,l,l,j);
-                        same_spin_two_int_negative *= -1;
                         addToHamiltonian((4*same_spin_two_int+2*same_spin_two_int_negative),i,i);
                     }
                 }

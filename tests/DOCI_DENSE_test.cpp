@@ -12,6 +12,9 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test.hpp>
+
+
+
 BOOST_AUTO_TEST_CASE ( DOCI_utils_test ) {
     using namespace std;
     using namespace libwrp;
@@ -27,7 +30,22 @@ BOOST_AUTO_TEST_CASE ( DOCI_utils_test ) {
 
 }
 
-BOOST_AUTO_TEST_CASE ( DOCI_DENSE_test ) {
+BOOST_AUTO_TEST_CASE ( DOCI_utils2_test ) {
+        using namespace std;
+        using namespace libwrp;
+        string path = "/Users/wulfix/Desktop/Cursussen_Gent/ThesisDir/Libraries/DOCILibs/DOCI_Head";
+        const string xyzfilename = path + "/tests/reference_data/h2o.xyz";
+        double threshold = 1.0e-06;
+        string basis_name = "STO-3G";
+        Molecule water (xyzfilename);
+        Basis basis (water, basis_name);
+        hf::rhf::RHF rhf (basis, threshold);
+
+        CI_basis ciBasis = rhf_to_CI_basis(rhf);
+
+}
+
+BOOST_AUTO_TEST_CASE ( DOCI_DENSE_rhf_test ) {
     using namespace std;
     using namespace libwrp;
     string path = "/Users/wulfix/Desktop/Cursussen_Gent/ThesisDir/Libraries/DOCILibs/DOCI_Head";
@@ -42,6 +60,9 @@ BOOST_AUTO_TEST_CASE ( DOCI_DENSE_test ) {
 
     DOCI_DENSE doci_test = DOCI_DENSE(ciBasis);
     State ground = doci_test.getGroundstates().at(0);
-    cout<<endl<<ground.eigenValue<<endl;
+    double en = ground.eigenValue+ciBasis.nuc;
+    cout<<endl<<en<<endl;
+
+    BOOST_CHECK(std::abs(en - (-74.9771)) < 1.0e-04);
 
 }

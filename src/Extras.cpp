@@ -43,3 +43,14 @@ bool areSame(const State &o1, const State &o2) {
 
     return fabs(o1.eigenValue - o2.eigenValue) < fabs(ELIPSON);
 }
+
+void symmatu_reverse(Eigen::MatrixXd &mat) {
+    for(int x =0; x<mat.innerSize();x++){
+        for (int y = 0; y<x;y++){
+            mat(y,x) = mat(x,y);
+        }
+    }
+
+
+
+}

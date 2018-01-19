@@ -7,7 +7,7 @@
 DOCI_DENSE::DOCI_DENSE(CI_basis calculator) : DOCI(calculator) {
     hamiltonian = Eigen::MatrixXd::Zero(nbf,nbf);
     calculateDoci(0,1);
-    symmatu(hamiltonian);
+    symmatu_reverse(hamiltonian);
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver(hamiltonian);
     eigenvalues = solver.eigenvalues().real().cast<double>();
     eigenvectors = solver.eigenvectors().real().cast<double>();

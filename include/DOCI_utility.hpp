@@ -18,6 +18,8 @@ struct CI_basis {
     size_t n_electrons; //number of electrons
 };
 
-CI_basis rhf_to_CI_basis(hf::rhf::RHF& rhf_basis);
+CI_basis rhf_to_CI_basis(hf::rhf::RHF &rhf_basis);
+CI_basis file_to_CI_basis(const std::string& filename);
+
 
 #endif //DOCI_HEAD_DOCI_UTILITY_HPP
