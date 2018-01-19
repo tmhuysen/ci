@@ -2,7 +2,7 @@
 // Created by Wulfix on 14/12/2017.
 //
 
-#include "DOCI_DENSE.h"
+#include "DOCI_DENSE.hpp"
 
 DOCI_DENSE::DOCI_DENSE(CI_basis calculator) : DOCI(calculator) {
     hamiltonian = Eigen::MatrixXd::Zero(nbf,nbf);

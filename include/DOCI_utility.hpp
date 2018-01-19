@@ -14,8 +14,8 @@ struct CI_basis {
     Eigen::MatrixXd one_int; //one electron integral matrix
     Eigen::Tensor<double, 4> two_int; //two electron integral tensor
     double nuc; //nuclear energy
-    unsigned long n_bf; //number of basis functions
-    unsigned long n_electrons; //number of electrons
+    size_t n_bf; //number of basis functions
+    size_t n_electrons; //number of electrons
 };
 
 CI_basis rhf_to_CI_basis(hf::rhf::RHF& rhf_basis);

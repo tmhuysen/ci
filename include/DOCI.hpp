@@ -8,9 +8,9 @@
 
 
 #include <iostream>
-#include "AddressingMatrix.h"
+#include "AddressingMatrix.hpp"
 #include <Eigen/Dense>
-#include "Extras.h"
+#include "Extras.hpp"
 #include "DOCI_utility.hpp"
 
 
@@ -20,17 +20,17 @@ public:
     const std::vector<State> &getGroundstates() const;
     //Virtuals
     virtual void print()=0;
-protected:
+protected: //variables
     unsigned long sites;
     unsigned long electrons;
     unsigned long nbf;
     CI_basis basis;
     AddressingMatrix ad_mat;
     std::vector<State> groundstates;
-
-protected:
     Eigen::VectorXd eigenvalues;
     Eigen::MatrixXd eigenvectors;
+
+protected://methods
     void calculateDoci(double start, double end);
     void groundStates(State state);
     //Virtuals

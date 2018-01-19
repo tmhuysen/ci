@@ -6,7 +6,7 @@
 #define DOCIPROJECT_DOCI_DENSE_H
 
 
-#include <DOCI.h>
+#include <DOCI.hpp>
 
 class DOCI_DENSE : public DOCI {
 public:

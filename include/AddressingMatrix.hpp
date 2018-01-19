@@ -5,7 +5,7 @@
 #ifndef HUBBARDMODEL_ADDRESSINGMATRIX_H
 #define HUBBARDMODEL_ADDRESSINGMATRIX_H
 
-#include "bitset.h"
+#include "bitset.hpp"
 #include <iostream>
 #include <Eigen/Dense>
 class AddressingMatrix {

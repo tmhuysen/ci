@@ -2,7 +2,7 @@
 // Created by Wulfix on 06/12/2017.
 //
 
-#include "Extras.h"
+#include "Extras.hpp"
 
 void symmatu(Eigen::MatrixXd &mat) {
     for(int x =0; x<mat.innerSize();x++){

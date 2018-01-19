@@ -4,7 +4,7 @@
 
 
 #include <DOCI_utility.hpp>
-#include "DOCI.h"
+#include "DOCI.hpp"
 
 DOCI::DOCI(CI_basis ciBasis) {
     this->sites = ciBasis.n_bf;

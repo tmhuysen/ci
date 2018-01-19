@@ -2,7 +2,7 @@
 
 
 # We want to make a static library target called "hubbard", based on the project source files
-add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} ${PROJECT_SOURCE_FILES} ${PROJECT_INCLUDE_FILES} ../include/DOCI_utility.hpp)
+add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} ${PROJECT_SOURCE_FILES} ${PROJECT_INCLUDE_FILES} ../include/DOCI_utility.hpp DOCI_utility.cpp ../include/DOCI_Head.hpp)
 
 
 # Configure the library: include headers and link to libraries

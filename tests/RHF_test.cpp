@@ -4,7 +4,7 @@
 
 #define BOOST_TEST_MODULE "RHF_test"
 
-#include "DOCI.h"
+#include "DOCI.hpp"
 #include <hf.hpp>
 #include <libwrp.hpp>
 
