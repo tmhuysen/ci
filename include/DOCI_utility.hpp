@@ -4,7 +4,7 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include <hf.hpp>
-#include <libwrp.hpp>
+#include <libwint.hpp>
 
 struct CI_basis {
     Eigen::MatrixXd one_int; //one electron integral matrix

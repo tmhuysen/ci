@@ -4,6 +4,8 @@
 #include "bitset.hpp"
 #include <iostream>
 #include <Eigen/Dense>
+
+
 class AddressingMatrix {
 private:
     int n_sites;
