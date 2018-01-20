@@ -1,8 +1,3 @@
-//
-// Created by Wulfix on 04/12/2017.
-//
-
-
 #include <DOCI_utility.hpp>
 #include "DOCI.hpp"
 

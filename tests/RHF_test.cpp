@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 21/12/2017.
-//
-
 #define BOOST_TEST_MODULE "RHF_test"
 
 #include "DOCI.hpp"

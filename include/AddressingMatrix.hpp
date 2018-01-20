@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 17/11/2017.
-//
-
 #ifndef HUBBARDMODEL_ADDRESSINGMATRIX_H
 #define HUBBARDMODEL_ADDRESSINGMATRIX_H
 

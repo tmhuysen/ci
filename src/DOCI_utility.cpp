@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 19/01/2018.
-//
-
 #include "DOCI_utility.hpp"
 
 CI_basis rhf_to_CI_basis(hf::rhf::RHF &rhf_basis) {

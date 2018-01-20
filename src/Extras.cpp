@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 06/12/2017.
-//
-
 #include "Extras.hpp"
 
 void symmatu(Eigen::MatrixXd &mat) {

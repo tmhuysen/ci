@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 17/11/2017.
-//
-
 #ifndef HUBBARDCLEAN_BITSET_H
 #define HUBBARDCLEAN_BITSET_H
 

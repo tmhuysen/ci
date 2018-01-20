@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 19/01/2018.
-//
-
 #ifndef DOCI_HEAD_DOCI_HEAD_HPP
 #define DOCI_HEAD_DOCI_HEAD_HPP
 

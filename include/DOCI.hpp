@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 04/12/2017.
-//
-
 #ifndef DOCIPROJECT_DOCI_H
 #define DOCIPROJECT_DOCI_H
 

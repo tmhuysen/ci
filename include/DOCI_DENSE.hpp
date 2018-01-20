@@ -1,7 +1,3 @@
-//
-// Created by Wulfix on 14/12/2017.
-//
-
 #ifndef DOCIPROJECT_DOCI_DENSE_H
 #define DOCIPROJECT_DOCI_DENSE_H
 
