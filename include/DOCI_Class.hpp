@@ -1,12 +1,12 @@
 #ifndef DOCI_DOCI_HPP
 #define DOCI_DOCI_HPP
 
+#include "AddressingMatrix.hpp"
+#include "DOCI_utility.hpp"
+#include "Extras.hpp"
 
 #include <iostream>
-#include "AddressingMatrix.hpp"
 #include <Eigen/Dense>
-#include "Extras.hpp"
-#include "DOCI_utility.hpp"
 
 
 class DOCI_Class {

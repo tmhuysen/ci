@@ -1,6 +1,6 @@
-#include "DOCI_dense.hpp"
+#include "DenseDOCI.hpp"
 
-DOCI_dense::DOCI_dense(CI_basis calculator) : DOCI_Class(calculator) {
+DenseDOCI::DenseDOCI(CI_basis calculator) : DOCI_Class(calculator) {
     hamiltonian = Eigen::MatrixXd::Zero(nbf,nbf);
     calculateDoci(0,1);
     symmatu_reverse(hamiltonian);
@@ -13,15 +13,15 @@ DOCI_dense::DOCI_dense(CI_basis calculator) : DOCI_Class(calculator) {
     }
 }
 
-void DOCI_dense::addToHamiltonian(double value, unsigned long index1, unsigned long index2) {
+void DenseDOCI::addToHamiltonian(double value, unsigned long index1, unsigned long index2) {
     hamiltonian(index1,index2) += value;
 
 }
 
-Eigen::MatrixXd DOCI_dense::getHam() {
+Eigen::MatrixXd DenseDOCI::getHam() {
     return hamiltonian;
 }
 
-void DOCI_dense::print(){
+void DenseDOCI::print(){
     std::cout<<hamiltonian;
 }

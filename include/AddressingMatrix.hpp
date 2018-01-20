@@ -2,6 +2,7 @@
 #define DOCI_ADDRESSINGMATRIX_H
 
 #include "bitset.hpp"
+
 #include <iostream>
 #include <Eigen/Dense>
 

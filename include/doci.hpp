@@ -5,7 +5,7 @@
 #include "AddressingMatrix.hpp"
 #include "bitset.hpp""
 #include "DOCI_Class.hpp"
-#include "DOCI_dense.hpp"
+#include "DenseDOCI.hpp"
 #include "DOCI_utility.hpp"
 #include "Extras.hpp"
 

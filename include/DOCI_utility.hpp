@@ -6,6 +6,7 @@
 #include <hf.hpp>
 #include <libwint.hpp>
 
+
 struct CI_basis {
     Eigen::MatrixXd one_int; //one electron integral matrix
     Eigen::Tensor<double, 4> two_int; //two electron integral tensor
