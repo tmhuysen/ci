@@ -1,5 +1,5 @@
-#ifndef HUBBARDMODEL_ADDRESSINGMATRIX_H
-#define HUBBARDMODEL_ADDRESSINGMATRIX_H
+#ifndef DOCI_ADDRESSINGMATRIX_H
+#define DOCI_ADDRESSINGMATRIX_H
 
 #include "bitset.hpp"
 #include <iostream>
@@ -46,4 +46,4 @@ public:
 };
 
 
-#endif //HUBBARDMODEL_ADDRESSINGMATRIX_H
+#endif // DOCI_ADDRESSINGMATRIX_H
