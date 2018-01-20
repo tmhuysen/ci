@@ -11,6 +11,8 @@ set(CMAKE_CXX_STANDARD 11)
 # Set extra compiler flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include")
 
+
+
 # Set CMake variables
 include(${CMAKE_SOURCE_DIR}/cmake/SetCMakeEnvironment.cmake)
 
@@ -19,6 +21,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/FindPackages.cmake)
 
 # Add the sources for the library
 add_subdirectory(${PROJECT_SOURCE_FOLDER})
+
 
 
 # Set up testing
