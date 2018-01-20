@@ -1,12 +1,12 @@
-#ifndef DOCIPROJECT_DOCI_DENSE_H
-#define DOCIPROJECT_DOCI_DENSE_H
+#ifndef DOCI_DOCI_DENSE_HPP
+#define DOCI_DOCI_DENSE_HPP
 
 
-#include <DOCI.hpp>
+#include <DOCI_Class.hpp>
 
-class DOCI_DENSE : public DOCI {
+class DOCI_dense : public DOCI_Class {
 public:
-    DOCI_DENSE(CI_basis basis);
+    DOCI_dense(CI_basis basis);
 private:
     Eigen::MatrixXd hamiltonian;
 protected:
@@ -18,4 +18,4 @@ public:
 };
 
 
-#endif //DOCIPROJECT_DOCI_DENSE_H
+#endif // DOCI_DOCI_DENSE_HPP

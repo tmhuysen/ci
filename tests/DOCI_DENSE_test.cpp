@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE "RHF_test"
 
-#include "DOCI.hpp"
-#include "DOCI_DENSE.hpp"
+#include "DOCI_Class.hpp"
+#include "DOCI_dense.hpp"
 #include <hf.hpp>
 #include <libwint.hpp>
 #include "DOCI_utility.hpp"
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_DENSE_rhf_test ) {
 
     CI_basis ciBasis = rhf_to_CI_basis(rhf);
 
-    DOCI_DENSE doci_test = DOCI_DENSE(ciBasis);
+    DOCI_dense doci_test = DOCI_dense(ciBasis);
     State ground = doci_test.getGroundstates().at(0);
     double en = ground.eigenValue+ciBasis.nuc;
     cout<<endl<<en<<endl;

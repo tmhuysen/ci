@@ -1,5 +1,5 @@
-#ifndef DOCI_HEAD_DOCI_UTILITY_HPP
-#define DOCI_HEAD_DOCI_UTILITY_HPP
+#ifndef DOCI_DOCI_UTILITY_HPP
+#define DOCI_DOCI_UTILITY_HPP
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
@@ -18,4 +18,4 @@ CI_basis rhf_to_CI_basis(hf::rhf::RHF &rhf_basis);
 CI_basis file_to_CI_basis(const std::string& filename);
 
 
-#endif //DOCI_HEAD_DOCI_UTILITY_HPP
+#endif // DOCI_DOCI_UTILITY_HPP

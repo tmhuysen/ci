@@ -1,5 +1,5 @@
-#ifndef HUBBARDCLEAN_BITSET_H
-#define HUBBARDCLEAN_BITSET_H
+#ifndef DOCI_BITSET_H
+#define DOCI_BITSET_H
 
 #include <boost/dynamic_bitset.hpp>
 #include <boost/math/special_functions.hpp>
@@ -96,4 +96,5 @@ bool creation( boost::dynamic_bitset<>& u, unsigned long i);
 
 int phaseCheck( const boost::dynamic_bitset<>& u, const boost::dynamic_bitset<>& v);
 
-#endif //HUBBARDCLEAN_BITSET_H
+
+#endif // DOCI_BITSET_H

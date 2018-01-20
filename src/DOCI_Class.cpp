@@ -1,7 +1,7 @@
 #include <DOCI_utility.hpp>
-#include "DOCI.hpp"
+#include "DOCI_Class.hpp"
 
-DOCI::DOCI(CI_basis ciBasis) {
+DOCI_Class::DOCI_Class(CI_basis ciBasis) {
     this->sites = ciBasis.n_bf;
     this->electrons =  ciBasis.n_electrons/2;
 
@@ -26,7 +26,7 @@ DOCI::DOCI(CI_basis ciBasis) {
 
 
 
-void DOCI::calculateDoci(double start, double end) {
+void DOCI_Class::calculateDoci(double start, double end) {
     boost::dynamic_bitset<> basic_bit = ad_mat.generateBinaryVector(start * nbf);
     for (size_t i = 0; i < nbf * end; i++) {
         for (size_t j = 0; j < sites; j++) {
@@ -62,7 +62,7 @@ void DOCI::calculateDoci(double start, double end) {
 
 
 
-void DOCI::groundStates(State state) {
+void DOCI_Class::groundStates(State state) {
     if(areSame(state,this->groundstates.at(0))){
         groundstates.push_back(state);
     }
@@ -74,7 +74,7 @@ void DOCI::groundStates(State state) {
 
 }
 
-const std::vector<State> &DOCI::getGroundstates() const {
+const std::vector<State> &DOCI_Class::getGroundstates() const {
     return groundstates;
 };
 

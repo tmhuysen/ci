@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE "RHF_test"
 
-#include "DOCI.hpp"
-#include "DOCI_DENSE.hpp"
+#include "DOCI_Class.hpp"
+#include "DOCI_dense.hpp"
 #include <hf.hpp>
 #include <libwint.hpp>
 #include "DOCI_utility.hpp"

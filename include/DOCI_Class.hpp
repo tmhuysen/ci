@@ -1,6 +1,5 @@
-#ifndef DOCIPROJECT_DOCI_H
-#define DOCIPROJECT_DOCI_H
-
+#ifndef DOCI_DOCI_HPP
+#define DOCI_DOCI_HPP
 
 
 #include <iostream>
@@ -10,9 +9,9 @@
 #include "DOCI_utility.hpp"
 
 
-class DOCI {
+class DOCI_Class {
 public:
-    explicit DOCI(CI_basis ciBasis);
+    explicit DOCI_Class(CI_basis ciBasis);
     const std::vector<State> &getGroundstates() const;
     //Virtuals
     virtual void print()=0;
@@ -34,4 +33,4 @@ protected://methods
 };
 
 
-#endif //DOCIPROJECT_DOCI_H
+#endif // DOCI_DOCI_HPP

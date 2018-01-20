@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE "RHF_test"
 
-#include "DOCI.hpp"
+#include "DOCI_Class.hpp"
 #include <hf.hpp>
 #include <libwint.hpp>
 
