@@ -10,5 +10,5 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 # Find hf
 find_package(hf 2.0.2 REQUIRED)
 
-# Find the libint integral wrapper + support for integral transformations
+# Find the libint integral wrapper (also includes support for integral transformations)
 find_package(libwint 2.2.2 REQUIRED)

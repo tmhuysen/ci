@@ -9,7 +9,7 @@ project(doci
 set(CMAKE_CXX_STANDARD 11)
 
 # Set extra compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMKL_ILP64 -m64 -I${MKLROOT}/include")  # FIXME: Can we move this include flag to somewhere else?
 
 
 
