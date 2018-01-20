@@ -15,5 +15,5 @@ target_include_directories(${LIBRARY_NAME} PUBLIC ${hf_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY_NAME} PUBLIC hf)
 
 # Use Eigen with MKL
-target_include_directories(${LIBRARY_NAME} PRIVATE $ENV{MKLROOT}/include)
-target_link_libraries(${LIBRARY_NAME} PRIVATE $ENV{MKLROOT}/lib/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/libmkl_sequential.a $ENV{MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl)
+# target_include_directories(${LIBRARY_NAME} PRIVATE $ENV{MKLROOT}/include)
+# target_link_libraries(${LIBRARY_NAME} PRIVATE $ENV{MKLROOT}/lib/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/libmkl_sequential.a $ENV{MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl)
