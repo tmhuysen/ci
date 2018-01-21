@@ -11,13 +11,7 @@ struct State {
     Eigen::VectorXd eigenVector; // The coefficients of the solution with respect to the given basis, a.k.a.
     // the eigenvector corresponding to the eigenvalue
 };
-void symmatu(Eigen::MatrixXd &mat);
-void symmatu_reverse(Eigen::MatrixXd &mat);
-void symmatu_tensor_reverse(Eigen::Tensor<double, 4> tensor);
 
-bool compareMat(Eigen::MatrixXd &mat1,Eigen::MatrixXd &mat2);
-bool compareState(const State &o1, const State &o2);
-bool areSame(const State &o1, const State &o2);
 
 
 #endif // DOCI_EXTRAS_HPP

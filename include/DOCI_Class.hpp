@@ -2,7 +2,7 @@
 #define DOCI_DOCI_HPP
 
 #include "AddressingMatrix.hpp"
-#include "DOCI_utility.hpp"
+#include "utility.hpp"
 #include "Extras.hpp"
 
 #include <iostream>

@@ -1,4 +1,4 @@
-#include <DOCI_utility.hpp>
+#include <utility.hpp>
 #include "DOCI_Class.hpp"
 
 DOCI_Class::DOCI_Class(CI_basis ciBasis) {
