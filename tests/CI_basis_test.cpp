@@ -19,3 +19,14 @@ BOOST_AUTO_TEST_CASE ( constructor ) {
 
 }
 
+
+BOOST_AUTO_TEST_CASE ( constructor_rhf ) {
+    const std::string xyzfilename = "../tests/reference_data/h2o.xyz";
+    double threshold = 1.0e-06;
+    std::string basis_name = "STO-3G";
+    libwint::Molecule water (xyzfilename);
+    libwint::Basis basis (water, basis_name);
+    hf::rhf::RHF rhf (basis, threshold);
+
+    doci::CI_basis ciBasis (rhf);
+}
