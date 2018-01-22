@@ -27,18 +27,6 @@ bool compareMat(Eigen::MatrixXd &mat1, Eigen::MatrixXd &mat2){
 
 }
 
-bool compareState(const State &o1, const State &o2) {
-    return o1.eigenValue < o2.eigenValue;
-}
-
-
-bool areSame(const State &o1, const State &o2) {
-    double precision = 10000000; //
-
-    double ELIPSON = (o1.eigenValue > o2.eigenValue) ?  o2.eigenValue/precision : o1.eigenValue/precision   ;
-
-    return fabs(o1.eigenValue - o2.eigenValue) < fabs(ELIPSON);
-}
 
 void symmatu_reverse(Eigen::MatrixXd &mat) {
     for(int x =0; x<mat.innerSize();x++){
