@@ -5,7 +5,9 @@
 #include "DOCI_Class.hpp"
 
 
-class DenseDOCI : public DOCI {  // FIXME: add documentation/comments
+namespace doci {
+
+class DenseDOCI : public doci::DOCI {  // FIXME: add documentation/comments
 
 private:
     Eigen::MatrixXd hamiltonian;
@@ -20,8 +22,10 @@ public:
     DenseDOCI(doci::CI_basis basis);
 
     Eigen::MatrixXd getHam();
+
     void print() override;
 };
 
+} // namespace doci
 
 #endif // DOCI_DOCI_DENSE_HPP

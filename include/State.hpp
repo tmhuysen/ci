@@ -4,6 +4,7 @@
 
 #include <Eigen/Dense>
 
+namespace doci {
 
 class State {  // FIXME: this class should be tested
 public:
@@ -18,9 +19,12 @@ public:
 
 
     // Operator overloading
-    bool operator<(const State& rhs);
-    bool operator==(const State& rhs);
+    bool operator<(const doci::State& rhs);
+
+    bool operator==(const doci::State& rhs);
 
 };
+
+} // namespace doci
 
 #endif // DOCI_STATE_HPP

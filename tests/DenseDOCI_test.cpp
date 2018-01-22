@@ -17,8 +17,8 @@ BOOST_AUTO_TEST_CASE ( first_test ) {  // FIXME use better name
 
     doci::CI_basis ciBasis (rhf);
 
-    DenseDOCI doci_test = DenseDOCI(ciBasis);
-    State ground = doci_test.getGroundstates().at(0);
+    doci::DenseDOCI doci_test (ciBasis);
+    doci::State ground = doci_test.getGroundstates().at(0);
     double en = ground.eval + ciBasis.internuclear_repulsion;
     std::cout << std::endl << en << std::endl;
 

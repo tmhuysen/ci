@@ -9,6 +9,8 @@
 #include <Eigen/Dense>
 
 
+namespace doci {
+
 class DOCI {
 
 // Protected variables
@@ -19,7 +21,7 @@ protected:
 
     AddressingMatrix ad_mat;
 
-    std::vector<State> groundstates;
+    std::vector<doci::State> groundstates;
 
     doci::CI_basis basis;
 
@@ -30,7 +32,7 @@ protected:
 // Protected methods
 protected:
     void calculateDoci(double start, double end);  // FIXME: add comments/documentation
-    void groundStates(State state);  // FIXME:: add comments/documentation
+    void groundStates(doci::State state);  // FIXME:: add comments/documentation
 
     // Virtuals
     virtual void addToHamiltonian(double value, size_t index1, size_t index2)=0;  // FIXME: add comments/documentation
@@ -40,11 +42,12 @@ public:
     /** Constructor based on a given CI_basis
      */
     explicit DOCI(doci::CI_basis ciBasis);  // FIXME: add comments/documentation
-    const std::vector<State> &getGroundstates() const;  // FIXME: add comments/documentation
+    const std::vector<doci::State>& getGroundstates() const;  // FIXME: add comments/documentation
 
     // Virtuals
     virtual void print()=0;  // FIXME: add comments/documentation
 };
 
+} // namespace doci
 
 #endif // DOCI_DOCI_HPP

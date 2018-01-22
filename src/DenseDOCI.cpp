@@ -3,7 +3,7 @@
 #include "utility.hpp"
 
 
-DenseDOCI::DenseDOCI(doci::CI_basis calculator) : DOCI(calculator) {
+doci::DenseDOCI::DenseDOCI(doci::CI_basis calculator) : doci::DOCI(calculator) {
 
     // Construct the Hamiltonian matrix
     this->hamiltonian = Eigen::MatrixXd::Zero(this->nbf, this->nbf);
@@ -17,19 +17,22 @@ DenseDOCI::DenseDOCI(doci::CI_basis calculator) : DOCI(calculator) {
 
     // Extract only the ground state
     for (size_t i = 0; i < this->eigenvalues.size(); i++) {
-        groundStates(State (eigenvalues[i], eigenvectors.col(i)));
+        groundStates(doci::State(eigenvalues[i], eigenvectors.col(i)));
     }
 }
 
-void DenseDOCI::addToHamiltonian(double value, unsigned long index1, unsigned long index2) {
+
+void doci::DenseDOCI::addToHamiltonian(double value, unsigned long index1, unsigned long index2) {
     this->hamiltonian(index1,index2) += value;
 
 }
 
-Eigen::MatrixXd DenseDOCI::getHam() {
+
+Eigen::MatrixXd doci::DenseDOCI::getHam() {
     return this->hamiltonian;
 }
 
-void DenseDOCI::print() {
+
+void doci::DenseDOCI::print() {
     std::cout << hamiltonian;
 }
