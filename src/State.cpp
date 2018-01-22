@@ -5,17 +5,16 @@
 State::State(double eval, Eigen::VectorXd evec) : eval(eval), evec(evec) {}
 
 
-
-bool State::operator<(const State& l, const State& r) {
-    return (l.eval < r.eval);
+bool State::operator<(const State& rhs) {
+    return (this->eval < rhs.eval);
 }
 
-bool State::operator==(const State& l, const State& r) {
-    // FIXME: this implementation only checks eigenvalues, it should also check eigenvectors
+bool State::operator==(const State& rhs) {
+    // FIXME: this implementation only checks eigenvalues, should it also check eigenvectors?
 
     double precision = 10000000; //
 
-    double ELIPSON = (l.eval > r.eval) ?  r.eval/precision : l.eval/precision;
+    double ELIPSON = (this->eval > rhs.eval) ?  rhs.eval/precision : this->eval/precision;
 
-    return fabs(l.eval - r.eval) < fabs(ELIPSON);
+    return fabs(this->eval - rhs.eval) < fabs(ELIPSON);
 }

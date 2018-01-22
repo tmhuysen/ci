@@ -20,8 +20,8 @@ public:
 
 
     // Operator overloading
-    friend bool operator<(const State& l, const State& r);
-    friend bool operator==(const State& l, const State& r);
+    bool operator<(const State& rhs);
+    bool operator==(const State& rhs);
 
 };
 
