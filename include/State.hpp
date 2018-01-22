@@ -16,12 +16,12 @@ public:
     // Constructors
     /** Constructor based on a given eigenvalue and corresponding eigenvector
      */
-    State(double eval, Eigen::VectorXd& evec);
+    State(double eval, Eigen::VectorXd evec);
 
 
     // Operator overloading
-    bool operator<(const State& l, const State& r);
-    bool operator==(const State& l, const State& r);
+    friend bool operator<(const State& l, const State& r);
+    friend bool operator==(const State& l, const State& r);
 
 };
 

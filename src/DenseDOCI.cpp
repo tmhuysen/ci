@@ -1,6 +1,6 @@
 #include "DenseDOCI.hpp"
 
-DenseDOCI::DenseDOCI(CI_basis calculator) : DOCI_Class(calculator) {
+DenseDOCI::DenseDOCI(CI_basis calculator) : DOCI(calculator) {
     hamiltonian = Eigen::MatrixXd::Zero(nbf,nbf);
     calculateDoci(0,1);
     symmatu_reverse(hamiltonian);

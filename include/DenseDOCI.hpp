@@ -5,7 +5,7 @@
 #include "DOCI_Class.hpp"
 
 
-class DenseDOCI : public DOCI_Class {
+class DenseDOCI : public DOCI {
 public:
     DenseDOCI(CI_basis basis);
 private:

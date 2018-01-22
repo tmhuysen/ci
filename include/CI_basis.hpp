@@ -9,14 +9,19 @@
 namespace doci {
 
 class CI_basis {
-private:
+public:
+    // FIXME: use private attributes and getters
     Eigen::MatrixXd one_ints;  // The one-electron integrals
     Eigen::Tensor<double, 4> two_ints;  // The two-electron integrals
     double internuclear_repulsion;  // The internuclear repulsion energy
+
     size_t nbf;  // The number of basis functions
     size_t nelec;  // The number of electrons
 
-public:
+
+    /** Default constructor
+     */
+    CI_basis();
 
     /** Constructor based on a given RHF instance
      */
@@ -25,7 +30,6 @@ public:
     /** Constructor based on a given filename
      */
     CI_basis(const std::string& filename);
-
 };
 
 } // namespace doci

@@ -1,14 +1,23 @@
-#include <utility.hpp>
 #include "DOCI_Class.hpp"
 
-DOCI_Class::DOCI_Class(CI_basis ciBasis) {
-    this->sites = ciBasis.n_bf;
-    this->electrons =  ciBasis.n_electrons/2;
 
-    if (sites < electrons) {
-        throw std::overflow_error("Invalid argument: to many electrons");
+/** Constructor based on a given CI_basis
+ */
+DOCI::DOCI(doci::CI_basis ciBasis) {
+
+    // Set the number of spatial orbitals and electron pairs
+    size_t K_ = ciBasis.nbf;
+    size_t npairs_ = ciBasis.nelec / 2;
+
+    if (K_ < npairs_) {
+        throw std::overflow_error("Invalid argument: too many electrons to place into the given number of spatial orbitals");
     }
-    auto nbf_ = boost::math::binomial_coefficient<double>(sites, electrons);
+
+    this->K = K_;
+    this->npairs = npairs_;
+
+    // Set the number of spatial orbitals
+    auto nbf_ = boost::math::binomial_coefficient<double>(this->K, this->npairs);
     if (nbf_ > 4294967295.0) {
         // before casting into unsigned long, we have to make sure that it can fit
         throw std::overflow_error("The number of basis functions for the sector is too high to be cast into unsigned long.");
@@ -16,42 +25,40 @@ DOCI_Class::DOCI_Class(CI_basis ciBasis) {
     this->nbf = static_cast<unsigned long>(nbf_);
 
 
-    ad_mat = AddressingMatrix(sites,electrons);
-    groundstates = { State {std::numeric_limits<double>::max(),Eigen::VectorXd()} };
-    basis = ciBasis;
-
-
+    this->ad_mat = AddressingMatrix(this->K, this->npairs);
+    this->groundstates = { State (std::numeric_limits<double>::max(), Eigen::VectorXd()) };
+    this->basis = ciBasis;
 }
 
 
 
 
-void DOCI_Class::calculateDoci(double start, double end) {
-    boost::dynamic_bitset<> basic_bit = ad_mat.generateBinaryVector(start * nbf);
-    for (size_t i = 0; i < nbf * end; i++) {
-        for (size_t j = 0; j < sites; j++) {
+void DOCI::calculateDoci(double start, double end) {
+    boost::dynamic_bitset<> basic_bit = this->ad_mat.generateBinaryVector(start * this->nbf);
+    for (size_t i = 0; i < this->nbf * end; i++) {
+        for (size_t j = 0; j < this->K; j++) {
             if (basic_bit[j]){
-                double one_int = basis.one_int(j,j);
-                addToHamiltonian(2*one_int,i,i);
+                double one_int = basis.one_ints(j,j);
+                addToHamiltonian(2 * one_int, i, i);
             }
             for(size_t l = 0; l < j+1; l++){
                 if(j!=l){
                     boost::dynamic_bitset<> two_target_dia = basic_bit;
                     if (annihilation(two_target_dia, j) && annihilation(two_target_dia, l)){
-                        //integral parameters are entered in chemical notation!
-                        //This means that first 2 parameters are for the first electrons and subsequent ones are for the second
-                        double same_spin_two_int = basis.two_int(j,j,l,l);
+                        // Integral parameters are entered in chemical notation!
+                        // This means that first 2 parameters are for the first electrons and subsequent ones are for the second
+                        double same_spin_two_int = basis.two_ints(j,j,l,l);
                         double mix_spin_two_int = same_spin_two_int; //just illustrative
-                        double same_spin_two_int_negative = -1*basis.two_int(j,l,l,j);
-                        addToHamiltonian((4*same_spin_two_int+2*same_spin_two_int_negative),i,i);
+                        double same_spin_two_int_negative = -basis.two_ints(j,l,l,j);
+                        addToHamiltonian((4 * same_spin_two_int + 2 * same_spin_two_int_negative), i, i);
                     }
                 }
                 boost::dynamic_bitset<> two_target = basic_bit;
                 if (annihilation(two_target, j) && creation(two_target, l)){
                     size_t address = ad_mat.fetchAddress(two_target);
                     //integrals parameters are entered in chemical notation!
-                    double mix_spin_two_int = basis.two_int(j,l,j,l);
-                    addToHamiltonian(mix_spin_two_int,i,address);
+                    double mix_spin_two_int = basis.two_ints(j,l,j,l);
+                    addToHamiltonian(mix_spin_two_int, i, address);
                 }
             }
         }
@@ -60,22 +67,21 @@ void DOCI_Class::calculateDoci(double start, double end) {
 }
 
 
-
-
-void DOCI_Class::groundStates(State state) {
-    if(areSame(state,this->groundstates.at(0))){
-        groundstates.push_back(state);
+void DOCI::groundStates(State state) {
+    if (state == this->groundstates.at(0)) {
+        this->groundstates.push_back(state);
     }
-    else{
-        if(compareState(state,groundstates.at(0))){
-            groundstates = std::vector<State> {state};
+
+    else {
+        if (state < this->groundstates.at(0)) {
+            this->groundstates = std::vector<State> {state};
         }
     }
-
 }
 
-const std::vector<State> &DOCI_Class::getGroundstates() const {
-    return groundstates;
+
+const std::vector<State> &DOCI::getGroundstates() const {
+    return this->groundstates;
 };
 
 

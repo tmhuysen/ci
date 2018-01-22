@@ -2,7 +2,7 @@
 
 /** Constructor based on a given eigenvalue and corresponding eigenvector
  */
-State::State(double eval, Eigen::VectorXd& evec) : eval(eval), evec(evec) {}
+State::State(double eval, Eigen::VectorXd evec) : eval(eval), evec(evec) {}
 
 
 

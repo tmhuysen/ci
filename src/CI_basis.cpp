@@ -1,5 +1,11 @@
 #include "CI_basis.hpp"
 
+
+/** Default constructor
+ */
+doci::CI_basis::CI_basis() {}
+
+
 /** Constructor based on a given RHF instance
  */
 doci::CI_basis::CI_basis(hf::rhf::RHF& rhf) {
@@ -14,6 +20,7 @@ doci::CI_basis::CI_basis(hf::rhf::RHF& rhf) {
     this->nbf = rhf.basis.nbf();
     this->nelec = rhf.basis.molecule.nelec;
 }
+
 
 /** Constructor based on a given filename
  */
