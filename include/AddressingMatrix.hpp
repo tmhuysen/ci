@@ -1,13 +1,12 @@
-//
-// Created by Wulfix on 17/11/2017.
-//
-
-#ifndef HUBBARDMODEL_ADDRESSINGMATRIX_H
-#define HUBBARDMODEL_ADDRESSINGMATRIX_H
+#ifndef DOCI_ADDRESSINGMATRIX_H
+#define DOCI_ADDRESSINGMATRIX_H
 
 #include "bitset.hpp"
+
 #include <iostream>
 #include <Eigen/Dense>
+
+
 class AddressingMatrix {
 private:
     int n_sites;
@@ -48,4 +47,4 @@ public:
 };
 
 
-#endif //HUBBARDMODEL_ADDRESSINGMATRIX_H
+#endif // DOCI_ADDRESSINGMATRIX_H

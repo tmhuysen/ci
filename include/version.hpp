@@ -1,12 +1,12 @@
-#ifndef DOCI_HEAD_VERSION_HPP
-#define DOCI_HEAD_VERSION_HPP
+#ifndef DOCI_VERSION_HPP
+#define DOCI_VERSION_HPP
 
 
 // Define all the version numbers
-#define DOCI_HEAD_MAJOR_VERSION (0)
-#define DOCI_HEAD_MINOR_VERSION (0)
-#define DOCI_HEAD_PATCH_VERSION (1)
-#define DOCI_HEAD_VERSION "0.0.1"
+#define DOCI_MAJOR_VERSION (0)
+#define DOCI_MINOR_VERSION (0)
+#define DOCI_PATCH_VERSION (1)
+#define DOCI_VERSION "0.0.1"
 
 
-#endif // DOCI_HEAD_VERSION_HPP
+#endif // DOCI_VERSION_HPP
