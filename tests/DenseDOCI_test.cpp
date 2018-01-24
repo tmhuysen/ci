@@ -19,8 +19,20 @@ BOOST_AUTO_TEST_CASE ( first_test ) {  // FIXME use better name
 
     doci::DenseDOCI doci_test (ciBasis);
     doci::State ground = doci_test.getGroundstates().at(0);
-    double en = ground.eval + ciBasis.internuclear_repulsion;
+    double en = ground.eval + ciBasis.getInternuclear_repulsion();
     std::cout << std::endl << en << std::endl;
 
     BOOST_CHECK(std::abs(en - (-74.9771)) < 1.0e-04);  // FIXME: add reference to DOCI energy in comments
+}
+
+BOOST_AUTO_TEST_CASE ( second_test ) {  // FIXME use better name
+    const std::string doci = "../tests/reference_data/doci_ref/beh_cation_ref.txt";
+    doci::CI_basis ciBasis(doci);
+
+    doci::DenseDOCI doci_test (ciBasis);
+    doci::State ground = doci_test.getGroundstates().at(0);
+    double en = ground.eval + ciBasis.getInternuclear_repulsion();
+    std::cout << std::endl << en << std::endl;
+    
+    //BOOST_CHECK(std::abs(en - (-74.9771)) < 1.0e-04);  // FIXME: add reference to DOCI energy in comments
 }

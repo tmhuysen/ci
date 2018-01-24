@@ -30,3 +30,10 @@ BOOST_AUTO_TEST_CASE ( constructor_rhf ) {
 
     doci::CI_basis ciBasis (rhf);
 }
+
+
+BOOST_AUTO_TEST_CASE ( constructor_filename) {
+    const std::string doci = "../tests/reference_data/doci_ref/beh_cation_ref.txt";
+    doci::CI_basis ciBasis(doci);
+
+}

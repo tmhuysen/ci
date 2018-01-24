@@ -16,14 +16,14 @@ class DOCI {
 // Protected variables
 protected:
     size_t K;  // number of spatial orbitals
-    size_t npairs;
-    size_t nbf;
+    size_t npairs; // number of electron pairs
+    size_t nbf; // number of basis functions
 
-    AddressingMatrix ad_mat;
+    AddressingMatrix ad_mat; // FIXME: scheme
 
-    std::vector<doci::State> groundstates;
+    std::vector<doci::State> groundstates; //vector of the all states with the ground energy.
 
-    doci::CI_basis basis;
+    doci::CI_basis basis; //contains all information required to do a DOCI calculation
 
     Eigen::VectorXd eigenvalues;
     Eigen::MatrixXd eigenvectors;
@@ -31,6 +31,11 @@ protected:
 
 // Protected methods
 protected:
+    /**
+     * calculate all hamiltonian elements.
+     * @param start : for parallellization
+     * @param end
+     */
     void calculateDoci(double start, double end);  // FIXME: add comments/documentation
     void groundStates(doci::State state);  // FIXME:: add comments/documentation
 

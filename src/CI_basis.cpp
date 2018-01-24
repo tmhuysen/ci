@@ -17,7 +17,7 @@ doci::CI_basis::CI_basis(hf::rhf::RHF& rhf) {
 
     // Set some more parameters
     this->internuclear_repulsion = rhf.basis.molecule.internuclear_repulsion();
-    this->nbf = rhf.basis.nbf();
+    this->K = rhf.basis.nbf();
     this->nelec = rhf.basis.molecule.nelec;
 }
 
@@ -25,21 +25,106 @@ doci::CI_basis::CI_basis(hf::rhf::RHF& rhf) {
 /** Constructor based on a given filename
  */
 doci::CI_basis::CI_basis(const std::string &filename) {
-    Eigen::Tensor<double, 4> tei;
-    tei.setZero();
-    double nuc = 0;
-    size_t nbf = 0;
-    size_t nelec = 0;
-    Eigen::MatrixXd one_int = Eigen::MatrixXd::Zero (nbf,nbf);
-
     std::ifstream is (filename);
 
     if (is.is_open()) {
-        // The dimension of the resulting matrix is found as the first entry in the file name
-        std::string startline;
-        std::getline(is, startline);
-        std::stringstream linestream(startline);
+        std::string startline; //first line contains orbitals and electron count.
+        std::getline(is, startline); //extract the line from the file
+        std::stringstream linestream(startline); // turn the string into a stream
+
+        int value;
+        char itter;
+        int counter = 0;
+        while(linestream >> itter && counter<2){
+            if(itter == '='){
+                if(counter == 0){
+                    linestream >> value;
+                    this->K = value;
+                    counter++;
+                }else{
+                    linestream >> value;
+                    this->nelec = value;
+                    counter++;
+                }
+            }
+
+        }
+
+        this->two_ints = Eigen::Tensor<double, 4>(K,K,K,K);
+        this->two_ints.setZero();
+        this->one_ints = Eigen::MatrixXd::Zero(K,K);
+
+        for(int i =0;i<3;i++){
+            std::getline(is, startline); //skip 3 lines;
+
+        }
+
+        std::string intline;
+
+
+        while(std::getline(is, intline)){
+            std::stringstream intss(intline);
+            std::vector<double> inputs;
+            double test;
+            while(intss >> test){
+                inputs.push_back(test);
+
+            }
+
+            double integral = inputs.at(0);
+            size_t index1 = inputs.at(1);
+            size_t index2 = inputs.at(2);
+            size_t index3 = inputs.at(3);
+            size_t index4 = inputs.at(4);
+
+
+            if(index1>0 && index2>0  && index3>0  && index4>0 ){
+                size_t i = index1-1;
+                size_t j = index2-1;
+                size_t l = index3-1;
+                size_t k = index4-1;
+                this->two_ints(i,j,k,l) = integral;
+                this->two_ints(j, i, k, l) = this->two_ints(i, j, k, l);
+                this->two_ints(j, i, l, k) = this->two_ints(i, j, k, l);
+                this->two_ints(i, j, l, k) = this->two_ints(i, j, k, l);
+
+            }
+            if(index1>0 && index2>0 && index3==0){
+                size_t i = index1-1;
+                size_t j = index2-1;
+                this->one_ints(i,j) = integral;
+
+
+            }
+            if(index1==0){
+                this->internuclear_repulsion = integral;
+
+            }
+
+        }
+
+    }else{
+        std::cout<<"can't open file";
     }
 
-    // FIXME: this function doesn't seem to be finished yet
+}
+
+double doci::CI_basis::getOne_ints_el(size_t index1, size_t index2) const {
+    return one_ints(index1,index2);
+}
+
+double doci::CI_basis::getTwo_ints_el(size_t index1, size_t index2, size_t index3, size_t index4) const {
+    return two_ints(index1,index2,index3,index4);
+}
+
+double doci::CI_basis::getInternuclear_repulsion() const {
+    return internuclear_repulsion;
+}
+
+size_t doci::CI_basis::getK() const {
+    return K;
+}
+
+size_t doci::CI_basis::getNelec() const {
+    return nelec;
 }

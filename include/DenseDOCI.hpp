@@ -15,6 +15,9 @@ private:
 
 // Protected methods
 protected:
+    /**
+     * function that adds
+     */
     void addToHamiltonian(double value, size_t index1, size_t index2) override;
 
 
