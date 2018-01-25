@@ -9,12 +9,24 @@ bool doci::State::operator<(const doci::State& rhs) {
     return (this->eval < rhs.eval);
 }
 
-bool doci::State::operator==(const doci::State& rhs) {
-    // FIXME: this implementation only checks eigenvalues, should it also check eigenvectors?
+bool doci::State::operator>(const doci::State& rhs) {
+    return (this->eval > rhs.eval);
+}
 
-    double precision = 10000000; //
+bool doci::State::operator==(const doci::State& rhs) {
+    // Does not check for eigenvectors, operator is meant to check for degeneracy.
+
+    double precision = 1000000;
 
     double ELIPSON = (this->eval > rhs.eval) ?  rhs.eval/precision : this->eval/precision;
 
     return fabs(this->eval - rhs.eval) < fabs(ELIPSON);
+}
+
+double doci::State::getEval() const {
+    return eval;
+}
+
+const Eigen::VectorXd &doci::State::getEvec() const {
+    return evec;
 }

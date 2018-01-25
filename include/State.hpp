@@ -6,11 +6,18 @@
 
 namespace doci {
 
-class State {  // FIXME: this class should be tested
+class State {
+private:
 public:
-    // FIXME: use private members and getters
+    double getEval() const;
+    const Eigen::VectorXd &getEvec() const;
+
+private:
     double eval;  // The energy of the solution, i.e. the eigenvalue
     Eigen::VectorXd evec;  // The coefficients of the solution with respect to the given basis, i.e. the eigenvector corresponding to the eigenvalue
+
+public:
+
 
     // Constructors
     /** Constructor based on a given eigenvalue and corresponding eigenvector
@@ -19,9 +26,10 @@ public:
 
 
     // Operator overloading
-    bool operator<(const doci::State& rhs);
+    bool operator<(const doci::State& rhs); //only compares eval.
+    bool operator>(const doci::State& rhs); //only compares eval.
 
-    bool operator==(const doci::State& rhs);
+    bool operator==(const doci::State& rhs); //only compares eval.
 
 };
 

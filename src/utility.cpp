@@ -16,6 +16,23 @@ void doci::symmatu_reverse(Eigen::MatrixXd &mat) {
     }
 }
 
+void doci::symmatu_tensor_reverse(Eigen::Tensor<double, 4>& tei) {
+    for (size_t i = 0; i<tei.dimension(0); i++) {
+        for (size_t j = 0; j <= i; j++) {
+            for (size_t k = 0; k <= i; k++) {
+                for (size_t l = 0; l <= k && l<= j &&10*k +l<= 10*i+j; l++) {
+                    tei(j, i, k, l) = tei(i, j, k, l);
+                    tei(j, i, l, k) = tei(i, j, k, l);
+                    tei(i, j, l, k) = tei(i, j, k, l);
+
+                }
+            }
+        }
+    }
+
+
+}
+
 // trim from start (in place)
 void doci::ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(),
@@ -27,28 +44,3 @@ void doci::rtrim(std::string &s) {
     s.erase(std::find_if(s.rbegin(), s.rend(),
                          std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
 }
-/*
-// trim from both ends (in place)
-static inline void doci::trim(std::string &s) {
-    doci::ltrim(s);
-    doci::rtrim(s);
-}
-
-// trim from start (copying)
-static inline std::string doci::ltrim_copy(std::string s) {
-    doci::ltrim(s);
-    return s;
-}
-
-// trim from end (copying)
-static inline std::string doci::rtrim_copy(std::string s) {
-    doci::rtrim(s);
-    return s;
-}
-
-// trim from both ends (copying)
-static inline std::string trim_copy(std::string s) {
-    doci::trim(s);
-    return s;
-}
- */

@@ -6,20 +6,6 @@
 #include <boost/test/included/unit_test.hpp>
 
 
-BOOST_AUTO_TEST_CASE ( constructor ) {
-    // FIXME: This test should be finished
-//    using namespace std;
-//    using namespace libwint;
-//    string path = "/Users/wulfix/Desktop/Cursussen_Gent/ThesisDir/Libraries/DOCILibs/DOCI_Head";
-//    const string doci = path + "/tests/reference_data/doci_ref/h2o.xyz";
-//
-//
-//
-//    CI_basis ciBasis = file_to_CI_basis(doci);
-
-}
-
-
 BOOST_AUTO_TEST_CASE ( constructor_rhf ) {
     const std::string xyzfilename = "../tests/reference_data/h2o.xyz";
     double threshold = 1.0e-06;
@@ -33,7 +19,7 @@ BOOST_AUTO_TEST_CASE ( constructor_rhf ) {
 
 
 BOOST_AUTO_TEST_CASE ( constructor_filename) {
-    const std::string doci = "../tests/reference_data/doci_ref/beh_cation_ref.txt";
+    const std::string doci = "../tests/reference_data/doci_ref/beh_cation_ap1rog_631g.txt";
     doci::CI_basis ciBasis(doci);
 
 }

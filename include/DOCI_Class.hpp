@@ -32,25 +32,45 @@ protected:
 // Protected methods
 protected:
     /**
-     * calculate all hamiltonian elements.
-     * @param start : for parallellization
-     * @param end
+     * calculate hamiltonian elements (the lower triagonal).
+     * @param start,end : (for parallellization?) calculates only the fraction between start and end
+     * example: start:O.5 to end:0.75. currently excludes based on nbf (iterates over fraction of bf)
      */
-    void calculateDoci(double start, double end);  // FIXME: add comments/documentation
-    void groundStates(doci::State state);  // FIXME:: add comments/documentation
+    void calculateDoci(double start, double end);
+
+    /**
+     * Adds a @param state to the groundstates vector of our DOCI,
+     * if this state's eigenvalue is equal to the eigenvalue of current groundstates, then it is added.
+     * if this state's eigenvalue is lower than it replaced the current groundstates.
+     */
+    void groundStates(doci::State state);
 
     // Virtuals
-    virtual void addToHamiltonian(double value, size_t index1, size_t index2)=0;  // FIXME: add comments/documentation
+    /**
+     * Adds a value as an element of the hamiltonian matrix.
+     * Virtual: when implementing this class one can opt for many ways to represent the hamiltonian.
+     */
+    virtual void addToHamiltonian(double value, size_t index1, size_t index2)=0;
 
 
 public:
+
     /** Constructor based on a given CI_basis
+     * Initializes the base variables of the class, and calculates the number of basis functions (nbf)
      */
-    explicit DOCI(doci::CI_basis ciBasis);  // FIXME: add comments/documentation
-    const std::vector<doci::State>& getGroundstates() const;  // FIXME: add comments/documentation
+    explicit DOCI(doci::CI_basis ciBasis);
+
+
+    /**
+     * Getters
+     */
+    const std::vector<doci::State>& getGroundstates() const;
 
     // Virtuals
-    virtual void print()=0;  // FIXME: add comments/documentation
+    /**
+     * Virtual print function, ment for printing the representation of the hamiltonian.
+     */
+    virtual void print()=0;
 };
 
 } // namespace doci

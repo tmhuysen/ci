@@ -16,7 +16,8 @@ private:
 // Protected methods
 protected:
     /**
-     * function that adds
+     * function that stores a calculated value in the Hamiltonian
+     * Us
      */
     void addToHamiltonian(double value, size_t index1, size_t index2) override;
 
