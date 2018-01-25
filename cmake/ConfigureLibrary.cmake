@@ -4,7 +4,7 @@
 # Include this project's headers
 target_include_directories(${LIBRARY_NAME} PRIVATE ${PROJECT_INCLUDE_FOLDER})
 
-# Include the boost headers (dynamic bitset)  # FIXME: link with bmqc
+# Include the boost headers (dynamic bitset)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 
 # Include Eigen
@@ -13,6 +13,10 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC Eigen3::Eigen)
 # Include hf
 target_include_directories(${LIBRARY_NAME} PUBLIC ${hf_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY_NAME} PUBLIC hf)
+
+# Include bmqc
+target_include_directories(${LIBRARY_NAME} PUBLIC ${bmqc_INCLUDE_DIRS})
+target_link_libraries(${LIBRARY_NAME} PUBLIC bmqc)
 
 # Use Eigen with MKL
 # target_include_directories(${LIBRARY_NAME} PRIVATE $ENV{MKLROOT}/include)

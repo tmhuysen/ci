@@ -25,7 +25,7 @@ doci::DOCI::DOCI(doci::CI_basis ciBasis) {
     this->nbf = static_cast<unsigned long>(nbf_);
 
 
-    this->ad_mat = AddressingMatrix(this->K, this->npairs); //constructing Addressing Scheme
+    this->ad_mat = bmqc::AddressingScheme(this->K, this->npairs); //constructing Addressing Scheme
     //initializing max State as starting groundstate.
     this->groundstates = { doci::State (std::numeric_limits<double>::max(), Eigen::VectorXd()) };
 
@@ -33,14 +33,14 @@ doci::DOCI::DOCI(doci::CI_basis ciBasis) {
 }
 
 
-    /**
-    * calculate hamiltonian elements (the lower triagonal).
-    * @param start,end : (for parallellization?) calculates only the fraction between start and end
-    * example: start:O.5 to end:0.75. currently excludes based on nbf (iterates over fraction of bf)
-    */
+/**
+* calculate hamiltonian elements (the lower triagonal).
+* @param start,end : (for parallellization?) calculates only the fraction between start and end
+* example: start:O.5 to end:0.75. currently excludes based on nbf (iterates over fraction of bf)
+*/
 
 void doci::DOCI::calculateDoci(double start, double end) {
-    boost::dynamic_bitset<> basic_bit = this->ad_mat.generateBinaryVector(start * this->nbf); //first basis function
+    boost::dynamic_bitset<> basic_bit = this->ad_mat.generateBitVector_bitset(start * this->nbf); //first basis function
 
     for (size_t i = 0; i < this->nbf * end; i++) {
         for (size_t j = 0; j < this->K; j++) { //First iteration over SO's.
@@ -57,7 +57,7 @@ void doci::DOCI::calculateDoci(double start, double end) {
                             //Because of the double occupancy constraint. All these excitations are in-place
 
                     boost::dynamic_bitset<> two_target_dia = basic_bit;
-                    if (annihilation(two_target_dia, j) && annihilation(two_target_dia, l)){
+                    if (bmqc::annihilation(two_target_dia, j) && bmqc::annihilation(two_target_dia, l)){
                         // Integral parameters are entered in chemical notation!
                         // This means that first 2 parameters are for the first electrons and subsequent ones are for the second
                         double same_spin_two_int = this->basis.getTwo_ints_el(j,j,l,l); //=mixed_spin_two_int
@@ -69,7 +69,7 @@ void doci::DOCI::calculateDoci(double start, double end) {
                     }
                 }
                 boost::dynamic_bitset<> two_target = basic_bit;
-                if (annihilation(two_target, j) && creation(two_target, l)) {
+                if (bmqc::annihilation(two_target, j) && bmqc::creation(two_target, l)) {
                     size_t address = this->ad_mat.fetchAddress(two_target);
                     //integrals parameters are entered in chemical notation!
                     //Multiply by 2 getting rid of 1/2 two electron term because we have 2 equal combinations:
@@ -80,7 +80,7 @@ void doci::DOCI::calculateDoci(double start, double end) {
                 }
             }
         }
-        basic_bit = next_bitset_permutation(basic_bit);
+        bmqc::next_bitset_permutation(basic_bit);
     }
 }
 
@@ -103,8 +103,8 @@ void doci::DOCI::groundStates(doci::State state) {
 }
 
 /**
-     * Getters
-     */
+ * Getters
+ */
 const std::vector<doci::State>& doci::DOCI::getGroundstates() const {
     return this->groundstates;
 };

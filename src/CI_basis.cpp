@@ -28,9 +28,9 @@ doci::CI_basis::CI_basis(const std::string &filename) {
     std::ifstream is (filename);
 
     if (is.is_open()) {
-        std::string startline; //first line contains orbitals and electron count.
-        std::getline(is, startline); //extract the line from the file
-        std::stringstream linestream(startline); // turn the string into a stream
+        std::string startline; // first line contains orbitals and electron count.
+        std::getline(is, startline); // extract the line from the file.
+        std::stringstream linestream(startline); // turn the string into a stream.
 
         int value;
         char itter;
@@ -87,6 +87,7 @@ doci::CI_basis::CI_basis(const std::string &filename) {
                 this->two_ints(j, i, k, l) = this->two_ints(i, j, k, l);
                 this->two_ints(j, i, l, k) = this->two_ints(i, j, k, l);
                 this->two_ints(i, j, l, k) = this->two_ints(i, j, k, l);
+                //FIXME only works for DOCI skips many indexes.
 
             }
             if(index1>0 && index2>0 && index3==0){

@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE ( doci_ref_beh_test ) {
     //compare
     BOOST_CHECK(std::abs(en - (-14.8782216937)) < 1.0e-06); //energy from beh_cation
 }
-/* to big
+/* to slow
 BOOST_AUTO_TEST_CASE ( doci_ref_cn_test ) {
     //cn_cation
     const std::string doci = "../tests/reference_data/doci_ref/cn_cation_ap1rog_631g.txt";

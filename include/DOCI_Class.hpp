@@ -1,10 +1,10 @@
 #ifndef DOCI_DOCI_HPP
 #define DOCI_DOCI_HPP
 
-#include "AddressingMatrix.hpp"
 #include "CI_basis.hpp"
 #include "State.hpp"
-
+#include <bmqc.hpp>
+#include <boost/math/special_functions.hpp>
 #include <iostream>
 #include <Eigen/Dense>
 
@@ -19,7 +19,7 @@ protected:
     size_t npairs; // number of electron pairs
     size_t nbf; // number of basis functions
 
-    AddressingMatrix ad_mat; // FIXME: scheme
+    bmqc::AddressingScheme ad_mat; //AddressingScheme retrieves lexographical position of basis function.
 
     std::vector<doci::State> groundstates; //vector of the all states with the ground energy.
 

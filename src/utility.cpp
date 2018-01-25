@@ -16,7 +16,7 @@ void doci::symmatu_reverse(Eigen::MatrixXd &mat) {
     }
 }
 
-void doci::symmatu_tensor_reverse(Eigen::Tensor<double, 4>& tei) {
+void doci::symmatu_tensor_reverse(Eigen::Tensor<double, 4>& tei) { //FIXME doesn't work
     for (size_t i = 0; i<tei.dimension(0); i++) {
         for (size_t j = 0; j <= i; j++) {
             for (size_t k = 0; k <= i; k++) {

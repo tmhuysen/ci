@@ -6,8 +6,12 @@
 
 
 namespace doci {
+/**
+ * Dense DOCI for calculations where the hamiltonian is stored in a dense matrix from the eigen lib
+ * Use only
+ */
+class DenseDOCI : public doci::DOCI {
 
-class DenseDOCI : public doci::DOCI {  // FIXME: add documentation/comments
 
 private:
     Eigen::MatrixXd hamiltonian;
