@@ -85,6 +85,13 @@ install:
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
 
+  # Install bmqc
+  - mkdir /tmp/bmqc && cd /tmp/bmqc
+  - git clone https://github.com/GQCG/bmqc.git
+  - cd bmqc
+  - mkdir build && cd build
+  - cmake .. && make && make test && sudo make install
+
 
 # Run the build script
 script:
