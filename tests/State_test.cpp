@@ -10,7 +10,7 @@
 BOOST_AUTO_TEST_CASE ( State_test) {
     doci::State test_1 (100.00101, Eigen::VectorXd());
     doci::State test_2 (100.001010000000001, Eigen::VectorXd());
-    BOOST_CHECK_EQUAL(test_1,test_2);
+    BOOST_CHECK(test_1==test_2);
     doci::State test_3 (200, Eigen::VectorXd());
     BOOST_CHECK((test_3>test_1));
 
