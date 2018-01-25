@@ -43,6 +43,9 @@ void doci::DOCI::calculateDoci(double start, double end) {
     boost::dynamic_bitset<> basic_bit = this->ad_mat.generateBitVector_bitset(start * this->nbf); //first basis function
 
     for (size_t i = 0; i < this->nbf * end; i++) {
+        if(i>0){
+            bmqc::next_bitset_permutation(basic_bit);
+        }
         for (size_t j = 0; j < this->K; j++) { //First iteration over SO's.
             if (basic_bit.test(j)){ //single excitation
                 //A single excitation in doci can only be done in place.
@@ -80,7 +83,6 @@ void doci::DOCI::calculateDoci(double start, double end) {
                 }
             }
         }
-        bmqc::next_bitset_permutation(basic_bit);
     }
 }
 

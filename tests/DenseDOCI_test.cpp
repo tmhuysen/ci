@@ -15,7 +15,6 @@ BOOST_AUTO_TEST_CASE ( self_test ) {
     libwint::Molecule water (xyzfilename);
     libwint::Basis basis (water, basis_name);
     hf::rhf::RHF rhf (basis, threshold);
-
     doci::CI_basis ciBasis (rhf);
 
     doci::DenseDOCI doci_test (ciBasis);
