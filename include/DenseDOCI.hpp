@@ -1,5 +1,4 @@
 #ifndef DOCI_DOCI_DENSE_HPP
-#define DOCI_DOCI_DENSE_HPP
 
 
 #include "DOCI_Class.hpp"
@@ -8,7 +7,7 @@
 namespace doci {
 /**
  * Dense DOCI for calculations where the hamiltonian is stored in a dense matrix from the eigen lib
- * Use only
+ * High memory requirements but fast diagonalization.
  */
 class DenseDOCI : public doci::DOCI {
 
@@ -21,16 +20,25 @@ private:
 protected:
     /**
      * function that stores a calculated value in the Hamiltonian
-     * Us
      */
     void addToHamiltonian(double value, size_t index1, size_t index2) override;
 
 
 public:
-    DenseDOCI(doci::CI_basis basis);
+    /** Constructor based on a given CI_basis
+     * Applies the base DOCI_class constructor and calls the DOCI calculation and
+     * solves the eigenvalues of the hamiltonian with the EigenSolver.
+     */
+    DenseDOCI(doci::CI_basis ciBasis);
 
-    Eigen::MatrixXd getHam();
 
+    /**
+     * Getters
+     */
+    Eigen::MatrixXd getHamiltonian();
+    /**
+     * Helper function for printing the hamiltonian to the console
+     */
     void print() override;
 };
 

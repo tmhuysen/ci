@@ -39,9 +39,9 @@ public:
      * Getters
      */
 
-    double getOne_ints_el(size_t index1, size_t index2) const;
+    double getOne_int(size_t index1, size_t index2) const;
 
-    double getTwo_ints_el(size_t index1, size_t index2, size_t index3, size_t index4) const;
+    double getTwo_int(size_t index1, size_t index2, size_t index3, size_t index4) const;
 
     double getInternuclear_repulsion() const;
 

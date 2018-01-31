@@ -1,6 +1,7 @@
+
 #include "utility.hpp"
 
-void doci::symmatu(Eigen::MatrixXd& mat) {
+void doci::symmatu(Eigen::MatrixXd& mat) { // no longer used
     for(int x =0; x<mat.innerSize();x++){
         for (int y = x+1; y<mat.innerSize();y++){
             mat(y,x) = mat(x,y);
@@ -8,7 +9,7 @@ void doci::symmatu(Eigen::MatrixXd& mat) {
     }
 }
 
-void doci::symmatu_reverse(Eigen::MatrixXd &mat) {
+void doci::symmatu_reverse(Eigen::MatrixXd &mat) { // no longer used
     for(int x =0; x<mat.innerSize();x++){
         for (int y = 0; y<x;y++){
             mat(y,x) = mat(x,y);
@@ -44,3 +45,4 @@ void doci::rtrim(std::string &s) {
     s.erase(std::find_if(s.rbegin(), s.rend(),
                          std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
 }
+

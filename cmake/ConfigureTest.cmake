@@ -11,6 +11,9 @@ target_link_libraries(${TEST_NAME} PRIVATE ${LIBRARY_NAME})
 # ... add Eigen3 ...
 target_link_libraries(${TEST_NAME} PUBLIC Eigen3::Eigen)
 
+# ... add Spectra ...
+target_include_directories(${TEST_NAME} PUBLIC /opt/local/spectra/include)
+
 # ... include hf ...
 target_include_directories(${TEST_NAME} PUBLIC ${hf_INCLUDE_DIRS})
 target_link_libraries(${TEST_NAME} PUBLIC hf)

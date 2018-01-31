@@ -3,12 +3,11 @@
 #include "utility.hpp"
 
 
-doci::DenseDOCI::DenseDOCI(doci::CI_basis calculator) : doci::DOCI(calculator) {
+doci::DenseDOCI::DenseDOCI(doci::CI_basis ciBasis) : doci::DOCI(ciBasis) {
 
     // Construct the Hamiltonian matrix
     this->hamiltonian = Eigen::MatrixXd::Zero(this->nbf, this->nbf);
     calculateDoci(0,1);
-    symmatu_reverse(this->hamiltonian);
 
     // Diagonalize the Hamiltonian matrix
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver (this->hamiltonian);
@@ -28,7 +27,7 @@ void doci::DenseDOCI::addToHamiltonian(double value, unsigned long index1, unsig
 }
 
 
-Eigen::MatrixXd doci::DenseDOCI::getHam() {
+Eigen::MatrixXd doci::DenseDOCI::getHamiltonian() {
     return this->hamiltonian;
 }
 

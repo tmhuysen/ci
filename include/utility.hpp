@@ -9,12 +9,12 @@
 #include <functional>
 #include <cctype>
 #include <locale>
+#include <Eigen/Sparse>
 
 namespace doci {
 
 void symmatu(Eigen::MatrixXd& mat);  //fills lower triagonal of upper triagonal matrix
 void symmatu_reverse(Eigen::MatrixXd& mat); //fills upper triagonal of lower triagonal matrix
-
 void symmatu_tensor_reverse(Eigen::Tensor<double, 4> &tensor); //fills upper part of tensor based on some kind of symmetry.
 
 

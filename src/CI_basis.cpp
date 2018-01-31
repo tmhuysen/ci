@@ -23,6 +23,7 @@ doci::CI_basis::CI_basis(hf::rhf::RHF& rhf) {
 
 
 /** Constructor based on a given filename
+ *  Very specific file.
  */
 doci::CI_basis::CI_basis(const std::string &filename) {
     std::ifstream is (filename);
@@ -36,7 +37,7 @@ doci::CI_basis::CI_basis(const std::string &filename) {
         char itter;
         int counter = 0;
         while(linestream >> itter && counter<2){
-            if(itter == '='){
+            if(itter == '='){ //
                 if(counter == 0){
                     linestream >> value;
                     this->K = value;
@@ -110,11 +111,15 @@ doci::CI_basis::CI_basis(const std::string &filename) {
 
 }
 
-double doci::CI_basis::getOne_ints_el(size_t index1, size_t index2) const {
+
+/**
+ * Getters
+ */
+double doci::CI_basis::getOne_int(size_t index1, size_t index2) const {
     return one_ints(index1,index2);
 }
 
-double doci::CI_basis::getTwo_ints_el(size_t index1, size_t index2, size_t index3, size_t index4) const {
+double doci::CI_basis::getTwo_int(size_t index1, size_t index2, size_t index3, size_t index4) const {
     return two_ints(index1,index2,index3,index4);
 }
 

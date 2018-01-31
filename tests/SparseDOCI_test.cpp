@@ -1,6 +1,6 @@
-#define BOOST_TEST_MODULE "DenseDOCI_test"
+#define BOOST_TEST_MODULE "SparseDOCI_test"
 
-#include "DenseDOCI.hpp"
+#include "SparseDOCI.hpp"
 #include "utility.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -8,7 +8,7 @@
 
 
 
-BOOST_AUTO_TEST_CASE ( self_test ) {
+BOOST_AUTO_TEST_CASE ( self_test_sparse ) {
     const std::string xyzfilename = "../tests/reference_data/h2o.xyz";
     double threshold = 1.0e-06;
     std::string basis_name = "STO-3G";
@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE ( self_test ) {
     hf::rhf::RHF rhf (basis, threshold);
     doci::CI_basis ciBasis (rhf);
 
-    doci::DenseDOCI doci_test (ciBasis);
+    doci::SparseDOCI doci_test (ciBasis);
     doci::State ground = doci_test.getGroundstates().at(0);
     double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
 
@@ -25,13 +25,13 @@ BOOST_AUTO_TEST_CASE ( self_test ) {
 }
 
 
-BOOST_AUTO_TEST_CASE ( doci_ref_beh_test ) {
+BOOST_AUTO_TEST_CASE ( doci_ref_beh_test_sparse ) {
     //beh_cation
     const std::string doci = "../tests/reference_data/doci_ref/beh_cation_ap1rog_631g.txt";
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -40,13 +40,13 @@ BOOST_AUTO_TEST_CASE ( doci_ref_beh_test ) {
     BOOST_CHECK(std::abs(en - (-14.8782216937)) < 1.0e-06); //energy from beh_cation
 }
 
-BOOST_AUTO_TEST_CASE ( doci_ref_lih_test ) {
+BOOST_AUTO_TEST_CASE ( doci_ref_lih_test_sparse ) {
     //lih
     const std::string doci = "../tests/reference_data/doci_ref/lih_ap1rog_631g.txt";
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -56,14 +56,14 @@ BOOST_AUTO_TEST_CASE ( doci_ref_lih_test ) {
 
 }
 
-/*  //FIXME to long tests need to link MKL for diagonalization first.
-BOOST_AUTO_TEST_CASE ( doci_ref_cn_test ) {
+
+BOOST_AUTO_TEST_CASE ( doci_ref_cn_test_sparse ) {
     //cn_cation
     const std::string doci = "../tests/reference_data/doci_ref/cn_cation_ap1rog_631g.txt";
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE ( doci_ref_co_test ) {
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE ( doci_ref_h2o_test ) {
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE ( doci_ref_hf_test ) {
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE ( doci_ref_lif_test ) {
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE ( doci_ref_nh3_test ) {
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
-    doci::DenseDOCI doci_test(ciBasis);
+    doci::SparseDOCI doci_test(ciBasis);
     //getting the electronic ground energy
     doci::State ground = doci_test.getGroundstates().at(0);
     //getting the total energy
@@ -153,4 +153,3 @@ BOOST_AUTO_TEST_CASE ( doci_ref_nh3_test ) {
     BOOST_CHECK(std::abs(en - (-56.2703067338)) < 1.0e-06); //energy from nh3
 
 }
-*/
