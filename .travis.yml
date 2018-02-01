@@ -91,6 +91,9 @@ install:
   - cd bmqc
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
+  # 'Install' Spectra
+  - mkdir /opt/local/ && cd /opt/local/
+  - git clone https://github.com/yixuan/spectra.git
 
 
 # Run the build script
