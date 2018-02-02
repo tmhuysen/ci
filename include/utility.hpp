@@ -5,12 +5,30 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 
 
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <locale>
+#include <Eigen/Sparse>
+
 namespace doci {
 
-void symmatu(Eigen::MatrixXd& mat);  // FIXME: this function is never used
-void symmatu_reverse(Eigen::MatrixXd& mat);
+void symmatu(Eigen::MatrixXd& mat);  //fills lower triagonal of upper triagonal matrix
+void symmatu_reverse(Eigen::MatrixXd& mat); //fills upper triagonal of lower triagonal matrix
+void symmatu_tensor_reverse(Eigen::Tensor<double, 4> &tensor); //fills upper part of tensor based on some kind of symmetry.
 
-void symmatu_tensor_reverse(Eigen::Tensor<double, 4> tensor);  // FIXME: this function is never used and not even implemented
+
+
+
+
+
+/*
+ * PARSING UTILITY
+ */
+// trim from start (in place)
+void ltrim(std::string &s);
+// trim from end (in place)
+void rtrim(std::string &s);
 
 } // namespace doci
 

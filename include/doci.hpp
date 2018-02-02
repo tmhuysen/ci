@@ -4,8 +4,6 @@
 
 // This header files acts as a collective include file
 
-#include "AddressingMatrix.hpp"
-#include "bitset.hpp"
 #include "DenseDOCI.hpp"
 #include "doci.hpp"
 #include "DOCI_Class.hpp"
