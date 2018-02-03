@@ -23,7 +23,7 @@ protected:
      */
     void addToHamiltonian(double value, size_t index1, size_t index2) override;
 
-
+// Public methods
 public:
     /** Constructor based on a given CI_basis
      * Applies the base DOCI_class constructor and calls the DOCI calculation and
@@ -33,13 +33,14 @@ public:
 
 
     /**
-     * Getters
-     */
-    Eigen::MatrixXd getHamiltonian();
-    /**
      * Helper function for printing the hamiltonian to the console
      */
     void print() override;
+
+    /**
+     * Getters
+     */
+    Eigen::MatrixXd getHamiltonian();
 };
 
 } // namespace doci
