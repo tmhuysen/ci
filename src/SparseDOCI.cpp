@@ -2,7 +2,10 @@
 #include "SparseDOCI.hpp"
 #include "utility.hpp"
 
-
+/** Constructor based on a given CI_basis
+ * Applies the base DOCI_class constructor and calls the DOCI calculation and
+ * solves the eigenvalues of the hamiltonian with the Sparse Spectra Symmetric Solver.
+ */
 doci::SparseDOCI::SparseDOCI(doci::CI_basis ciBasis) : doci::DOCI(ciBasis) {
 
     // Construct the Hamiltonian matrix
@@ -34,18 +37,21 @@ doci::SparseDOCI::SparseDOCI(doci::CI_basis ciBasis) : doci::DOCI(ciBasis) {
     }
 }
 
-
+//Protected overridden
 void doci::SparseDOCI::addToHamiltonian(double value, unsigned long index1, unsigned long index2) {
     this->hamiltonian.coeffRef(index1,index2) += value;
 
 }
+//Public overridden
+void doci::SparseDOCI::print() {
+    std::cout << hamiltonian;
+}
 
+/**
+ * Getters
+ */
 
 Eigen::SparseMatrix<double> doci::SparseDOCI::getHamiltonian() {
     return this->hamiltonian;
 }
 
-
-void doci::SparseDOCI::print() {
-    std::cout << hamiltonian;
-}

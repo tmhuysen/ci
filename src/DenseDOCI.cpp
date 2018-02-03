@@ -2,7 +2,10 @@
 
 #include "utility.hpp"
 
-
+/** Constructor based on a given CI_basis
+ * Applies the base DOCI_class constructor and calls the DOCI calculation and
+ * solves the eigenvalues of the hamiltonian with the EigenSolver.
+ */
 doci::DenseDOCI::DenseDOCI(doci::CI_basis ciBasis) : doci::DOCI(ciBasis) {
 
     // Construct the Hamiltonian matrix
@@ -20,18 +23,20 @@ doci::DenseDOCI::DenseDOCI(doci::CI_basis ciBasis) : doci::DOCI(ciBasis) {
     }
 }
 
-
+//Protected overridden function.
 void doci::DenseDOCI::addToHamiltonian(double value, unsigned long index1, unsigned long index2) {
     this->hamiltonian(index1,index2) += value;
 
 }
+//Public overridden function.
+void doci::DenseDOCI::print() {
+    std::cout << hamiltonian;
+}
 
+/**
+ * Getters
+ */
 
 Eigen::MatrixXd doci::DenseDOCI::getHamiltonian() {
     return this->hamiltonian;
-}
-
-
-void doci::DenseDOCI::print() {
-    std::cout << hamiltonian;
 }

@@ -28,7 +28,6 @@ public:
     // Operator overloading
     bool operator<(const doci::State& rhs); //only compares eval.
     bool operator>(const doci::State& rhs); //only compares eval.
-
     bool operator==(const doci::State& rhs); //only compares eval.
 
 };

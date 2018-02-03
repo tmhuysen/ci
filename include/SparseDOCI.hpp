@@ -33,19 +33,21 @@ protected:
 public:
     /** Constructor based on a given CI_basis
      * Applies the base DOCI_class constructor and calls the DOCI calculation and
-         * solves the eigenvalues of the hamiltonian with the EigenSolver.
+     * solves the eigenvalues of the hamiltonian with the Sparse Spectra Symmetric Solver.
      */
     SparseDOCI(doci::CI_basis ciBasis);
 
+
+
+    /**
+     * Helper function for printing the hamiltonian to the console
+     */
+    void print() override;
 
     /**
      * Getters
      */
     Eigen::SparseMatrix<double> getHamiltonian();
-    /**
-     * Helper function for printing the hamiltonian to the console
-     */
-    void print() override;
 };
 
 } // namespace doci

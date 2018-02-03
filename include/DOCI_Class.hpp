@@ -52,7 +52,7 @@ protected:
      */
     virtual void addToHamiltonian(double value, size_t index1, size_t index2)=0;
 
-
+//public methods
 public:
 
     /** Constructor based on a given CI_basis
