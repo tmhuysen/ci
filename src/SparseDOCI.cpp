@@ -18,7 +18,7 @@ doci::SparseDOCI::SparseDOCI(doci::CI_basis ciBasis) : doci::DOCI(ciBasis) {
     // Construct matrix operation object using the wrapper class SparseGenMatProd
     Spectra::SparseSymMatProd<double> op(hamiltonian);
 
-    // Construct eigen solver object, requesting the largest x eigenvalues (in magnitude)
+    // Construct eigen solver object, requesting the largest x eigenvalues (in magnitude) with a cap of y iterations.
     Spectra::SymEigsSolver< double, Spectra::LARGEST_MAGN, Spectra::SparseSymMatProd<double> > eigs(&op,1,6);
 
     // Initialize and compute
