@@ -32,6 +32,22 @@ namespace doci {
     }
 
 
+    class FCI {
+        __ private members __
+            - size_t nelec_a
+            - size_t nelec_b
+            - size_t nbf_a
+            - size_t nbf_b
+            - bmqc::AddressingScheme ad_mat_a
+            - bmqc::AddressingScheme ad_mat_b
+        __ private methods __
+            - void **calculateCI**(size_t start, size_t end) override
+            - void **construct**() override
+        == constructors ==
+            **FCI**(CI_basis *ciBasis)
+    }
+
+
     class State {
         __ private members __
             - double eval
@@ -113,6 +129,9 @@ namespace bmqc {
     class global {
         .. bitset ..
             void next_bitset_permutation(boost::dynamic_bitset<>& v)
+        .. bitset_s ..
+            void annihilation_s(bf_base_a, a, sign)
+            void creation_s(bf_base_a, b, sign)
     }
 
 
@@ -149,5 +168,8 @@ doci.DOCI --|> doci.CI
 doci.DOCI *--> bmqc.AddressingScheme
 doci.DOCI ..> bmqc.global
 
+doci.FCI --|> doci.CI
+doci.FCI ..> bmqc.global
+doci.FCI *--> "2" bmqc.AddressingScheme
 
 @enduml
