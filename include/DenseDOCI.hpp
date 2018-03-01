@@ -1,5 +1,5 @@
-#ifndef DOCI_DOCI_DENSE_HPP
-
+#ifndef CI_DENSEDOCI_HPP
+#define CI_DENSEDOCI_HPP
 
 #include "DOCI_Class.hpp"
 
@@ -45,4 +45,4 @@ public:
 
 } // namespace doci
 
-#endif // DOCI_DOCI_DENSE_HPP
+#endif // CI_DENSEDOCI_HPP

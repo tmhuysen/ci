@@ -1,5 +1,5 @@
-#ifndef DOCI_STATE_HPP
-#define DOCI_STATE_HPP
+#ifndef CI_STATE_HPP
+#define CI_STATE_HPP
 
 
 #include <Eigen/Dense>
@@ -34,4 +34,4 @@ public:
 
 } // namespace doci
 
-#endif // DOCI_STATE_HPP
+#endif // CI_STATE_HPP

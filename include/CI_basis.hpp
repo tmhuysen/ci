@@ -1,5 +1,5 @@
-#ifndef DOCI_CI_BASIS_HPP
-#define DOCI_CI_BASIS_HPP
+#ifndef CI_CI_BASIS_HPP
+#define CI_CI_BASIS_HPP
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
@@ -55,4 +55,4 @@ public:
 } // namespace doci
 
 
-#endif // DOCI_CI_BASIS_HPP
+#endif // CI_CI_BASIS_HPP

@@ -1,5 +1,5 @@
-#ifndef DOCI_DOCI_UTILITY_HPP
-#define DOCI_DOCI_UTILITY_HPP
+#ifndef CI_UTILITY_HPP
+#define CI_UTILITY_HPP
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
@@ -32,4 +32,4 @@ void rtrim(std::string &s);
 
 } // namespace doci
 
-#endif // DOCI_DOCI_UTILITY_HPP
+#endif // CI_UTILITY_HPP

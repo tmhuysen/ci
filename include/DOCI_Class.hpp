@@ -1,5 +1,5 @@
-#ifndef DOCI_DOCI_HPP
-#define DOCI_DOCI_HPP
+#ifndef CI_DOCI_CLASS_HPP
+#define CI_DOCI_CLASS_HPP
 
 #include "CI_basis.hpp"
 #include "State.hpp"
@@ -75,4 +75,4 @@ public:
 
 } // namespace doci
 
-#endif // DOCI_DOCI_HPP
+#endif // CI_DOCI_CLASS_HPP

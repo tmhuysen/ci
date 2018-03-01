@@ -1,7 +1,5 @@
-#ifndef DOCI_SPARSEDOCI_HPP
-#define DOCI_SPARSEDOCI_HPP
-
-
+#ifndef CI_SPARSEDOCI_HPP
+#define CI_SPARSEDOCI_HPP
 
 
 #include "DOCI_Class.hpp"
@@ -54,4 +52,4 @@ public:
 
 
 
-#endif //DOCI_SPARSEDOCI_HPP
+#endif // CI_SPARSEDOCI_HPP
