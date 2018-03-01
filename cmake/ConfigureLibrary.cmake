@@ -21,6 +21,9 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC hf)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${bmqc_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY_NAME} PUBLIC bmqc)
 
+# Include Spectra
+target_include_directories(${LIBRARY_NAME} PUBLIC ${spectra_INCLUDE_DIRS})
+
 # Use Eigen with MKL
 # target_include_directories(${LIBRARY_NAME} PRIVATE $ENV{MKLROOT}/include)
 # target_link_libraries(${LIBRARY_NAME} PRIVATE $ENV{MKLROOT}/lib/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/libmkl_sequential.a $ENV{MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl)
