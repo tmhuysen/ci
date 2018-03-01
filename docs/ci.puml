@@ -1,0 +1,99 @@
+@startuml
+
+namespace doci {
+
+CI *-- Hamiltonian : calculates data for >
+CI - CI_basis : retrieves data from >
+CI *- State
+Hamiltonian *- State
+Hamiltonian -- StorageType
+DenseHamiltonian <|-- Hamiltonian
+SparseHamiltonian <|-- Hamiltonian
+FCI <|-- CI
+DOCI <|-- CI
+note "Hamiltonian passes back solutions to CI" as N2
+class CI_basis{
+-one_ints
+-two_ints
++rotate(double,size_t,size_t)
++element_getters(indexes)
+}
+abstract class CI{
+# nelec : size_t
+# K : size_t
+# nbf : size_t
+# lowestEigenstate : State
+# basis : CI_basis
+# hamiltonian : Hamiltonian
+# {abstract} construct()
+# {abstract} calculateCI()
++ CI(CI_basis)
++ CI(CI_basis, StorageType)
+}
+
+abstract class Hamiltonian {
+# nbf : size_t
+# groundstates : vector<State>
++{static} pFactoryMethod
++{abstract} void add(double, size_t, size_t)
++{abstract} void solve()
++{static} Hamiltonian* make_hamiltonian(size_t)
++{static} Hamiltonian* make_hamiltonian(size_t, StorageType)
+-{static} Hamiltonian* make_dense(size_t)
+-{static} Hamiltonian* make_sparse(size_t)
+}
+
+
+note left: pFactoryMethod is a static array of functions \n that returns a (pointer to) Hamiltonian and takes \n size_t as parameter
+class DOCI{
+-npairs : size_t
+-ad_mat : AddressingScheme
+-construct()
+-calculateCI()
+}
+class FCI{
+-nelec_a : size_t
+-nelec_b : size_t
+-nbf_a : size_t
+-nbf_b : size_t
+-ad_mat_a : AddressingScheme
+-ad_mat_b : AddressingScheme
+-construct()
+-calculateCI()
+}
+
+
+
+
+
+
+class DenseHamiltonian {
+-hamiltonian : Eigen::MatrixXd
++DenseHamiltonian(size_t)
++void add(double, size_t, size_t)
++void solve()
+}
+class SparseHamiltonian {
+-hamiltonian : Eigen::SparseMatrix<double>
++SparseHamiltonian(size_t)
++void add(double, size_t, size_t)
++void solve()
+}
+
+class State{
+-eval : double
+-evec : Eigen::VectorXd
+}
+CI .. N2
+N2 .. Hamiltonian
+
+
+
+enum StorageType {
+DENSE
+SPARSE
+STORAGE
+}
+
+}
+@enduml

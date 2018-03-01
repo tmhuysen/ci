@@ -23,6 +23,10 @@ public:
     /** Constructor based on a given eigenvalue and corresponding eigenvector
      */
     State(double eval, Eigen::VectorXd evec);
+    /**
+     * Default constructor
+     */
+    State();
 
 
     // Operator overloading
@@ -33,5 +37,6 @@ public:
 };
 
 } // namespace doci
+
 
 #endif // CI_STATE_HPP

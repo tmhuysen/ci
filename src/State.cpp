@@ -30,3 +30,5 @@ double doci::State::getEval() const {
 const Eigen::VectorXd &doci::State::getEvec() const {
     return evec;
 }
+
+doci::State::State() : doci::State(std::numeric_limits<double>::max(), Eigen::VectorXd()){};
