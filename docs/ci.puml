@@ -119,8 +119,17 @@ namespace bmqc {
 }
 
 namespace libwint {
-    class global {
-        Eigen::MatrixXd **transform_AO_to_SO**(Eigen::MatrixXd& f_AO, Eigen::MatrixXd& C)
+    class SOBasis {
+        == constructors ==
+            **SOBasis**(const libwint::AOBasis& ao_basis, Eigen::MatrixXd& C)
+        __ public methods __
+            + inline const libwint::AOBasis& **get_ao_basis**() const
+            + inline Eigen::MatrixXd& **get_h_SO**() const
+            + inline Eigen::Tensor<double, 4>& **get_g_SO**() const
+            + inline const size_t **get_K**() const
+
+            + void **transform**(Eigen::MatrixXd& T)
+            + void **transformJacobi**(size_t p, size_t q, double angle)
     }
 }
 
@@ -134,15 +143,12 @@ namespace hf {
 }
 
 
-doci.CI_basis ..> libwint.global
-doci.CI_basis o--> hf.rhf.RHF
-
 doci.Hamiltonian o--> doci.State
 
 doci.DenseHamiltonian --|> doci.Hamiltonian
 
 doci.CI *--> doci.State
-doci.CI o--> doci.CI_basis
+doci.CI o--> libwint.SOBasis
 doci.CI *--> doci.Hamiltonian
 
 doci.DOCI --|> doci.CI
