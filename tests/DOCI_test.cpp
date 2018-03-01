@@ -55,5 +55,11 @@ BOOST_AUTO_TEST_CASE ( DOCI_ref_lih_test ) {
     double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
     //compare
     BOOST_CHECK(std::abs(en - (-8.0029560313)) < 1.0e-06); //energy from lih
+}
 
+
+BOOST_AUTO_TEST_CASE ( DOCI_ref ) {
+
+    // Put this test in because we don't have actual reference data
+    BOOST_CHECK(false);
 }
