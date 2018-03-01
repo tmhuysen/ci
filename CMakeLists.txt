@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.8)
 
 
-project(doci
+project(ci
         VERSION 0.0.1
         LANGUAGES CXX)
 
