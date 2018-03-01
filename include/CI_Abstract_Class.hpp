@@ -16,6 +16,8 @@ protected:
 	doci::State lowestEigenState;
 	doci::CI_basis* basis; //contains all information required to do a CI calculation
 	doci::Hamiltonian* hamiltonian; //abstract hamiltonian
+	bool is_basis_dynamic = false; //indicates if your basis is dynamically allocated
+
 
 protected:
 	/**

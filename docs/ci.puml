@@ -9,6 +9,7 @@ namespace doci {
             # doci::State lowestEigenState
             # doci::CI_basis* basis
             # doci::Hamiltonian* hamiltonian
+            # bool is_basis_dynamic = false
         __ protected methods __
             # virtual void **calculateCI**(size_t start, size_t end)=0
 	        # virtual void **construct**()=0
@@ -29,6 +30,8 @@ namespace doci {
             - void **construct**() override
         == constructors ==
             **DOCI**(CI_basis *ciBasis)
+        __ public methods __
+            void **optimizeBasis**(size_t max_iterations=20000, size_t max_fails=1000)
     }
 
 
@@ -97,6 +100,22 @@ namespace doci {
             + void **solve**() override
             + void **add**(double value, size_t index1, size_t index2) override
     }
+
+    class NormalGenerator {
+        __ private members __
+            - std::random_device random_device
+            - std::mt19937 generator
+            - std::normal_distribution<double> distribution
+            - double min_bound
+            - double max_bound
+            - double mean;
+            - double std_dev;
+        == constructors ==
+            **NormalGenerator**(double mean, double std_dev, double min_bound,double max_bound)
+        __ public methods __
+            double **generate**()
+            void **transform**(double magnitude)
+    }
 }
 
 
@@ -148,6 +167,7 @@ doci.CI *--> doci.Hamiltonian
 doci.DOCI --|> doci.CI
 doci.DOCI *--> bmqc.AddressingScheme
 doci.DOCI ..> bmqc.global
+doci.DOCI *--> doci.NormalGenerator
 
 
 @enduml

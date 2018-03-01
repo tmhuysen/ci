@@ -27,6 +27,13 @@ private:
 
 public:
 	DOCI(CI_basis *ciBasis);
+
+	/**
+	* Optimizes the CI basis with jacobi rotations based on a simulated annealing algorithm
+	* @param max_iterations maximum iterations for finding a (local) minimum.
+	* @param max_fails maximum of subsequent non-accepted rotations.
+	*/
+	void optimizeBasis(size_t max_iterations=20000, size_t max_fails=1000);
 };
 
 }  // namespace doci
