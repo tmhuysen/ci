@@ -40,21 +40,11 @@ public:
 	 */
 	virtual void solve()=0;
 
-
-/*
- * STATIC: factory methods.
- */
-private:
-	static Hamiltonian *make_dense(size_t nbf); //return a pointer to a new dense instance of the hamiltonian
-	static Hamiltonian *make_sparse(size_t nbf); //return a pointer to a new sparse instance of the hamiltonian
-
-public:
 	/**
 	 * @param nbf the dimensions of the hamiltonian.
 	 * @return Hamiltonian based on the memory it would require.
 	 */
-	static Hamiltonian *make_hamiltonian(size_t nbf);
-
+	static Hamiltonian* make_hamiltonian(size_t nbf);
 };
 
 

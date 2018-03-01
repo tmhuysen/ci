@@ -14,8 +14,8 @@ protected:
 	size_t K; // number of spatial orbitals
 	size_t nbf; // number of basis functions
 	doci::State lowestEigenState;
-	doci::CI_basis *basis; //contains all information required to do a CI calculation
-	doci::Hamiltonian *hamiltonian; //abstract hamiltonian
+	doci::CI_basis* basis; //contains all information required to do a CI calculation
+	doci::Hamiltonian* hamiltonian; //abstract hamiltonian
 
 protected:
 	/**

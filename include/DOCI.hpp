@@ -10,14 +10,10 @@
 namespace doci {
 
 class DOCI : public CI {
-
-
 private:
-// private variables
 	size_t npairs; // number of electron pairs
 	bmqc::AddressingScheme ad_mat;
 
-// private methods
 	/**
 	* calculate hamiltonian elements.
 	* @param start,end : indicates the bf you want to start with and where the iteration ends(excluded).
@@ -28,7 +24,6 @@ private:
 	 * Helper function for the constructors
 	 */
 	void construct() override;
-
 
 public:
 	DOCI(CI_basis *ciBasis);

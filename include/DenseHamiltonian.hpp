@@ -4,7 +4,7 @@
 
 #include "Hamiltonian.hpp"
 
-namespace doci{
+namespace doci {
 
 
 /**
@@ -34,9 +34,7 @@ public:
 	/**
 	 * Getters
 	 */
-	const Eigen::MatrixXd &getHamiltonian() const;
-
-
+	const Eigen::MatrixXd& getHamiltonian() const;
 };
 
 } // namespace doci

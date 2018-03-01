@@ -9,7 +9,7 @@
 namespace doci {
 
 class CI_basis {
-//private variables
+
 private:
     Eigen::MatrixXd one_ints; // The one-electron integrals
     Eigen::Tensor<double, 4> two_ints;  // The two-electron integrals
@@ -18,7 +18,6 @@ private:
     size_t K;  // The number of spatial orbitals
     size_t nelec;  // The number of electrons
 
-//public methods
 public:
     /** Default constructor
      */
