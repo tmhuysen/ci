@@ -1,5 +1,5 @@
 #include "CI_basis.hpp"
-
+#define PI 3.14159265
 
 /** Default constructor
  */
@@ -133,4 +133,18 @@ size_t doci::CI_basis::getK() const {
 
 size_t doci::CI_basis::getNelec() const {
     return nelec;
+}
+
+void doci::CI_basis::rotate(double rot, size_t index1, size_t index2) {
+    double c,s;
+    c = cos (rot * PI / 180.0);
+    s = sin (rot * PI / 180.0);
+    Eigen::JacobiRotation<double> J(c,s);
+    this->one_ints.applyOnTheLeft(index1,index2,J.adjoint());
+    this->one_ints.applyOnTheRight(index1,index2,J);
+
+    //FIXME write own transformation with jacobi
+    Eigen::MatrixXd J2 = Eigen::MatrixXd::Identity(one_ints.cols(),one_ints.cols());
+    J2.applyOnTheRight(index1,index2,J);
+    this->two_ints = libwint::transform_AO_to_SO(two_ints,J2);
 }
