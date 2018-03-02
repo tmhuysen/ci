@@ -1,5 +1,5 @@
 #include "CI_basis.hpp"
-
+#define PI 3.14159265
 
 /** Default constructor
  */
@@ -22,21 +22,21 @@ doci::CI_basis::CI_basis(hf::rhf::RHF& rhf) {
 }
 
 
-/** Constructor based on a given filename
- *  Very specific file.
+/**
+ * Constructor based on a given FCIDUMP file
  */
 doci::CI_basis::CI_basis(const std::string &filename) {
     std::ifstream is (filename);
 
     if (is.is_open()) {
-        std::string startline; // first line contains orbitals and electron count.
-        std::getline(is, startline); // extract the line from the file.
-        std::stringstream linestream(startline); // turn the string into a stream.
+        std::string start_line; // first line contains orbitals and electron count
+        std::getline(is, start_line); // extract the line from the file
+        std::stringstream linestream(start_line); // turn the string into a stream
 
         int value;
         char itter;
         int counter = 0;
-        while(linestream >> itter && counter<2){
+        while (linestream >> itter && counter<2) {
             if(itter == '='){ //
                 if(counter == 0){
                     linestream >> value;
@@ -56,14 +56,13 @@ doci::CI_basis::CI_basis(const std::string &filename) {
         this->one_ints = Eigen::MatrixXd::Zero(K,K);
 
         for(int i =0;i<3;i++){
-            std::getline(is, startline); //skip 3 lines;
-
+            std::getline(is, start_line);  // skip 3 lines
         }
 
         std::string intline;
 
 
-        while(std::getline(is, intline)){
+        while (std::getline(is, intline)) {
             std::stringstream intss(intline);
             std::vector<double> inputs;
             double test;
@@ -79,7 +78,7 @@ doci::CI_basis::CI_basis(const std::string &filename) {
             size_t index4 = inputs.at(4);
 
 
-            if(index1>0 && index2>0  && index3>0  && index4>0 ){
+            if (index1>0 && index2>0 && index3>0 && index4>0 ) {
                 size_t i = index1-1;
                 size_t j = index2-1;
                 size_t l = index3-1;
@@ -91,22 +90,22 @@ doci::CI_basis::CI_basis(const std::string &filename) {
                 //FIXME only works for DOCI skips many indexes.
 
             }
-            if(index1>0 && index2>0 && index3==0){
+            if (index1>0 && index2>0 && index3==0) {
                 size_t i = index1-1;
                 size_t j = index2-1;
                 this->one_ints(i,j) = integral;
 
 
             }
-            if(index1==0){
+            if (index1==0) {
                 this->internuclear_repulsion = integral;
 
             }
 
         }
 
-    }else{
-        std::cout<<"can't open file";
+    } else {
+        throw std::runtime_error("The file you provided can't be opened. Maybe you specified a wrong path name?");
     }
 
 }
@@ -133,4 +132,18 @@ size_t doci::CI_basis::getK() const {
 
 size_t doci::CI_basis::getNelec() const {
     return nelec;
+}
+
+void doci::CI_basis::rotate(double rot, size_t index1, size_t index2) {
+    double c,s;
+    c = cos (rot * PI / 180.0);
+    s = sin (rot * PI / 180.0);
+    Eigen::JacobiRotation<double> J(c,s);
+    this->one_ints.applyOnTheLeft(index1,index2,J.adjoint());
+    this->one_ints.applyOnTheRight(index1,index2,J);
+
+    //FIXME write own transformation with jacobi
+    Eigen::MatrixXd J2 = Eigen::MatrixXd::Identity(one_ints.cols(),one_ints.cols());
+    J2.applyOnTheRight(index1,index2,J);
+    this->two_ints = libwint::transform_AO_to_SO(two_ints,J2);
 }

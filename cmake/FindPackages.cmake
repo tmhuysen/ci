@@ -15,3 +15,6 @@ find_package(libwint 2.2.2 REQUIRED)
 
 # Find bmqc for bitset manipulations
 find_package(bmqc 0.1.0 REQUIRED)
+
+# We will use our custom FindSpectra.cmake-file, so that we can use find_package(Spectra)
+find_package(Spectra REQUIRED)

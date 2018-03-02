@@ -1,5 +1,5 @@
-#ifndef DOCI_CI_BASIS_HPP
-#define DOCI_CI_BASIS_HPP
+#ifndef CI_CI_BASIS_HPP
+#define CI_CI_BASIS_HPP
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/CXX11/Tensor>
@@ -9,19 +9,15 @@
 namespace doci {
 
 class CI_basis {
-//private variables
+
 private:
-    Eigen::MatrixXd one_ints;
-
-
-    private:
-        // The one-electron integrals
+    Eigen::MatrixXd one_ints; // The one-electron integrals
     Eigen::Tensor<double, 4> two_ints;  // The two-electron integrals
     double internuclear_repulsion;  // The internuclear repulsion energy
 
     size_t K;  // The number of spatial orbitals
     size_t nelec;  // The number of electrons
-//public methods
+
 public:
     /** Default constructor
      */
@@ -31,9 +27,18 @@ public:
      */
     CI_basis(hf::rhf::RHF& rhf);
 
-    /** Constructor based on a given filename
+    /**
+     * Constructor based on a given FCIDUMP file
      */
     CI_basis(const std::string& filename);
+
+    /**
+     * Apply a Jacobi rotation on the CI_basis
+     * @param rot in degrees
+     * @param index1 row1 you want to apply
+     * @param index2 row2 you want to apply
+     */
+    void rotate(double rot, size_t index1, size_t index2);
 
     /**
      * Getters
@@ -48,11 +53,9 @@ public:
     size_t getK() const;
 
     size_t getNelec() const;
-
-
 };
 
 } // namespace doci
 
 
-#endif // DOCI_CI_BASIS_HPP
+#endif // CI_CI_BASIS_HPP
