@@ -27,7 +27,8 @@ public:
      */
     CI_basis(hf::rhf::RHF& rhf);
 
-    /** Constructor based on a given filename
+    /**
+     * Constructor based on a given FCIDUMP file
      */
     CI_basis(const std::string& filename);
 
