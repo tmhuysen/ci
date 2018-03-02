@@ -5,7 +5,19 @@
 #include <boost/test/included/unit_test.hpp>
 
 
-BOOST_AUTO_TEST_CASE ( DOCI_class ) {
+BOOST_AUTO_TEST_CASE ( DOCI_co_klaas ) {
+
+    // Klaas' reference DOCI energy for CO
+    
+
+}
+
+
+
+BOOST_AUTO_TEST_CASE ( DOCI_h2o_klaas ) {
+
+    // Klaas' reference DOCI energy for water
+
 
     const std::string xyzfilename = "../tests/reference_data/h2o.xyz";
     double threshold = 1.0e-06;
@@ -17,18 +29,17 @@ BOOST_AUTO_TEST_CASE ( DOCI_class ) {
 
     doci::DOCI doci_test = doci::DOCI(&ciBasis);
 
-    const doci::State &ground = doci_test.getLowestEigenState();
+    const doci::State& ground = doci_test.getLowestEigenState();
 
     double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
     BOOST_CHECK(std::abs(en - (-74.9771)) < 1.0e-04);
-
 }
 
 
-BOOST_AUTO_TEST_CASE ( DOCI_ref_beh_test ) {
+BOOST_AUTO_TEST_CASE ( DOCI_beh_klaas ) {
 
     //beh_cation
-    const std::string doci = "../tests/reference_data/doci_ref/beh_cation_ap1rog_631g.txt";
+    const std::string doci = "../tests/reference_data/doci/beh_cation_ap1rog_631g.txt";
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
@@ -42,9 +53,9 @@ BOOST_AUTO_TEST_CASE ( DOCI_ref_beh_test ) {
 
 }
 
-BOOST_AUTO_TEST_CASE ( DOCI_ref_lih_test ) {
+BOOST_AUTO_TEST_CASE ( DOCI_lih_klaas ) {
     //lih
-    const std::string doci = "../tests/reference_data/doci_ref/lih_ap1rog_631g.txt";
+    const std::string doci = "../tests/reference_data/doci/lih_ap1rog_631g.txt";
     //loading the basis
     doci::CI_basis ciBasis(doci);
     //calculating doci
@@ -55,11 +66,4 @@ BOOST_AUTO_TEST_CASE ( DOCI_ref_lih_test ) {
     double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
     //compare
     BOOST_CHECK(std::abs(en - (-8.0029560313)) < 1.0e-06); //energy from lih
-}
-
-
-BOOST_AUTO_TEST_CASE ( DOCI_ref ) {
-
-    // Put this test in because we don't have actual reference data
-    BOOST_CHECK(false);
 }

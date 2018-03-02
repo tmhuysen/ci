@@ -7,6 +7,8 @@
 
 
 BOOST_AUTO_TEST_CASE ( constructor_rhf ) {
+
+    // Do an RHF calculation
     const std::string xyzfilename = "../tests/reference_data/h2o.xyz";
     double threshold = 1.0e-06;
     std::string basis_name = "STO-3G";
@@ -14,12 +16,19 @@ BOOST_AUTO_TEST_CASE ( constructor_rhf ) {
     libwint::Basis basis (water, basis_name);
     hf::rhf::RHF rhf (basis, threshold);
 
-    doci::CI_basis ciBasis (rhf);
+    // Test that the constructor doesn't raise an error when a correct input RHF instance is supplied
+    BOOST_REQUIRE_NO_THROW(doci::CI_basis ciBasis (rhf));
 }
 
 
-BOOST_AUTO_TEST_CASE ( constructor_filename) {
-    const std::string doci = "../tests/reference_data/doci_ref/beh_cation_ap1rog_631g.txt";
-    doci::CI_basis ciBasis(doci);
+BOOST_AUTO_TEST_CASE ( constructor_filename ) {
 
+    // Test that the constructor raises an error when a file can't be read
+    const std::string doci_faulty_path = "this_is_a_non_existent_path";
+    BOOST_REQUIRE_THROW(doci::CI_basis ciBasis (doci_faulty_path), std::runtime_error);
+
+
+    // Test that the constructor doesn't raise an error when a correct FCIDUMP file is provided
+    const std::string co_631g_fcidump = "../tests/reference_data/co_631g.FCIDUMP";
+    BOOST_REQUIRE_NO_THROW(doci::CI_basis ciBasis (co_631g_fcidump));
 }
