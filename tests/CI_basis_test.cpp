@@ -29,6 +29,6 @@ BOOST_AUTO_TEST_CASE ( constructor_filename ) {
 
 
     // Test that the constructor doesn't raise an error when a correct FCIDUMP file is provided
-    const std::string co_631g_fcidump = "../tests/reference_data/co_631g.FCIDUMP";
+    const std::string co_631g_fcidump = "../tests/reference_data/co_631g_klaas.FCIDUMP";
     BOOST_REQUIRE_NO_THROW(doci::CI_basis ciBasis (co_631g_fcidump));
 }
