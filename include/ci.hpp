@@ -4,10 +4,11 @@
 
 // This header files acts as a collective include file
 
+#include "CI_Abstract_Class.hpp
 #include "CI_basis.hpp"
-#include "DenseDOCI.hpp"
-#include "DOCI_Class.hpp"
-#include "SparseDOCI.hpp"
+#include "DenseHamiltonian.hpp"
+#include "DOCI.hpp"
+#include "Hamiltonian.hpp
 #include "State.hpp"
 #include "utility.hpp"
 #include "version.hpp"
