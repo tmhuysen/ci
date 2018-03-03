@@ -1,0 +1,9 @@
+For the aug-cc-pVQZ basis set, the following FCI energies are reported for two-electron systems.
+
+He: -2.902533599
+Li+: -7.252573528
+Be2+: -13.63038767
+
+Cristina's reference DOCI energy for H2 6-31g**:
+
+double reference_doci_energy = -1.1651486697;
