@@ -36,3 +36,8 @@ const std::vector<doci::State>& doci::Hamiltonian::getGroundstates() const {
 doci::Hamiltonian *doci::Hamiltonian::make_hamiltonian(size_t nbf) {
 	return new doci::DenseHamiltonian(nbf);
 }
+
+/**
+ * (virtual) Destructor
+ */
+doci::Hamiltonian::~Hamiltonian() {}

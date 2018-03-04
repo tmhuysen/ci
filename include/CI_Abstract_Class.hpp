@@ -18,6 +18,7 @@ protected:
 	doci::Hamiltonian* hamiltonian; //abstract hamiltonian
 
 protected:
+
 	/**
 	* calculate hamiltonian elements.
 	* @param start,end : indicates the bf you want to start with and where the iteration ends(excluded).
@@ -35,13 +36,16 @@ public:
 	 */
 	CI(CI_basis *ciBasis);
 
-	/**
-	 * Default constructor
+	/** Default Constructor
 	 */
 	CI();
 
-	/**
-	 * Getters
+    /** Destructor
+     * clears the hamiltonian pointer.
+     */
+    virtual ~CI();
+
+	/** Getters
 	 */
 	const State &getLowestEigenState() const;
 	Hamiltonian *getHamiltonian() const;

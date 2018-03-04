@@ -40,6 +40,11 @@ public:
 	 */
 	virtual void solve()=0;
 
+    /**
+     * (virtual) Destructor
+     */
+    virtual ~Hamiltonian();
+
 	/**
 	 * @param nbf the dimensions of the hamiltonian.
 	 * @return Hamiltonian based on the memory it would require.
