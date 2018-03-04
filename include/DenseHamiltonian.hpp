@@ -34,7 +34,7 @@ public:
 	/**
 	 * Getters
 	 */
-	const Eigen::MatrixXd& getHamiltonian() const;
+	const Eigen::MatrixXd& get_hamiltonian() const;
 };
 
 } // namespace doci

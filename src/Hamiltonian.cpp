@@ -25,7 +25,7 @@ void doci::Hamiltonian::groundStates(doci::State state) {
 /*
  * Getters
  */
-const std::vector<doci::State>& doci::Hamiltonian::getGroundstates() const {
+const std::vector<doci::State>& doci::Hamiltonian::get_groundstates() const {
 	return this->groundstates;
 }
 

@@ -44,15 +44,15 @@ public:
      * Getters
      */
 
-    double getOne_int(size_t index1, size_t index2) const;
+    double get_one_int(size_t index1, size_t index2) const;
 
-    double getTwo_int(size_t index1, size_t index2, size_t index3, size_t index4) const;
+    double get_two_int(size_t index1, size_t index2, size_t index3, size_t index4) const;
 
-    double getInternuclear_repulsion() const;
+    double get_internuclear_repulsion() const;
 
-    size_t getK() const;
+    size_t get_K() const;
 
-    size_t getNelec() const;
+    size_t get_N() const;
 };
 
 } // namespace doci

@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_beh_klaas ) {
 
 	// Calculate the total energy as the sum of the lowest energy eigenstate + the internuclear repulsion
 	const doci::State& ground = doci_test.get_lowest_eigenstate();
-    double test_doci_energy = ground.getEval() + ciBasis.getInternuclear_repulsion();
+    double test_doci_energy = ground.get_eigenvalue() + ciBasis.get_internuclear_repulsion();
 
     BOOST_CHECK(std::abs(test_doci_energy - (reference_doci_energy)) < 1.0e-06);
 }
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_lih_klaas ) {
 
 	// Calculate the total energy as the sum of the lowest energy eigenstate + the internuclear repulsion
     const doci::State &ground = doci.get_lowest_eigenstate();
-    double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
+    double en = ground.get_eigenvalue() + ciBasis.get_internuclear_repulsion();
 
     BOOST_CHECK(std::abs(en - (reference_doci_energy)) < 1.0e-06);
 }

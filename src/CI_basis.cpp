@@ -114,23 +114,23 @@ doci::CI_basis::CI_basis(const std::string &filename) {
 /**
  * Getters
  */
-double doci::CI_basis::getOne_int(size_t index1, size_t index2) const {
+double doci::CI_basis::get_one_int(size_t index1, size_t index2) const {
     return one_ints(index1,index2);
 }
 
-double doci::CI_basis::getTwo_int(size_t index1, size_t index2, size_t index3, size_t index4) const {
+double doci::CI_basis::get_two_int(size_t index1, size_t index2, size_t index3, size_t index4) const {
     return two_ints(index1,index2,index3,index4);
 }
 
-double doci::CI_basis::getInternuclear_repulsion() const {
+double doci::CI_basis::get_internuclear_repulsion() const {
     return internuclear_repulsion;
 }
 
-size_t doci::CI_basis::getK() const {
+size_t doci::CI_basis::get_K() const {
     return K;
 }
 
-size_t doci::CI_basis::getNelec() const {
+size_t doci::CI_basis::get_N() const {
     return nelec;
 }
 

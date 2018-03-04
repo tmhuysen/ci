@@ -23,6 +23,6 @@ void doci::DenseHamiltonian::add(double value, size_t index1, size_t index2) {
 
 }
 
-const Eigen::MatrixXd &doci::DenseHamiltonian::getHamiltonian() const {
+const Eigen::MatrixXd &doci::DenseHamiltonian::get_hamiltonian() const {
 	return hamiltonian;
 }

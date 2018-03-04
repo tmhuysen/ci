@@ -27,7 +27,7 @@ protected:
 
 public:
 
-	const std::vector<doci::State>& getGroundstates() const;
+	const std::vector<doci::State>& get_groundstates() const;
 
 	//Virtuals
 	/**

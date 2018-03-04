@@ -34,14 +34,14 @@ namespace doci {
 
     class State {
         __ private members __
-            - double eval
-            - Eigen::VectorXd evec
+            - double eigenvalue
+            - Eigen::VectorXd eigenvector
         == constructors ==
             **State**()
-            **State**(double eval, Eigen::VectorXd evec)
+            **State**(double eigenvalue, Eigen::VectorXd eigenvector)
         __ public methods __
-            + double **getEval**()
-            + const Eigen::VectorXd& **getEvec**() const
+            + double **get_eigenvalue**()
+            + const Eigen::VectorXd& **get_eigenvector**() const
 
             + bool **operator<**(const doci::State& rhs)
             + bool **operator>**(const doci::State& rhs)
@@ -62,11 +62,11 @@ namespace doci {
             **CI_basis**(const std::string& filename)
         __ public methods __
             + void **rotate**(double rot, size_t index1, size_t index2)
-            + double **getOne_int**(size_t index1, size_t index2) const
-            + double **getTwo_int**(size_t index1, size_t index2, size_t index3, size_t index4) const
-            + double **getInternuclear_repulsion**() const
-            + size_t **getK**() const
-            + size_t **getNelec**() const
+            + double **get_one_int**(size_t index1, size_t index2) const
+            + double **get_two_int**(size_t index1, size_t index2, size_t index3, size_t index4) const
+            + double **get_internuclear_repulsion**() const
+            + size_t **get_K**() const
+            + size_t **get_N**() const
     }
 
 
@@ -79,7 +79,7 @@ namespace doci {
         __ protected methods __
             # void **groundStates**(doci::State state)
         __ public methods __
-            + const std::vector<doci::State>& **getGroundstates**() const
+            + const std::vector<doci::State>& **get_groundstates**() const
             + virtual void **add**(double value, size_t index1, size_t index2)=0
             + virtual void **solve**()=0
             + {static} Hamiltonian* **make_hamiltonian**(size_t nbf);
@@ -92,7 +92,7 @@ namespace doci {
         == constructors ==
             **DenseHamiltonian**(size_t nbf)
         __ public methods __
-            + const Eigen::MatrixXd& **getHamiltonian**() const
+            + const Eigen::MatrixXd& **get_hamiltonian**() const
 
             + void **solve**() override
             + void **add**(double value, size_t index1, size_t index2) override

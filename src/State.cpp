@@ -2,15 +2,15 @@
 
 /** Constructor based on a given eigenvalue and corresponding eigenvector
  */
-doci::State::State(double eval, Eigen::VectorXd evec) : eval(eval), evec(evec) {}
+doci::State::State(double eval, Eigen::VectorXd evec) : eigenvalue(eval), eigenvector(evec) {}
 
 
 bool doci::State::operator<(const doci::State& rhs) {
-    return (this->eval < rhs.eval);
+    return (this->eigenvalue < rhs.eigenvalue);
 }
 
 bool doci::State::operator>(const doci::State& rhs) {
-    return (this->eval > rhs.eval);
+    return (this->eigenvalue > rhs.eigenvalue);
 }
 
 bool doci::State::operator==(const doci::State& rhs) {
@@ -18,17 +18,17 @@ bool doci::State::operator==(const doci::State& rhs) {
 
     double precision = 1000000;
 
-    double ELIPSON = (this->eval > rhs.eval) ?  rhs.eval/precision : this->eval/precision;
+    double ELIPSON = (this->eigenvalue > rhs.eigenvalue) ?  rhs.eigenvalue/precision : this->eigenvalue/precision;
 
-    return fabs(this->eval - rhs.eval) < fabs(ELIPSON);
+    return fabs(this->eigenvalue - rhs.eigenvalue) < fabs(ELIPSON);
 }
 
-double doci::State::getEval() const {
-    return eval;
+double doci::State::get_eigenvalue() const {
+    return eigenvalue;
 }
 
-const Eigen::VectorXd &doci::State::getEvec() const {
-    return evec;
+const Eigen::VectorXd &doci::State::get_eigenvector() const {
+    return eigenvector;
 }
 
 doci::State::State() : doci::State(std::numeric_limits<double>::max(), Eigen::VectorXd()){};

@@ -12,6 +12,6 @@ BOOST_AUTO_TEST_CASE ( Hamiltonian ) {
 	hamPtr->add(2,1,1);
 	hamPtr->add(3,2,2);
 	hamPtr->solve(); //"solve" the eigenvalue problem
-	doci::State ground = hamPtr->getGroundstates().at(0);
-	BOOST_CHECK(std::abs(1-ground.getEval()) < 1.0e-04);
+	doci::State ground = hamPtr->get_groundstates().at(0);
+	BOOST_CHECK(std::abs(1- ground.get_eigenvalue()) < 1.0e-04);
 }
