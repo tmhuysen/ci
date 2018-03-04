@@ -10,12 +10,15 @@ namespace doci {
 class CI {
 
 protected:
-	size_t nelec; // number of electrons
+	size_t N; // number of electrons
 	size_t K; // number of spatial orbitals
 	size_t nbf; // number of basis functions
-	doci::State lowestEigenState;
+	doci::State lowest_eigenstate;
 	doci::CI_basis* basis; //contains all information required to do a CI calculation
-	doci::Hamiltonian* hamiltonian; //abstract hamiltonian
+
+    // abstract members cannot be introduced as reference or variable because abstract classes have no (real) constructor
+    // therefor we use a pointer that points to the address of an instance of an object that is derived from the abstract class.
+	doci::Hamiltonian* hamiltonian; // abstract hamiltonian
 
 protected:
 
@@ -47,8 +50,8 @@ public:
 
 	/** Getters
 	 */
-	const State &getLowestEigenState() const;
-	Hamiltonian *getHamiltonian() const;
+	const State &get_lowest_eigenstate() const;
+	Hamiltonian *get_hamiltonian() const;
 };
 
 }  // namespace doci

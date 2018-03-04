@@ -91,7 +91,7 @@ doci::DOCI::DOCI( doci::CI_basis *ciBasis) : CI(ciBasis) {
 	this->hamiltonian = Hamiltonian::make_hamiltonian(nbf);
 	calculateCI(0,this->nbf);
 	this->hamiltonian->solve();
-	this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
+	this->lowest_eigenstate = this->hamiltonian->getGroundstates().at(0);
 
 
 

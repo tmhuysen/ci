@@ -20,12 +20,12 @@ doci::CI::~CI() {
 
 /** Getters
  */
-const doci::State &doci::CI::getLowestEigenState() const {
-    return lowestEigenState;
+const doci::State &doci::CI::get_lowest_eigenstate() const {
+    return lowest_eigenstate;
 }
 
 
-doci::Hamiltonian *doci::CI::getHamiltonian() const {
+doci::Hamiltonian *doci::CI::get_hamiltonian() const {
     return hamiltonian;
 }
 

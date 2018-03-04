@@ -3,10 +3,10 @@
 namespace doci {
     abstract class CI {
         __ protected members __
-            # size_t nelec
+            # size_t N
             # size_t K
             # size_t nbf
-            # doci::State lowestEigenState
+            # doci::State lowest_eigenstate
             # doci::CI_basis* basis
             # doci::Hamiltonian* hamiltonian
         __ protected methods __
@@ -55,7 +55,7 @@ namespace doci {
             - Eigen::Tensor<double, 4> two_ints
             - double internuclear_repulsion
             - size_t K
-            - size_t nelec
+            - size_t N
         == constructors ==
             **CI_basis**()
             **CI_basis**(hf::rhf::RHF& rhf)
