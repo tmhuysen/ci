@@ -81,13 +81,17 @@ doci::CI_basis::CI_basis(const std::string &filename) {
             if (index1>0 && index2>0 && index3>0 && index4>0 ) {
                 size_t i = index1-1;
                 size_t j = index2-1;
-                size_t l = index3-1;
-                size_t k = index4-1;
-                this->two_ints(i,j,k,l) = integral;
+                size_t k = index3-1;
+                size_t l = index4-1;
+                this->two_ints(i, j, k, l) = integral;
                 this->two_ints(j, i, k, l) = this->two_ints(i, j, k, l);
-                this->two_ints(j, i, l, k) = this->two_ints(i, j, k, l);
                 this->two_ints(i, j, l, k) = this->two_ints(i, j, k, l);
-                //FIXME only works for DOCI skips many indexes.
+                this->two_ints(j, i, l, k) = this->two_ints(i, j, k, l);
+
+                this->two_ints(k, l, i, j) = this->two_ints(i, j, k, l);
+                this->two_ints(l, k, j, i) = this->two_ints(i, j, k, l);
+                this->two_ints(k, l, j, i) = this->two_ints(i, j, k, l);
+                this->two_ints(l, k, i, j) = this->two_ints(i, j, k, l);
 
             }
             if (index1>0 && index2>0 && index3==0) {
