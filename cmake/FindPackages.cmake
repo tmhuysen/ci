@@ -18,3 +18,6 @@ find_package(bmqc 0.1.0 REQUIRED)
 
 # We will use our custom FindSpectra.cmake-file, so that we can use find_package(Spectra)
 find_package(Spectra REQUIRED)
+
+# Find numopt for DavidsonSolver
+find_package(numopt 0.2.0 REQUIRED)

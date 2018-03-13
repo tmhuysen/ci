@@ -94,7 +94,12 @@ install:
   # 'Install' Spectra
   - mkdir /opt/local/ && cd /opt/local/
   - git clone https://github.com/yixuan/spectra.git
-
+  # Install numopt
+  - git clone https://github.com/GQCG/numopt.git --branch feature/DavidsonSolver --single-branch
+  - cd numopt
+  - mkdir build && cd build
+  - cmake ..
+  - make && make test && sudo make install
 
 # Run the build script
 script:

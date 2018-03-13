@@ -38,7 +38,7 @@ public:
 	/**
 	 *  Solves the eigenvalue problem of the hamiltonian
 	 */
-	virtual void solve()=0;
+	virtual bool solve()=0;
 
 	/**
 	 * @param nbf the dimensions of the hamiltonian.

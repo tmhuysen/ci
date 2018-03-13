@@ -25,7 +25,7 @@ public:
 	/**
 	 *  Solves the eigenvalue problem of the hamiltonian with the EigenSolver.
 	 */
-	void solve() override;
+    bool solve() override;
 	/**
 	 * Adds a value as an element of the hamiltonian matrix.
 	 */
