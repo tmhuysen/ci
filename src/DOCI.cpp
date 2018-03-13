@@ -46,11 +46,16 @@ void doci::DOCI::calculateCI(size_t start, size_t end) {
 
 doci::DOCI::DOCI( doci::CI_basis *ciBasis) : CI(ciBasis) {
     construct();
-    this->hamiltonian = Hamiltonian::make_hamiltonian(nbf);
+    this->hamiltonian = Hamiltonian::make_hamiltonian(this->nbf);
     calculateCI(0,this->nbf);
     this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
+}
 
-
+doci::DOCI::DOCI( doci::CI_basis *ciBasis,StorageType type) : CI(ciBasis) {
+    construct();
+    this->hamiltonian = Hamiltonian::make_hamiltonian(this->nbf,type);
+    calculateCI(0,this->nbf);
+    this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
 
 }
 

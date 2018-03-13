@@ -2,6 +2,7 @@
 #define CI_HAMILTONIAN_HPP
 
 #include "State.hpp"
+#include "StorageType.hpp"
 
 #include <bmqc.hpp>
 #include <boost/math/special_functions.hpp>
@@ -11,6 +12,11 @@
 namespace doci {
 
 class Hamiltonian {
+private:
+    static Hamiltonian* (*pFactoryMethods[(int)StorageType::STORAGE]) (size_t nbf); //Static array of pointer to factory methods.
+
+    static Hamiltonian* make_dense(size_t nbf); //return a pointer to a new dense instance of the hamiltonian
+    static Hamiltonian* make_davidson(size_t nbf); //return a pointer to a new sparse instance of the hamiltonian
 
 protected:
 	size_t nbf; //number of basis fucntions in the Hamiltionian aka the dimensions.
@@ -45,6 +51,7 @@ public:
 	 * @return Hamiltonian based on the memory it would require.
 	 */
 	static Hamiltonian* make_hamiltonian(size_t nbf);
+	static Hamiltonian* make_hamiltonian(size_t nbf, StorageType type);
 };
 
 

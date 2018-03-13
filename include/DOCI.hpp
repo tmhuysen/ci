@@ -34,6 +34,7 @@ private:
 
 public:
     DOCI(CI_basis *ciBasis);
+    DOCI(CI_basis *ciBasis, StorageType type);
 };
 
 }  // namespace doci

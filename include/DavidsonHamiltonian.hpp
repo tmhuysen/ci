@@ -1,5 +1,5 @@
-#ifndef CI_DENSEHAMILTONIAN_HPP
-#define CI_DENSEHAMILTONIAN_HPP
+#ifndef CI_DAVIDSONHAMILTONIAN_HPP
+#define CI_DAVIDSONHAMILTONIAN_HPP
 
 
 #include "Hamiltonian.hpp"
@@ -16,6 +16,7 @@ namespace doci {
 */
 class DavidsonHamiltonian: public doci::Hamiltonian {
 private:
+    StorageType type = StorageType::DAVIDSON;
     numopt::DavidsonSolver* davidson_solver;
     size_t nbf;
     Eigen::VectorXd diagonal_matrix;
