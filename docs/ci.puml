@@ -11,12 +11,12 @@ namespace doci {
             # doci::Hamiltonian* hamiltonian
         __ protected methods __
             # virtual void **calculateCI**(size_t start, size_t end)=0
-	        # virtual void **construct**()=0
+            # virtual void **construct**()=0
         == constructors ==
-	        **CI**()
-	        **CI**(CI_basis *ciBasis)
-	    __ public methods __
-	        + Hamiltonian* **getHamiltonian**() const
+            **CI**()
+            **CI**(CI_basis *ciBasis)
+        __ public methods __
+            + Hamiltonian* **getHamiltonian**() const
     }
 
 
