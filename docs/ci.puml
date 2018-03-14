@@ -1,6 +1,6 @@
 @startuml
 
-namespace doci {
+namespace ci {
     abstract class CI {
         __ protected members __
             # size_t nelec
@@ -34,39 +34,18 @@ namespace doci {
 
     class State {
         __ private members __
-            - double eval
-            - Eigen::VectorXd evec
+            - double eigenvalue
+            - Eigen::VectorXd eigenvector
         == constructors ==
             **State**()
-            **State**(double eval, Eigen::VectorXd evec)
+            **State**(double eval, const Eigen::VectorXd& evec)
         __ public methods __
-            + double **getEval**()
-            + const Eigen::VectorXd& **getEvec**() const
+            + double **get_eigenvalue**() const
+            + Eigen::VectorXd **get_eigenvector**() const
 
-            + bool **operator<**(const doci::State& rhs)
-            + bool **operator>**(const doci::State& rhs)
-            + bool **operator==**(const doci::State& rhs)
-    }
-
-
-    class CI_basis {
-        __ private members __
-            - Eigen::MatrixXd one_ints
-            - Eigen::Tensor<double, 4> two_ints
-            - double internuclear_repulsion
-            - size_t K
-            - size_t nelec
-        == constructors ==
-            **CI_basis**()
-            **CI_basis**(hf::rhf::RHF& rhf)
-            **CI_basis**(const std::string& filename)
-        __ public methods __
-            + void **rotate**(double rot, size_t index1, size_t index2)
-            + double **getOne_int**(size_t index1, size_t index2) const
-            + double **getTwo_int**(size_t index1, size_t index2, size_t index3, size_t index4) const
-            + double **getInternuclear_repulsion**() const
-            + size_t **getK**() const
-            + size_t **getNelec**() const
+            + bool **operator<**(const ci::State& rhs) const
+            + bool **operator>**(const ci::State& rhs) const
+            + bool **operator==**(const ci::State& rhs) const
     }
 
 
@@ -103,20 +82,22 @@ namespace doci {
 namespace bmqc {
     class AddressingScheme {
         == constructors ==
-            AddressingScheme(size_t K, size_t N)
+            **AddressingScheme**(size_t K, size_t N)
         __ public methods __
-            + const Matrixi& get_vertex_weights() const
-            + size_t fetchAddress(const boost::dynamic_bitset<> bitVector)
-            + boost::dynamic_bitset<> **generateBitVector_bitset**(size_t address)
-    }
-
-    class global {
-        .. bitset ..
-            void next_bitset_permutation(boost::dynamic_bitset<>& v)
+            + const bmqc::Matrixi **get_vertex_weights**() const
     }
 
 
+    class SpinString<T> {
+        == constructors ==
+            **SpinString**<T>(size_t address, const bmqc::AddressingScheme& addressing_scheme)
+        __ public methods __
+            + size_t **address**(const bmqc::AddressingScheme& addressing_scheme) const
+            + bool **annihilate**(size_t p)
+            + bool **create**(size_t p)
+    }
 }
+
 
 namespace libwint {
     class SOBasis {
@@ -133,27 +114,18 @@ namespace libwint {
     }
 }
 
-namespace hf {
-    namespace rhf {
-        class RHF {
-            __ public data __
-                + libwint::Basis &basis
-        }
-    }
-}
 
+ci.Hamiltonian o--> ci.State
 
-doci.Hamiltonian o--> doci.State
+ci.DenseHamiltonian --|> ci.Hamiltonian
 
-doci.DenseHamiltonian --|> doci.Hamiltonian
+ci.CI *--> ci.State
+ci.CI o--> libwint.SOBasis
+ci.CI *--> ci.Hamiltonian
 
-doci.CI *--> doci.State
-doci.CI o--> libwint.SOBasis
-doci.CI *--> doci.Hamiltonian
-
-doci.DOCI --|> doci.CI
-doci.DOCI *--> bmqc.AddressingScheme
-doci.DOCI ..> bmqc.global
+ci.DOCI --|> ci.CI
+ci.DOCI *--> bmqc.AddressingScheme
+ci.DOCI ..> bmqc.SpinString
 
 
 @enduml
