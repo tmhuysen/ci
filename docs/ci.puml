@@ -1,6 +1,23 @@
 @startuml
 
 namespace ci {
+
+    class State {
+        __ private members __
+            - const double eigenvalue
+            - const Eigen::VectorXd eigenvector
+        == constructors ==
+            **State**()
+            **State**(double eigenvalue, const Eigen::VectorXd& eigenvector)
+        __ public methods __
+            + double **get_eigenvalue**() const
+            + Eigen::VectorXd **get_eigenvector**() const
+
+            + bool **isDegenerate**(const ci::State& other, double tolerance = 1.0e-06) const
+            + bool **hasLowerEnergy**(const ci::State& other, double tolerance = 1.0e-06) const
+    }
+
+
     abstract class CI {
         __ protected members __
             # size_t nelec
@@ -32,39 +49,27 @@ namespace ci {
     }
 
 
-    class State {
-        __ private members __
-            - const double eigenvalue
-            - const Eigen::VectorXd eigenvector
-        == constructors ==
-            **State**()
-            **State**(double eigenvalue, const Eigen::VectorXd& eigenvector)
-        __ public methods __
-            + double **get_eigenvalue**() const
-            + Eigen::VectorXd **get_eigenvector**() const
-
-            + bool **isDegenerate**(const ci::State& other, double tolerance = 1.0e-06) const
-            + bool **hasLowerEnergy**(const ci::State& other, double tolerance = 1.0e-06) const
-    }
 
 
-    abstract class Hamiltonian {
+    abstract class BaseHamiltonianSolver {
         __ protected members __
-            # size_t nbf
-            # Eigen::VectorXd eigenvalues
-            # Eigen::MatrixXd eigenvectors
-            # std::vector<doci::State> groundstates= { doci::State (std::numeric_limits<double>::max(), Eigen::VectorXd()) }
+            # const size_t dimension
+
+            # bool is_solved = false
+            # std::vector<doci::State> ground_states
         __ protected methods __
-            # void **groundStates**(doci::State state)
+            # void **addToGroundStates**(const ci::State& state)
         __ public methods __
-            + const std::vector<doci::State>& **getGroundstates**() const
-            + virtual void **add**(double value, size_t index1, size_t index2)=0
-            + virtual void **solve**()=0
+            + std::vector<ci::State> **get_ground_states**() const
+
+            + virtual void **solve**() = 0
+            + virtual void **addElement**(double value, size_t index1, size_t index2) = 0;
+
             + {static} Hamiltonian* **make_hamiltonian**(size_t nbf);
     }
 
 
-    class DenseHamiltonian {
+    class DenseHamiltonianSolver {
         __ private members __
             - Eigen::MatrixXd hamiltonian
         == constructors ==
@@ -114,13 +119,13 @@ namespace libwint {
 }
 
 
-ci.Hamiltonian o--> ci.State
+ci.BaseHamiltonianSolver o--> ci.State
 
-ci.DenseHamiltonian --|> ci.Hamiltonian
+ci.DenseHamiltonianSolver --|> ci.BaseHamiltonianSolver
 
 ci.CI *--> ci.State
 ci.CI o--> libwint.SOBasis
-ci.CI *--> ci.Hamiltonian
+ci.CI *--> ci.BaseHamiltonianSolver
 
 ci.DOCI --|> ci.CI
 ci.DOCI *--> bmqc.AddressingScheme

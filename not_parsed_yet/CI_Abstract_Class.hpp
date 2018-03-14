@@ -2,7 +2,7 @@
 #define CI_CI_ABSTRACT_CLASS_HPP
 
 #include "State.hpp"
-#include "Hamiltonian.hpp"
+#include "BaseHamiltonianSolver.hpp"
 
 
 namespace doci {
