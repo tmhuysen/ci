@@ -1,34 +1,52 @@
 #include "State.hpp"
 
-/** Constructor based on a given eigenvalue and corresponding eigenvector
+
+
+namespace ci {
+
+
+/*
+ *  CONSTRUCTORS
  */
-doci::State::State(double eval, Eigen::VectorXd evec) : eval(eval), evec(evec) {}
+
+/**
+ *  Constructor based on a given eigenvalue and corresponding eigenvector
+ */
+State::State(double eigenvalue, const Eigen::VectorXd& eigenvector) :
+    eigenvalue (eigenvalue),
+    eigenvector (eigenvector)
+{}
 
 
-bool doci::State::operator<(const doci::State& rhs) {
-    return (this->eval < rhs.eval);
+
+/*
+ *  PUBLIC METHODS
+ */
+
+/**
+  *  @return if this is degenerate to @param other, i.e. the eigenvalues are the same within the given @param tolerance.
+  *
+  *  @param tolerance: defaults to 1.0e-06
+  */
+bool State::isDegenerate(const ci::State& other, double tolerance) const {
+
+    return std::abs(this->eigenvalue - other.eigenvalue) < tolerance;
 }
 
-bool doci::State::operator>(const doci::State& rhs) {
-    return (this->eval > rhs.eval);
+
+/**
+ *  @return if this has an eigenvalue lower than @param other, within a given @param tolerance.
+ *
+ *  @param tolerance: defaults to 1.0e-06
+ */
+bool State::hasLowerEnergy(const ci::State& other, double tolerance) const {
+
+    return (other.eigenvalue - this->eigenvalue) > tolerance;
 }
 
-bool doci::State::operator==(const doci::State& rhs) {
-    // Does not check for eigenvectors, operator is meant to check for degeneracy.
 
-    double precision = 1000000;
+}  // namespace ci
 
-    double ELIPSON = (this->eval > rhs.eval) ?  rhs.eval/precision : this->eval/precision;
 
-    return fabs(this->eval - rhs.eval) < fabs(ELIPSON);
-}
 
-double doci::State::getEval() const {
-    return eval;
-}
-
-const Eigen::VectorXd &doci::State::getEvec() const {
-    return evec;
-}
-
-doci::State::State() : doci::State(std::numeric_limits<double>::max(), Eigen::VectorXd()){};
+// doci::State::State() : doci::State(std::numeric_limits<double>::max(), Eigen::VectorXd()){};

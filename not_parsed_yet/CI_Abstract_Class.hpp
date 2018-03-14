@@ -3,7 +3,6 @@
 
 #include "State.hpp"
 #include "Hamiltonian.hpp"
-#include "CI_basis.hpp"
 
 
 namespace doci {

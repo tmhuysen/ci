@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_class ) {
 
     const doci::State &ground = doci_test.getLowestEigenState();
 
-    double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
+    double en = ground.get_eigenvalue() + ciBasis.getInternuclear_repulsion();
     BOOST_CHECK(std::abs(en - (-74.9771)) < 1.0e-04);
 
 }
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_ref_beh_test ) {
     //getting the electronic ground energy
     const doci::State &ground = doci_test.getLowestEigenState();
     //getting the total energy
-    double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
+    double en = ground.get_eigenvalue() + ciBasis.getInternuclear_repulsion();
     //compare
     BOOST_CHECK(std::abs(en - (-14.8782216937)) < 1.0e-06); //energy from beh cation
 
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_ref_lih_test ) {
     //getting the electronic ground energy
     const doci::State &ground = doci_test.getLowestEigenState();
     //getting the total energy
-    double en = ground.getEval() + ciBasis.getInternuclear_repulsion();
+    double en = ground.get_eigenvalue() + ciBasis.getInternuclear_repulsion();
     //compare
     BOOST_CHECK(std::abs(en - (-8.0029560313)) < 1.0e-06); //energy from lih
 }

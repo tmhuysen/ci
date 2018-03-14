@@ -2,37 +2,50 @@
 #define CI_STATE_HPP
 
 
+
 #include <Eigen/Dense>
 
-namespace doci {
+
+
+namespace ci {
+
 
 class State {
 private:
-    double eval;  // The energy of the solution, i.e. the eigenvalue
-    Eigen::VectorXd evec;  // The coefficients of the solution with respect to the given basis, i.e. the eigenvector corresponding to the eigenvalue
+    const double eigenvalue;  // the energy of the solution, i.e. the eigenvalue
+    const Eigen::VectorXd eigenvector;  // the coefficients of the solution with respect to the given basis, i.e. the eigenvector corresponding to the eigenvalue
 
 public:
-    // Constructors
+    // CONSTRUCTORS
     /**
-     * Default constructor
+     *  Constructor based on a given eigenvalue and corresponding eigenvector
      */
-    State();
-    /** Constructor based on a given eigenvalue and corresponding eigenvector
+    State(double eigenvalue, const Eigen::VectorXd& eigenvector);
+
+
+    // GETTERS
+    double get_eigenvalue() const { return this->eigenvalue; }
+    Eigen::VectorXd get_eigenvector() const { return this->eigenvector; }
+
+
+    // PUBLIC METHODS
+    /**
+     *  @return if this is degenerate to @param other, i.e. the eigenvalues are the same within the given @param tolerance.
+     *
+     *  @param tolerance: defaults to 1.0e-06
      */
-    State(double eval, Eigen::VectorXd evec);
+    bool isDegenerate(const ci::State& other, double tolerance = 1.0e-06) const;
 
-    // Getters
-    double getEval() const;
-    const Eigen::VectorXd &getEvec() const;
-
-    // Operator overloading
-    bool operator<(const doci::State& rhs); //only compares eval.
-    bool operator>(const doci::State& rhs); //only compares eval.
-    bool operator==(const doci::State& rhs); //only compares eval.
-
+    /**
+     *  @return if this has an eigenvalue lower than @param other, within a given @param tolerance.
+     *
+     *  @param tolerance: defaults to 1.0e-06
+     */
+    bool hasLowerEnergy(const ci::State& other, double tolerance = 1.0e-06) const;
 };
 
-} // namespace doci
+
+} // namespace ci
 
 
-#endif // CI_STATE_HPP
+#endif  // CI_STATE_HPP

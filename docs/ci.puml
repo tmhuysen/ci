@@ -34,18 +34,17 @@ namespace ci {
 
     class State {
         __ private members __
-            - double eigenvalue
-            - Eigen::VectorXd eigenvector
+            - const double eigenvalue
+            - const Eigen::VectorXd eigenvector
         == constructors ==
             **State**()
-            **State**(double eval, const Eigen::VectorXd& evec)
+            **State**(double eigenvalue, const Eigen::VectorXd& eigenvector)
         __ public methods __
             + double **get_eigenvalue**() const
             + Eigen::VectorXd **get_eigenvector**() const
 
-            + bool **operator<**(const ci::State& rhs) const
-            + bool **operator>**(const ci::State& rhs) const
-            + bool **operator==**(const ci::State& rhs) const
+            + bool **isDegenerate**(const ci::State& other, double tolerance = 1.0e-06) const
+            + bool **hasLowerEnergy**(const ci::State& other, double tolerance = 1.0e-06) const
     }
 
 
