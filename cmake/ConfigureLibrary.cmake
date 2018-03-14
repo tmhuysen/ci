@@ -7,6 +7,10 @@ target_include_directories(${LIBRARY_NAME} PRIVATE ${PROJECT_INCLUDE_FOLDER})
 # Include the boost headers (dynamic bitset)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 
+# Include numopt
+target_include_directories(${LIBRARY_NAME} PUBLIC ${numopt_INCLUDE_DIRS})
+target_link_libraries(${LIBRARY_NAME} PUBLIC numopt)
+
 # Include Eigen
 target_link_libraries(${LIBRARY_NAME} PUBLIC Eigen3::Eigen)
 
@@ -24,10 +28,3 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC bmqc)
 # Include Spectra
 target_include_directories(${LIBRARY_NAME} PUBLIC ${spectra_INCLUDE_DIRS})
 
-# Include numopt
-target_include_directories(${LIBRARY_NAME} PUBLIC ${numopt_INCLUDE_DIRS})
-target_link_libraries(${LIBRARY_NAME} PUBLIC numopt)
-
-#... use Eigen with MKL ...
-target_include_directories(${LIBRARY_NAME}  PRIVATE $ENV{MKLROOT}/include)
-target_link_libraries(${LIBRARY_NAME}  PRIVATE $ENV{MKLROOT}/lib/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/libmkl_sequential.a $ENV{MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl)

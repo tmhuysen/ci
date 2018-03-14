@@ -8,6 +8,10 @@ target_include_directories(${TEST_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(${TEST_NAME} PRIVATE ${PROJECT_INCLUDE_FOLDER})
 target_link_libraries(${TEST_NAME} PRIVATE ${LIBRARY_NAME})
 
+# ... add numopt ...
+target_include_directories(${TEST_NAME} PUBLIC ${numopt_INCLUDE_DIRS})
+target_link_libraries(${TEST_NAME} PUBLIC numopt)
+
 # ... add Eigen3 ...
 target_link_libraries(${TEST_NAME} PUBLIC Eigen3::Eigen)
 
@@ -22,10 +26,4 @@ target_link_libraries(${TEST_NAME} PUBLIC hf)
 target_include_directories(${TEST_NAME} PUBLIC ${bmqc_INCLUDE_DIRS})
 target_link_libraries(${TEST_NAME} PUBLIC bmqc)
 
-# ... add bmqc ...
-target_include_directories(${TEST_NAME} PUBLIC ${numopt_INCLUDE_DIRS})
-target_link_libraries(${TEST_NAME} PUBLIC numopt)
 
-#... use Eigen with MKL ...
-target_include_directories(${TEST_NAME} PRIVATE $ENV{MKLROOT}/include)
-target_link_libraries(${TEST_NAME} PRIVATE $ENV{MKLROOT}/lib/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/libmkl_sequential.a $ENV{MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl)
