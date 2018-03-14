@@ -16,6 +16,7 @@ namespace doci {
 */
 class DavidsonHamiltonian: public doci::Hamiltonian {
 private:
+    size_t iterations = 0;
     StorageType type = StorageType::DAVIDSON;
     numopt::DavidsonSolver* davidson_solver;
     size_t nbf;

@@ -60,10 +60,10 @@ doci::DOCI::DOCI( doci::CI_basis *ciBasis,StorageType type) : CI(ciBasis) {
 }
 
 void doci::DOCI::calculateOffDiagonal() {
-    boost::dynamic_bitset<> bf_base = this->ad_mat.generateBitVector_bitset(0); //first basis function
+    size_t bf_base = this->ad_mat.generateBitVector_long(0); //first basis function
     for (size_t i = 0; i < this->nbf; i++) {
         if(i>0){
-            bmqc::next_bitset_permutation(bf_base);
+            bf_base= bmqc::next_long_permutation(bf_base);
         }
         for (size_t j = 0; j < this->K; j++) {
             if (bmqc::annihilation(bf_base,j)){
@@ -79,10 +79,10 @@ void doci::DOCI::calculateOffDiagonal() {
                         this->hamiltonian->add(mix_spin_two_int, i, address);
                         this->hamiltonian->add(mix_spin_two_int, address, i);
 
-                        bf_base.flip(l);//flip back (so we don't need to copy the set)
+                        bf_base -= 1 << l;
                     }
                 }
-                bf_base.flip(j);//flip back (so we don't need to copy the set)
+                bf_base += 1 << j;//flip back (so we don't need to copy the set)
             }
 
 
@@ -92,18 +92,18 @@ void doci::DOCI::calculateOffDiagonal() {
 }
 
 void doci::DOCI::calculateDiagonal() {
-    boost::dynamic_bitset<> bf_base = this->ad_mat.generateBitVector_bitset(0); //first basis function
+    size_t bf_base = this->ad_mat.generateBitVector_long(0); //first basis function
     for (size_t i = 0; i < this->nbf; i++) {
         if(i>0){
-            bmqc::next_bitset_permutation(bf_base);
+            bf_base= bmqc::next_long_permutation(bf_base);
         }
         double hamiltonian_value = 0;
         for (size_t j = 0; j < this->K; j++) {
-            if (bf_base.test(j)){
+            if (bf_base & (1<<j)){
                 hamiltonian_value += 2*this->basis->getOne_int(j, j);
                 hamiltonian_value += this->basis->getTwo_int(j, j, j, j);
                 for(size_t l = 0; l < j; l++){
-                    if(bf_base.test(l)){
+                    if(bf_base & (1<<l)){
                         hamiltonian_value += 4*this->basis->getTwo_int(j, j, l, l); //=mixed_spin_two_int (exciting a beta and an alpha in-place)
                         hamiltonian_value -= 2*this->basis->getTwo_int(j, l, l, j); //mixed_spin does not have this because it would result in 0 term (integral of alpha-beta)
 

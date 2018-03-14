@@ -26,6 +26,6 @@ target_link_libraries(${TEST_NAME} PUBLIC bmqc)
 target_include_directories(${TEST_NAME} PUBLIC ${numopt_INCLUDE_DIRS})
 target_link_libraries(${TEST_NAME} PUBLIC numopt)
 
-# ... use Eigen with MKL ...
-# target_include_directories(${TEST_NAME} PRIVATE $ENV{MKLROOT}/include)
-# target_link_libraries(${TEST_NAME} PRIVATE $ENV{MKLROOT}/lib/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/libmkl_sequential.a $ENV{MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl)
+#... use Eigen with MKL ...
+target_include_directories(${TEST_NAME} PRIVATE $ENV{MKLROOT}/include)
+target_link_libraries(${TEST_NAME} PRIVATE $ENV{MKLROOT}/lib/libmkl_intel_lp64.a $ENV{MKLROOT}/lib/libmkl_sequential.a $ENV{MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl)

@@ -2,7 +2,7 @@
 #define CI_DOCI_HPP
 
 #include "CI_Abstract_Class.hpp"
-
+#include "bitlong.hpp"
 #include <bmqc.hpp>
 #include <iostream>
 
@@ -17,6 +17,7 @@ private:
     /** Calculates the diagonal elements
      */
     void calculateDiagonal();
+
     /** Calculates the off diagonal elements
      */
     void calculateOffDiagonal();

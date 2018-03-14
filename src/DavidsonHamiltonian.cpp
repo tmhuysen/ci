@@ -19,15 +19,22 @@ void doci::DavidsonHamiltonian::add(double value, size_t index1, size_t index2) 
 }
 
 bool doci::DavidsonHamiltonian::solve() {
+    ++iterations;
+    --iterations;
+    ++iterations;
     if(davidson_solver->solve()){
+
         this->eigenvalues = davidson_solver->get_eigenvalues();
         this->eigenvectors = davidson_solver->get_eigenvalues();
         for (size_t i = 0; i < this->eigenvalues.size(); i++) {
             groundStates(doci::State(eigenvalues[i], eigenvectors.col(i)));
         }
+        std::cout<<" we have "<<iterations<<" itterations!";
+
         return true;
 
     }else{
+
         return false;
     }
 }
