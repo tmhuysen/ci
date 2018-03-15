@@ -1,0 +1,98 @@
+@startuml
+
+
+namespace ci {
+
+
+namespace solver {
+
+abstract class BaseSolver {
+    __ public methods __
+        + virtual void **solve**() = 0
+}
+
+
+
+abstract class MatrixSolver {
+    __ public methods __
+        + virtual void **solve**() = 0
+}
+
+
+class DenseSolver {
+    __ public methods __
+        + virtual void **solve**()
+}
+
+
+class SparseSolver {
+    __ public methods __
+        + virtual void **solve**()
+}
+
+
+class DavidsonSolver {
+    __ public methods __
+        + virtual void **solve**()
+}
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+}
+
+
+
+
+ci.solver.MatrixSolver --|> ci.solver.BaseSolver
+
+ci.solver.DenseSolver --|> ci.solver.MatrixSolver
+ci.solver.SparseSolver --|> ci.solver.MatrixSolver
+
+ci.solver.DavidsonSolver --|> ci.solver.BaseSolver
+
+
+
+
+@enduml
+
+
+
+abstract class BaseCI {
+    __ protected data __
+        # SOBasis& so_basis
+        # const size_t K
+        # const size_t dim
+        # std::vector<ci:State> solutions
+    __ protected methods __
+
+}
+
+
+
+class DOCI {
+    __ private data __
+        - const size_t N_P
+        - const size_t K
+        - const size_t dim
+        - std::vector<ci::State> solutions
+    == constructors ==
+
+    __ public methods __
+        + void **solveDenseEigenvalueProblem**()
+        + void **solveSparseEigenvalueProblem**()
+        + void **solveDavidsonEigenvalueProblem**()
+
+
+
+}
