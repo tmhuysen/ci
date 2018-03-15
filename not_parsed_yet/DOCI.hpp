@@ -1,7 +1,7 @@
 #ifndef CI_DOCI_HPP
 #define CI_DOCI_HPP
 
-#include "CI_Abstract_Class.hpp"
+#include "BaseCI.hpp"
 
 #include <bmqc.hpp>
 #include <iostream>

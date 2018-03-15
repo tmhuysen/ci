@@ -1,0 +1,44 @@
+@startuml
+
+
+namespace ci {
+
+
+
+
+abstract class BaseCI {
+    __ protected data __
+        # SOBasis& so_basis
+        # const size_t K
+        # const size_t dim
+        # std::vector<ci:State> solutions
+    __ protected methods __
+
+}
+
+
+
+class DOCI {
+    __ private data __
+        - const size_t N_P
+        - const size_t K
+        - const size_t dim
+        - std::vector<ci::State> solutions
+    == constructors ==
+
+    __ public methods __
+        + void **solveDenseEigenvalueProblem**()
+        + void **solveSparseEigenvalueProblem**()
+        + void **solveDavidsonEigenvalueProblem**()
+
+
+
+}
+
+
+
+ci.DOCI --> BaseCI
+
+
+
+@enduml

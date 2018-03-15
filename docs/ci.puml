@@ -20,12 +20,12 @@ namespace ci {
 
     abstract class CI {
         __ protected members __
-            # size_t nelec
-            # size_t K
-            # size_t nbf
-            # doci::State lowestEigenState
-            # doci::CI_basis* basis
-            # doci::Hamiltonian* hamiltonian
+            # const size_t K
+            # const size_t dim
+
+            # libwint::SOBasis& so_basis
+
+            # std::unique_ptr<ci::BaseHamiltonianSolver> hamiltonian_solver_ptr
         __ protected methods __
             # virtual void **calculateCI**(size_t start, size_t end)=0
             # virtual void **construct**()=0
