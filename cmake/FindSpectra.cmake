@@ -1,4 +1,3 @@
-# FindSpectra.cmake. Find<package>.cmake-template from (https://cmake.org/Wiki/CMake:How_To_Find_Libraries#Writing_find_modules).
 
 # For the moment, only an installation of Spectra inside /usr/local is supported.
 
