@@ -1,8 +1,7 @@
 #ifndef CI_CI_BASIS_HPP
 #define CI_CI_BASIS_HPP
 
-#include <Eigen/Dense>
-#include <unsupported/Eigen/CXX11/Tensor>
+#include "numopt.hpp"
 #include <hf.hpp>
 #include "utility.hpp"
 

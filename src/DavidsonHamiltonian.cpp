@@ -20,8 +20,6 @@ void doci::DavidsonHamiltonian::add(double value, size_t index1, size_t index2) 
 
 bool doci::DavidsonHamiltonian::solve() {
     ++iterations;
-    --iterations;
-    ++iterations;
     if(davidson_solver->solve()){
 
         this->eigenvalues = davidson_solver->get_eigenvalues();
@@ -30,6 +28,7 @@ bool doci::DavidsonHamiltonian::solve() {
             groundStates(doci::State(eigenvalues[i], eigenvectors.col(i)));
         }
         std::cout<<" we have "<<iterations<<" itterations!";
+        std::cout<<davidson_solver->get_num_guess_vectors();
 
         return true;
 

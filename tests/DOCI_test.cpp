@@ -4,7 +4,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test.hpp>
-#define EIGEN_USE_MKL_ALL
 
 BOOST_AUTO_TEST_CASE ( DOCI_beh_klaas ) {
 

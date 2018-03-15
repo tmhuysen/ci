@@ -10,7 +10,7 @@
 namespace doci {
 
 class DOCI : public CI {
-private:
+public:
     size_t npairs; // number of electron pairs
     bmqc::AddressingScheme ad_mat;
 

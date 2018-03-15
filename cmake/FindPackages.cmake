@@ -4,6 +4,9 @@
 # Find the Boost package - needed for unittests
 find_package(Boost REQUIRED)
 
+# Find numopt for DavidsonSolver
+find_package(numopt 0.2.0 REQUIRED)
+
 # Find Eigen3
 find_package(Eigen3 REQUIRED NO_MODULE)
 
@@ -16,8 +19,6 @@ find_package(libwint 2.2.2 REQUIRED)
 # Find bmqc for bitset manipulations
 find_package(bmqc 0.1.0 REQUIRED)
 
-# We will use our custom FindSpectra.cmake-file, so that we can use find_package(Spectra)
-find_package(Spectra REQUIRED)
 
 # Find numopt for DavidsonSolver
 find_package(numopt 0.2.0 REQUIRED)

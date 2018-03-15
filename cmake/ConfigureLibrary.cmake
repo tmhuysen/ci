@@ -11,9 +11,6 @@ target_include_directories(${LIBRARY_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(${LIBRARY_NAME} PUBLIC ${numopt_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY_NAME} PUBLIC numopt)
 
-# Include Eigen
-target_link_libraries(${LIBRARY_NAME} PUBLIC Eigen3::Eigen)
-
 #Include Spectra
 target_include_directories(${LIBRARY_NAME} PUBLIC /opt/local/spectra/include)
 
@@ -24,7 +21,3 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC hf)
 # Include bmqc
 target_include_directories(${LIBRARY_NAME} PUBLIC ${bmqc_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY_NAME} PUBLIC bmqc)
-
-# Include Spectra
-target_include_directories(${LIBRARY_NAME} PUBLIC ${spectra_INCLUDE_DIRS})
-
