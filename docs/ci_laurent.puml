@@ -1,52 +1,185 @@
 @startuml
 
 
-namespace ci {
-
-
-namespace solver {
-
-abstract class BaseSolver {
-    __ public methods __
-        + virtual void **solve**() = 0
-}
-
-
-
-abstract class MatrixSolver {
-    __ public methods __
-        + virtual void **solve**() = 0
-}
-
-
-class DenseSolver {
-    __ public methods __
-        + virtual void **solve**()
-}
-
-
-class SparseSolver {
-    __ public methods __
-        + virtual void **solve**()
-}
+namespace numopt {
 
 
 class DavidsonSolver {
+    __ private members __
+        - const double residue_tolerance
+        - const double correction_threshold
+        - const size_t maximum_subspace_dimension
+
+        - const Eigen::VectorXd t0
+        - const numopt::VectorFunction matrixVectorProduct
+
+        - double eigenvalue
+        - Eigen::VectorXd eigenvector
+    == constructors ==
+        **DavidsonSolver**(const numopt::VectorFunction& matrixVectorProduct, const Eigen::VectorXd& t0, double residue_tolerance = 1.0e-08, double correction_threshold = 1.0e-03, size_t maximum_subspace_dimension = 15)
     __ public methods __
-        + virtual void **solve**()
+        + **get_eigenvalue**()
+        + **get_eigenvector**()
+
+        + **solve**()
+}
+
+
 }
 
 
 
+namespace bmqc {
+
+    class AddressingScheme {
+        == constructors ==
+            **AddressingScheme**(size_t K, size_t N)
+        __ public methods __
+            + const bmqc::Matrixi **get_vertex_weights**() const
+    }
+
+    class SpinString<T> {
+        == constructors ==
+            **SpinString**<T>(T representation, size_t K)
+            **SpinString**<T>(size_t address, const bmqc::AddressingScheme& addressing_scheme)
+        __ public methods __
+            + T **get_representation**() const
+            + size_t **get_K**() const
+            + size_t **get_N**() const
+
+            + size_t **address**(const bmqc::AddressingScheme& addressing_scheme) const
+            + void **nextPermutation**()
+            + bool **annihilate**(size_t p)
+            + bool **annihilate**(size_t p, int& sign)
+            + bool **create**(size_t p)
+            + bool **create**(size_t p, int& sign)
+    }
 
 
 }
 
 
 
+namespace libwint {
+
+    class SOBasis {
+        __ public methods __
+            + const size_t **get_K**() const
+            + double get_h_SO(size_t i, size_t j) const
+            + double get_g_SO(size_t i, size_t j, size_t k, size_t l) const
+    }
+
+
+    class Molecule {
+        __ public methods __
+            + site_t **get_N** () const
+    }
+
+
+}
 
 
 
+namespace ci {
+
+
+    namespace solver {
+
+
+        abstract class BaseSolver {
+            __ public methods __
+                + virtual void **solve**() = 0
+        }
+
+
+
+        abstract class MatrixSolver {
+            __ public methods __
+                + virtual void **solve**() = 0
+                + virtual void **addToMatrix**(double value, size_t index1, size_t index2) = 0
+        }
+
+
+        class DenseSolver {
+            __ private members __
+                - Eigen::MatrixXd hamiltonian
+            __ public methods __
+                + void **solve**() override
+                + void **addToMatrix**(double value, size_t index1, size_t index2) override
+        }
+
+
+        class SparseSolver {
+            __ private members __
+                - Eigen::SparseMatrix<double> hamiltonian
+            __ public methods __
+                + virtual void **solve**() override
+                + void **addToMatrix**(double value, size_t index1, size_t index2) override
+        }
+
+
+        class DavidsonSolver {
+            __ private members __
+                numopt::DavidsonSolver numopt_davidson_solver
+            == constructors ==
+                **DavidsonSolver**(const VectorFunction& matrixVectorProduct, const Eigen::VectorXd& diagonal)
+            __ public methods __
+                + virtual void **solve**()
+        }
+
+
+    }
+
+
+
+
+
+    abstract class BaseCI {
+        __ protected members __
+            # std::vector<ci::State> ground_states
+            # libwint::SOBasis& so_basis
+        __ protected methods __
+            # virtual void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) = 0
+            # virtual Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) = 0
+            # virtual Eigen::VectorXd **calculateDiagonal**() = 0
+
+            # **addGroundState**(const ci::State& state)
+        __ public methods __
+            + virtual void **solve**() = 0
+    }
+
+
+    class FCI {
+        __ private members __
+            - const size_t N_alpha
+            - const size_t N_beta
+            - const size_t K
+            - const size_t dimension
+        __ private methods __
+            - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver, bmqc::AddressingScheme& addressing_scheme) override
+            - Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) override
+            - Eigen::VectorXd **calculateDiagonal**(const bmqc::AddressingScheme& addressing_scheme) override
+        == constructors ==
+                **FCI**(const libwint::SOBasis& so_basis, const libwint::Molecule& molecule)
+        __ public methods __
+            + void **solve**() override
+    }
+
+
+    class DOCI {
+        __ private members __
+            - const size_t N_P
+            - const size_t K
+            - const size_t dimension
+        __ private methods __
+            - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver, bmqc::AddressingScheme& addressing_scheme) override
+            - Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) override
+            - Eigen::VectorXd **calculateDiagonal**(const bmqc::AddressingScheme& addressing_scheme) override
+        == constructors ==
+            **DOCI**(const libwint::SOBasis& so_basis, const libwint::Molecule& molecule)
+        __ public methods __
+            + void **solve**() override
+    }
 
 
 }
@@ -56,43 +189,30 @@ class DavidsonSolver {
 
 ci.solver.MatrixSolver --|> ci.solver.BaseSolver
 
+
 ci.solver.DenseSolver --|> ci.solver.MatrixSolver
+
+
 ci.solver.SparseSolver --|> ci.solver.MatrixSolver
 
-ci.solver.DavidsonSolver --|> ci.solver.BaseSolver
 
+ci.solver.DavidsonSolver --|> ci.solver.BaseSolver
+ci.solver.DavidsonSolver *--> numopt.DavidsonSolver
+
+
+ci.BaseCI *--> ci.solver.BaseSolver
+ci.BaseCI *--> bmqc.SpinString
+ci.BaseCI o--> bmqc.AddressingScheme
+ci.BaseCI o--> libwint.SOBasis
+
+
+ci.FCI --|> ci.BaseCI
+ci.FCI o--> libwint.Molecule
+
+
+ci.DOCI --|> ci.BaseCI
+ci.DOCI o--> libwint.Molecule
 
 
 
 @enduml
-
-
-
-abstract class BaseCI {
-    __ protected data __
-        # SOBasis& so_basis
-        # const size_t K
-        # const size_t dim
-        # std::vector<ci:State> solutions
-    __ protected methods __
-
-}
-
-
-
-class DOCI {
-    __ private data __
-        - const size_t N_P
-        - const size_t K
-        - const size_t dim
-        - std::vector<ci::State> solutions
-    == constructors ==
-
-    __ public methods __
-        + void **solveDenseEigenvalueProblem**()
-        + void **solveSparseEigenvalueProblem**()
-        + void **solveDavidsonEigenvalueProblem**()
-
-
-
-}
