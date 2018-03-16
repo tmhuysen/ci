@@ -1,9 +1,24 @@
 #include "State.hpp"
 
+<<<<<<< HEAD
 
 
 namespace ci {
 
+=======
+/** Constructor based on a given eigenvalue and corresponding eigenvector
+ */
+doci::State::State(double eval, Eigen::VectorXd evec) : eigenvalue(eval), eigenvector(evec) {}
+
+
+bool doci::State::operator<(const doci::State& rhs) {
+    return (this->eigenvalue < rhs.eigenvalue);
+}
+
+bool doci::State::operator>(const doci::State& rhs) {
+    return (this->eigenvalue > rhs.eigenvalue);
+}
+>>>>>>> a1be18ed473b2634f7d4cca3483eb610e27257b0
 
 /*
  *  CONSTRUCTORS
@@ -18,6 +33,7 @@ State::State(double eigenvalue, const Eigen::VectorXd& eigenvector) :
 {}
 
 
+<<<<<<< HEAD
 
 /*
  *  PUBLIC METHODS
@@ -42,6 +58,19 @@ bool State::isDegenerate(const ci::State& other, double tolerance) const {
 bool State::hasLowerEnergy(const ci::State& other, double tolerance) const {
 
     return (other.eigenvalue - this->eigenvalue) > tolerance;
+=======
+    double ELIPSON = (this->eigenvalue > rhs.eigenvalue) ?  rhs.eigenvalue/precision : this->eigenvalue/precision;
+
+    return fabs(this->eigenvalue - rhs.eigenvalue) < fabs(ELIPSON);
+}
+
+double doci::State::get_eigenvalue() const {
+    return eigenvalue;
+}
+
+const Eigen::VectorXd &doci::State::get_eigenvector() const {
+    return eigenvector;
+>>>>>>> a1be18ed473b2634f7d4cca3483eb610e27257b0
 }
 
 
