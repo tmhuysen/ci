@@ -87,14 +87,7 @@ namespace ci {
     namespace solver {
 
 
-        abstract class BaseSolver {
-            __ public methods __
-                + virtual void **solve**() = 0
-        }
-
-
-
-        abstract class MatrixSolver {
+        abstract class BaseMatrixSolver {
             __ public methods __
                 + virtual void **solve**() = 0
                 + virtual void **addToMatrix**(double value, size_t index1, size_t index2) = 0
@@ -119,19 +112,7 @@ namespace ci {
         }
 
 
-        class DavidsonSolver {
-            __ private members __
-                numopt::DavidsonSolver numopt_davidson_solver
-            == constructors ==
-                **DavidsonSolver**(const VectorFunction& matrixVectorProduct, const Eigen::VectorXd& diagonal)
-            __ public methods __
-                + virtual void **solve**()
-        }
-
-
     }
-
-
 
 
 
@@ -188,20 +169,15 @@ namespace ci {
 
 
 
-ci.solver.MatrixSolver --|> ci.solver.BaseSolver
+ci.solver.DenseSolver --|> ci.solver.BaseMatrixSolver
 
 
-ci.solver.DenseSolver --|> ci.solver.MatrixSolver
+ci.solver.SparseSolver --|> ci.solver.BaseMatrixSolver
 
 
-ci.solver.SparseSolver --|> ci.solver.MatrixSolver
 
-
-ci.solver.DavidsonSolver --|> ci.solver.BaseSolver
-ci.solver.DavidsonSolver *--> numopt.DavidsonSolver
-
-
-ci.BaseCI *--> ci.solver.BaseSolver
+ci.BaseCI *--> ci.solver.BaseMatrixSolver
+ci.BaseCI *--> numopt.DavidsonSolver
 ci.BaseCI *--> bmqc.SpinString
 ci.BaseCI o--> bmqc.AddressingScheme
 ci.BaseCI o--> libwint.SOBasis
@@ -217,3 +193,25 @@ ci.DOCI o--> libwint.Molecule
 
 
 @enduml
+
+
+
+        class DavidsonSolver {
+            __ private members __
+                numopt::DavidsonSolver numopt_davidson_solver
+            == constructors ==
+                **DavidsonSolver**(const numopt::VectorFunction& matrixVectorProduct, const Eigen::VectorXd& t_0, const Eigen::VectorXd& diagonal, double residue_tolerance = 1.0e-08, double correction_threshold = 1.0e-03, size_t maximum_subspace_dimension = 15);
+            __ public methods __
+                + virtual void **solve**()
+
+                + double **get_eigenvalue**() const
+                + Eigen::VectorXd **get_eigenvector**() const
+        }
+
+
+                abstract class BaseSolver {
+                    == destructor ==
+                        virtual ~ **BaseSolver**() = default
+                    __ public methods __
+                        + virtual void **solve**() = 0
+                }
