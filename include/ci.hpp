@@ -4,7 +4,9 @@
 
 
 // This header files acts as a collective include file
-#include "State.hpp"
+#include "BaseMatrixSolver.hpp"
+#include "DenseSolver.hpp"
+#include "SparseSolver.hpp"
 #include "version.hpp"
 
 

@@ -88,15 +88,28 @@ namespace ci {
 
 
         abstract class BaseMatrixSolver {
-            __ public methods __
+            __ protected members __
+                # const size_t dim
+
+                # bool is_solved = false
+                # double eigenvalue
+                # Eigen::VectorXd eigenvector
+            == destructor ==
+                virtual ~ **BaseMatrixSolver**() = default
+            __ public pure virtual methods __
                 + virtual void **solve**() = 0
                 + virtual void **addToMatrix**(double value, size_t index1, size_t index2) = 0
+            __ public methods __
+                + double **get_eigenvalue**() const
+                + double **get_eigenvector**() const
         }
 
 
         class DenseSolver {
             __ private members __
                 - Eigen::MatrixXd hamiltonian
+            == destructor ==
+                 **~DenseSolver**() override = default
             __ public methods __
                 + void **solve**() override
                 + void **addToMatrix**(double value, size_t index1, size_t index2) override
