@@ -139,11 +139,9 @@ namespace ci {
         __ protected members __
             # libwint::SOBasis& so_basis
         __ protected methods __
-            # virtual void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) = 0
+            # virtual void **constructHamiltonian**(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) = 0
             # virtual Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) = 0
             # virtual Eigen::VectorXd **calculateDiagonal**() = 0
-
-            # **addGroundState**(const ci::State& state)
         __ public methods __
             + virtual void **solve**() = 0
     }

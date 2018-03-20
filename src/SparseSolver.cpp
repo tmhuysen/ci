@@ -32,7 +32,6 @@ SparseSolver::SparseSolver(size_t dim) :
  */
 void SparseSolver::solve() {
 
-
     // Solve the Sparse eigenvalue problem of the Hamiltonian matrix.
     Spectra::SparseSymMatProd<double> matrixVectorProduct (this->hamiltonian);
     Spectra::SymEigsSolver<double, Spectra::SMALLEST_ALGE, Spectra::SparseSymMatProd<double>> sparse_eigensolver (&matrixVectorProduct, 1, 128);
