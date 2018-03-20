@@ -17,7 +17,17 @@ class SparseSolver : public ci::solver::BaseMatrixSolver {
 private:
     Eigen::SparseMatrix<double> hamiltonian;
 
+
 public:
+    /*
+     *  CONSTRUCTORS
+     */
+    /**
+     *   Constructor based on the dimension @param dim of the Hamiltonian matrix representation.
+     */
+    explicit SparseSolver(size_t dim);
+
+
     /*
      *  DESTRUCTOR
      */

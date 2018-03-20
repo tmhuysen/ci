@@ -9,10 +9,14 @@ namespace solver {
 /*
  *  CONSTRUCTORS
  */
+
+/**
+ *   Constructor based on the dimension @param dim of the Hamiltonian matrix representation.
+ */
 DenseSolver::DenseSolver(size_t dim) :
     dim (dim),
-    hamiltonian (Eigen::MatrixXd(this->dim, this->dim))
-{ }
+    hamiltonian (Eigen::MatrixXd (this->dim, this->dim))
+{}
 
 
 
@@ -27,11 +31,11 @@ void DenseSolver::solve() {
 
     // Solve the dense eigenvalue problem of the Hamiltonian matrix.
     Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> self_adjoint_eigensolver (this->hamiltonian);
-    this->is_solved = true;
 
 
     // Set the eigenvalue and eigenvector as the lowest-energy eigenpair. We can use index 0 because
     // SelfAdjointEigenSolver gives the eigenvalues (and corresponding eigenvalues) in ascending order.
+    this->is_solved = true;
     this->eigenvalue = self_adjoint_eigensolver.eigenvalues()(0);
     this->eigenvector = self_adjoint_eigensolver.eigenvectors().col(0);
 }

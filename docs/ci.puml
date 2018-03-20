@@ -108,6 +108,8 @@ namespace ci {
         class DenseSolver {
             __ private members __
                 - Eigen::MatrixXd hamiltonian
+            == constructors ==
+                explicit **DenseSolver**(size_t dim)
             == destructor ==
                  **~DenseSolver**() override = default
             __ public methods __
@@ -119,6 +121,10 @@ namespace ci {
         class SparseSolver {
             __ private members __
                 - Eigen::SparseMatrix<double> hamiltonian
+            == constructors ==
+                explicit **SparseSolver**(size_t dim)
+            == destructor ==
+                 **~SparseSolver**() override = default
             __ public methods __
                 + virtual void **solve**() override
                 + void **addToMatrix**(double value, size_t index1, size_t index2) override
