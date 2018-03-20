@@ -68,6 +68,22 @@ namespace doci {
             + size_t **getK**() const
             + size_t **getNelec**() const
     }
+    class CI_basis_mulliken {
+        == CI_basis==
+        __ private members __
+            -double lagrange_multiplier
+            -Eigen::MatrixXd C
+            -Eigen::MatrixXd S
+            -Eigen::MatrixXd S_inverse
+            -Eigen::MatrixXd mulliken_matrix
+        __ private methods __
+            -double evaluateMullikenOperator(size_t molecular_orbital1,size_t molecular_orbital2,size_t atomic_orbital)
+        == constructors ==
+            +CI_basis_mulliken(hf::rhf::RHF& rhf)
+        __ public methods __
+           +void calculateMullikenMatrix(std::vector<size_t> set_of_AO)
+
+        }
 
 
     abstract class Hamiltonian {
@@ -136,6 +152,7 @@ namespace hf {
 
 doci.CI_basis ..> libwint.global
 doci.CI_basis o--> hf.rhf.RHF
+doci.CI_basis_mulliken --|> doci.CI_basis
 
 doci.Hamiltonian o--> doci.State
 

@@ -10,7 +10,7 @@ namespace doci {
 
 class CI_basis {
 
-private:
+protected:
     Eigen::MatrixXd one_ints; // The one-electron integrals
     Eigen::Tensor<double, 4> two_ints;  // The two-electron integrals
     double internuclear_repulsion;  // The internuclear repulsion energy
@@ -44,9 +44,9 @@ public:
      * Getters
      */
 
-    double getOne_int(size_t index1, size_t index2) const;
+    virtual double getOne_int(size_t index1, size_t index2) const;
 
-    double getTwo_int(size_t index1, size_t index2, size_t index3, size_t index4) const;
+    virtual double getTwo_int(size_t index1, size_t index2, size_t index3, size_t index4) const;
 
     double getInternuclear_repulsion() const;
 
