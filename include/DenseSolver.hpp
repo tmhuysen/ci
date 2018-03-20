@@ -19,24 +19,18 @@ private:
 
 
 public:
-    /*
-     *  CONSTRUCTORS
-     */
+    // CONSTRUCTOR
     /**
      *   Constructor based on the dimension @param dim of the Hamiltonian matrix representation.
      */
     explicit DenseSolver(size_t dim);
 
 
-    /*
-     *  DESTRUCTOR
-     */
+    // DESTRUCTOR
     ~DenseSolver() override = default;
 
 
-    /*
-     *  PUBLIC OVERRIDDEN FUNCTIONS
-     */
+    // PUBLIC OVERRIDDEN METHODS
     /**
      *  Solve the full dense eigenvalue problem of the Hamiltonian matrix.
      */
@@ -47,7 +41,6 @@ public:
      */
     void addToMatrix(double value, size_t index1, size_t index2) override;
 };
-
 
 
 }  // namespace solver

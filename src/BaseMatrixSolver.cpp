@@ -2,10 +2,8 @@
 
 
 
-
 namespace ci {
 namespace solver {
-
 
 
 /*

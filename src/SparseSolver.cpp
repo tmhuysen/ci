@@ -4,6 +4,7 @@
 #include <MatOp/SparseSymMatProd.h>
 
 
+
 namespace ci {
 namespace solver {
 
@@ -23,7 +24,7 @@ SparseSolver::SparseSolver(size_t dim) :
 
 
 /*
- *  PUBLIC OVERRIDDEN FUNCTIONS
+ *  PUBLIC OVERRIDDEN METHODS
  */
 
 /**

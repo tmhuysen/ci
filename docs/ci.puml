@@ -137,7 +137,6 @@ namespace ci {
 
     abstract class BaseCI {
         __ protected members __
-            # std::vector<ci::State> ground_states
             # libwint::SOBasis& so_basis
         __ protected methods __
             # virtual void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) = 0

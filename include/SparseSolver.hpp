@@ -19,24 +19,18 @@ private:
 
 
 public:
-    /*
-     *  CONSTRUCTORS
-     */
+    // CONSTRUCTORS
     /**
      *   Constructor based on the dimension @param dim of the Hamiltonian matrix representation.
      */
     explicit SparseSolver(size_t dim);
 
 
-    /*
-     *  DESTRUCTOR
-     */
+    // DESTRUCTOR
     ~SparseSolver() override = default;
 
 
-    /*
-     *  PUBLIC OVERRIDDEN FUNCTIONS
-     */
+    // PUBLIC OVERRIDDEN METHODS
     /**
      *  Solve the sparse eigenvalue problem of the Hamiltonian matrix.
      */
@@ -47,7 +41,6 @@ public:
      */
     void addToMatrix(double value, size_t index1, size_t index2) override;
 };
-
 
 
 }  // namespace solver

@@ -23,15 +23,11 @@ protected:
 
 
 public:
-    /*
-     *  DESTRUCTOR
-     */
+    // DESTRUCTOR
     virtual ~BaseMatrixSolver() = default;
 
 
-    /*
-     *  PURE VIRTUAL METHODS
-     */
+    // PURE VIRTUAL METHODS
     /**
      *  Solve the eigenvalue problem associated to the matrix solver.
      */
@@ -43,9 +39,7 @@ public:
     virtual void addToMatrix(double value, size_t index1, size_t index2) = 0;
 
 
-    /*
-     *  GETTERS
-     */
+    // GETTERS
     double get_eigenvalue() const;
     Eigen::VectorXd get_eigenvector() const;
 };
