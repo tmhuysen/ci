@@ -6,6 +6,8 @@
 #include <libwint.hpp>
 #include <bmqc.hpp>
 
+#include "SolverType.hpp"
+
 #include "BaseMatrixSolver.hpp"
 
 
@@ -19,6 +21,10 @@ protected:
     const size_t dim;  // the dimension of the Fock space (i.e. the dimension of the CI space)
 
     libwint::SOBasis& so_basis;
+
+    bool is_solved = false;
+    double eigenvalue;
+    Eigen::VectorXd eigenvector;
 
 
     // PURE VIRTUAL PROTECTED METHODS
@@ -39,14 +45,27 @@ protected:
     virtual Eigen::VectorXd calculateDiagonal() = 0;
 
 
+    // PROTECTED METHODS
+    /**
+     *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a pointer
+     *  to a @param matrix_solver and to speed up the searches for the addresses of spin strings using a @param
+     *  addressing_scheme
+     */
+    void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme);
+
+
+
 public:
+    // GETTERS
+    double get_eigenvalue () const;
+    Eigen::VectorXd get_eigenvector () const;
+
+
     // PUBLIC METHODS
     /**
      *  Find the lowest energy eigenpair of the Hamiltonian.
      */
     void solve(ci::solver::SolverType solver_type, const bmqc::AddressingScheme& addressing_scheme);
-
-
 };
 
 
