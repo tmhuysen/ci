@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE ( doci_value_change_test ) {
     test_doci_energy = ground.getEval() + ci_basis_mulliken.getInternuclear_repulsion();
     std::cout<<std::endl<<" energy mulliken : "<< test_doci_energy;
 
-    BOOST_CHECK(true)
+    BOOST_CHECK(true);
 
 
 }
