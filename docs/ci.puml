@@ -149,8 +149,8 @@ namespace ci {
         __ protected methods __
             # void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme)
         __ public methods __
-            + double get_eigenvalue () const
-            + Eigen::VectorXd get_eigenvector () const
+            + double **get_eigenvalue**() const
+            + Eigen::VectorXd **get_eigenvector**() const
             + virtual void **solve**()
     }
 

@@ -49,16 +49,23 @@ protected:
     /**
      *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a pointer
      *  to a @param matrix_solver and to speed up the searches for the addresses of spin strings using a @param
-     *  addressing_scheme
+     *  addressing_scheme.
      */
     void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme);
+
+
+    // PROTECTED CONSTRUCTORS
+    /**
+     *  Protected constructor to initialize the const @member dim by @param dim and the reference @member so_basis by @param so_basis.
+     */
+    explicit BaseCI(size_t dim, libwint::SOBasis& so_basis);
 
 
 
 public:
     // GETTERS
-    double get_eigenvalue () const;
-    Eigen::VectorXd get_eigenvector () const;
+    double get_eigenvalue() const;
+    Eigen::VectorXd get_eigenvector() const;
 
 
     // PUBLIC METHODS

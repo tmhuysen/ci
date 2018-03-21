@@ -10,6 +10,21 @@
 namespace ci {
 
 
+
+/*
+ *  PROTECTED CONSTRUCTORS
+ */
+
+/**
+ *  Protected constructor to initialize the const @member dim by @param dim and the reference @member so_basis by @param so_basis
+ */
+BaseCI::BaseCI(size_t dim, libwint::SOBasis& so_basis) :
+    dim (dim),
+    so_basis (so_basis)
+{}
+
+
+
 /*
  *  PRIVATE METHODS
  */
