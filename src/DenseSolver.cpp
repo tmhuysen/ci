@@ -15,7 +15,7 @@ namespace solver {
  */
 DenseSolver::DenseSolver(size_t dim) :
     BaseMatrixSolver(dim),
-    hamiltonian (Eigen::MatrixXd (this->dim, this->dim))
+    hamiltonian (Eigen::MatrixXd::Zero(this->dim, this->dim))
 {}
 
 

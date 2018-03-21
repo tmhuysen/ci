@@ -27,6 +27,13 @@ protected:
     Eigen::VectorXd eigenvector;
 
 
+    // PROTECTED CONSTRUCTORS
+    /**
+     *  Protected constructor to initialize the const @member dim by @param dim and the reference @member so_basis by @param so_basis.
+     */
+    explicit BaseCI(size_t dim, libwint::SOBasis& so_basis);
+
+
     // PURE VIRTUAL PROTECTED METHODS
     /**
      *  Given a @param matrix_solver, construct the Hamiltonian matrix in the solver's matrix representation. An
@@ -54,15 +61,12 @@ protected:
     void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme);
 
 
-    // PROTECTED CONSTRUCTORS
-    /**
-     *  Protected constructor to initialize the const @member dim by @param dim and the reference @member so_basis by @param so_basis.
-     */
-    explicit BaseCI(size_t dim, libwint::SOBasis& so_basis);
-
-
 
 public:
+    // DESTRUCTOR
+    virtual ~BaseCI() = default;
+
+
     // GETTERS
     double get_eigenvalue() const;
     Eigen::VectorXd get_eigenvector() const;

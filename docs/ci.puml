@@ -94,6 +94,8 @@ namespace ci {
                 # bool is_solved = false
                 # double eigenvalue
                 # Eigen::VectorXd eigenvector
+            == protected constructors ==
+                # explicit **BaseMatrixSolver**(size_t dim)
             == destructor ==
                 virtual ~ **BaseMatrixSolver**() = default
             __ public pure virtual methods __
@@ -139,19 +141,25 @@ namespace ci {
         __ protected members __
             # const size_t dim
             # libwint::SOBasis& so_basis
+
             # bool is_solved = false
             # double eigenvalue
             # Eigen::VectorXd eigenvector
+        == protected constructors ==
+            # **BaseCI**(size_t dim, libwint::SOBasis& so_basis)
         __ protected pure virtual methods __
             # virtual void **constructHamiltonian**(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) = 0
             # virtual Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) = 0
             # virtual Eigen::VectorXd **calculateDiagonal**() = 0
         __ protected methods __
             # void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme)
+        == destructor ==
+            virtual ~ **BaseCI**() = default
         __ public methods __
             + double **get_eigenvalue**() const
             + Eigen::VectorXd **get_eigenvector**() const
-            + virtual void **solve**()
+
+            + void **solve**(ci::solver::SolverType solver_type, const bmqc::AddressingScheme& addressing_scheme)
     }
 
 

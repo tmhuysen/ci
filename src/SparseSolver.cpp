@@ -18,7 +18,7 @@ namespace solver {
  */
 SparseSolver::SparseSolver(size_t dim) :
     BaseMatrixSolver(dim),
-    hamiltonian (Eigen::SparseMatrix<double> (this->dim, this->dim))
+    hamiltonian (Eigen::SparseMatrix<double> (this->dim, this->dim))  // Eigen::Sparse is always initiated to zeros
 {}
 
 
