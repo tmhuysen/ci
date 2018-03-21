@@ -16,28 +16,26 @@ namespace ci {
  */
 
 /**
- *  Protected constructor to initialize the const @member dim by @param dim and the reference @member so_basis by @param so_basis
+ *  Protected constructor to initialize the reference @member so_basis by @param so_basis
  */
-BaseCI::BaseCI(size_t dim, libwint::SOBasis& so_basis) :
-    dim (dim),
+BaseCI::BaseCI(libwint::SOBasis& so_basis) :
     so_basis (so_basis)
 {}
 
 
 
 /*
- *  PRIVATE METHODS
+ *  PROTECTED METHODS
  */
 
 /**
  *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a pointer
- *  to a @param matrix_solver and to speed up the searches for the addresses of spin strings using a @param
- *  addressing_scheme
+ *  to a @param matrix_solver.
  */
-void BaseCI::solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) {
+void BaseCI::solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver) {
 
     // Initialize the Hamiltonian matrix and solve the eigenvalue problem associated to it.
-    this->constructHamiltonian(matrix_solver, addressing_scheme);
+    this->constructHamiltonian(matrix_solver);
     matrix_solver->solve();
 
 
@@ -54,24 +52,24 @@ void BaseCI::solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_s
  */
 
 /**
- *  Find the lowest energy eigenpair of the Hamiltonian.
+ *  Find the lowest energy eigenpair of the Hamiltonian, using a @param solver_type.
  */
-void BaseCI::solve(ci::solver::SolverType solver_type, const bmqc::AddressingScheme& addressing_scheme) {
+void BaseCI::solve(ci::solver::SolverType solver_type) {
 
     switch (solver_type) {
 
         case ci::solver::SolverType::DENSE: {
             auto *dense_solver = new ci::solver::DenseSolver(this->dim);
-            this->solveMatrixEigenvalueProblem(dense_solver, addressing_scheme);
+            this->solveMatrixEigenvalueProblem(dense_solver);
         }
 
         case ci::solver::SolverType::SPARSE: {
             auto *sparse_solver = new ci::solver::SparseSolver(this->dim);
-            this->solveMatrixEigenvalueProblem(sparse_solver, addressing_scheme);
+            this->solveMatrixEigenvalueProblem(sparse_solver);
         }
 
         case ci::solver::SolverType::DAVIDSON: {
-            numopt::VectorFunction matrixVectorProduct = [this, addressing_scheme] (const Eigen::VectorXd& x) { return this->matrixVectorProduct(addressing_scheme, x); };
+            numopt::VectorFunction matrixVectorProduct = [this] (const Eigen::VectorXd& x) { return this->matrixVectorProduct(x); };
             Eigen::VectorXd diagonal = this->calculateDiagonal();
 
             Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);

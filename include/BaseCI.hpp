@@ -18,9 +18,12 @@ namespace ci {
 
 class BaseCI {
 protected:
-    const size_t dim;  // the dimension of the Fock space (i.e. the dimension of the CI space)
-
     libwint::SOBasis& so_basis;
+
+    // Every derived class should have the following two members. However, until runtime we don't know anything about
+    // their exact value.
+    size_t dim = 0;  // a good value for an uninitialized state, since the real dimension is always greater than 0
+    bmqc::AddressingScheme* addressing_scheme_ptr = nullptr;
 
     bool is_solved = false;
     double eigenvalue;
@@ -29,22 +32,21 @@ protected:
 
     // PROTECTED CONSTRUCTORS
     /**
-     *  Protected constructor to initialize the const @member dim by @param dim and the reference @member so_basis by @param so_basis.
+     *  Protected constructor to initialize the reference @member so_basis by @param so_basis
      */
-    explicit BaseCI(size_t dim, libwint::SOBasis& so_basis);
+    explicit BaseCI(libwint::SOBasis& so_basis);
 
 
     // PURE VIRTUAL PROTECTED METHODS
     /**
-     *  Given a @param matrix_solver, construct the Hamiltonian matrix in the solver's matrix representation. An
-     *  @param addressing_scheme is used to speed up the searches for the addresses of coupling spin strings.
+     *  Given a @param matrix_solver, construct the Hamiltonian matrix in the solver's matrix representation.
      */
-    virtual void constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) = 0;
+    virtual void constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver) = 0;
 
     /**
-     *  Given a @param addressing_scheme, @return the action of the Hamiltonian of the coefficient vector @param x.
+     *  @return the action of the Hamiltonian of the coefficient vector @param x.
      */
-    virtual Eigen::VectorXd matrixVectorProduct(const bmqc::AddressingScheme& addressing_scheme, const Eigen::VectorXd& x) = 0;
+    virtual Eigen::VectorXd matrixVectorProduct(const Eigen::VectorXd& x) = 0;
 
     /**
      *  @return the diagonal of the matrix representation of the Hamiltonian.
@@ -55,10 +57,9 @@ protected:
     // PROTECTED METHODS
     /**
      *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a pointer
-     *  to a @param matrix_solver and to speed up the searches for the addresses of spin strings using a @param
-     *  addressing_scheme.
+     *  to a @param matrix_solver.
      */
-    void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme);
+    void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver);
 
 
 
@@ -74,9 +75,9 @@ public:
 
     // PUBLIC METHODS
     /**
-     *  Find the lowest energy eigenpair of the Hamiltonian.
+     *  Find the lowest energy eigenpair of the Hamiltonian, using a @param solver_type.
      */
-    void solve(ci::solver::SolverType solver_type, const bmqc::AddressingScheme& addressing_scheme);
+    void solve(ci::solver::SolverType solver_type);
 };
 
 
