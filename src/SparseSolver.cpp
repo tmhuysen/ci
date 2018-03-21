@@ -17,7 +17,7 @@ namespace solver {
  *   Constructor based on the dimension @param dim of the Hamiltonian matrix representation.
  */
 SparseSolver::SparseSolver(size_t dim) :
-    dim (dim),
+    BaseMatrixSolver(dim),
     hamiltonian (Eigen::SparseMatrix<double> (this->dim, this->dim))
 {}
 

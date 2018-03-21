@@ -14,7 +14,7 @@ namespace solver {
  *   Constructor based on the dimension @param dim of the Hamiltonian matrix representation.
  */
 DenseSolver::DenseSolver(size_t dim) :
-    dim (dim),
+    BaseMatrixSolver(dim),
     hamiltonian (Eigen::MatrixXd (this->dim, this->dim))
 {}
 

@@ -22,6 +22,14 @@ protected:
     Eigen::VectorXd eigenvector;
 
 
+    // CONSTRUCTOR
+    /**
+     *  Protected constructor to initialize the const @member dim by @param dim.
+     */
+    BaseMatrixSolver(size_t dim);
+
+
+
 public:
     // DESTRUCTOR
     virtual ~BaseMatrixSolver() = default;

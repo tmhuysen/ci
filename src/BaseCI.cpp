@@ -45,18 +45,18 @@ void BaseCI::solve(ci::solver::SolverType solver_type, const bmqc::AddressingSch
 
     switch (solver_type) {
 
-        case ci::solver::SolverType::DENSE:
-            auto* dense_solver = new ci::solver::DenseSolver(this->dim);
+        case ci::solver::SolverType::DENSE: {
+            auto *dense_solver = new ci::solver::DenseSolver(this->dim);
             this->solveMatrixEigenvalueProblem(dense_solver, addressing_scheme);
+        }
 
-
-        case ci::solver::SolverType::SPARSE:
-            auto* sparse_solver = new ci::solver::SparseSolver(this->dim);
+        case ci::solver::SolverType::SPARSE: {
+            auto *sparse_solver = new ci::solver::SparseSolver(this->dim);
             this->solveMatrixEigenvalueProblem(sparse_solver, addressing_scheme);
+        }
 
-
-        case ci::solver::SolverType::DAVIDSON:
-            numopt::VectorFunction matrixVectorProduct = [this] (const Eigen::VectorXd& x) { return this->matrixVectorProduct(addressing_scheme, x); };
+        case ci::solver::SolverType::DAVIDSON: {
+            numopt::VectorFunction matrixVectorProduct = [this, addressing_scheme] (const Eigen::VectorXd& x) { return this->matrixVectorProduct(addressing_scheme, x); };
             Eigen::VectorXd diagonal = this->calculateDiagonal();
 
             Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
@@ -68,6 +68,8 @@ void BaseCI::solve(ci::solver::SolverType solver_type, const bmqc::AddressingSch
             this->is_solved = true;
             this->eigenvalue = davidson_solver.get_eigenvalue();
             this->eigenvector = davidson_solver.get_eigenvector();
+        }
+
     }
 
 }

@@ -7,8 +7,22 @@ namespace solver {
 
 
 /*
+ *  CONSTRUCTORS
+ */
+
+/**
+ *  Protected constructor to initialize the const @member dim by @param dim.
+ */
+BaseMatrixSolver::BaseMatrixSolver(size_t dim) :
+    dim (dim)
+{}
+
+
+
+/*
  *  GETTERS
  */
+
 double BaseMatrixSolver::get_eigenvalue() const {
 
     if (this->is_solved) {
