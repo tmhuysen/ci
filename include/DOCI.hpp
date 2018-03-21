@@ -41,7 +41,10 @@ public:
 
 
     // CONSTRUCTORS
-    DOCI(libwint::SOBasis& so_basis, const libwint::Molecule& molecule);
+    /**
+     *  Constructor based on a given @param so_basis and a number of electrons @param N.
+     */
+    DOCI(libwint::SOBasis& so_basis, size_t N);
 
 
     // STATIC PUBLIC METHODS

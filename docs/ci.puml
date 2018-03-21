@@ -140,26 +140,27 @@ namespace ci {
     abstract class BaseCI {
         __ protected members __
             # const size_t dim
+            # const bmqc::AddressingScheme addressing_scheme
             # libwint::SOBasis& so_basis
 
             # bool is_solved = false
             # double eigenvalue
             # Eigen::VectorXd eigenvector
         == protected constructors ==
-            # **BaseCI**(size_t dim, libwint::SOBasis& so_basis)
+            # **BaseCI**(size_t dim, const bmqc::AddressingScheme& addressing_scheme, libwint::SOBasis& so_basis)
         __ protected pure virtual methods __
-            # virtual void **constructHamiltonian**(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) = 0
-            # virtual Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) = 0
+            # virtual void **constructHamiltonian**(ci::solver::BaseMatrixSolver* matrix_solver) = 0
+            # virtual Eigen::VectorXd **matrixVectorProduct**() = 0
             # virtual Eigen::VectorXd **calculateDiagonal**() = 0
         __ protected methods __
-            # void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme)
+            # void **solveMatrixEigenvalueProblem**(ci::solver::BaseMatrixSolver* matrix_solver)
         == destructor ==
             virtual ~ **BaseCI**() = default
         __ public methods __
             + double **get_eigenvalue**() const
             + Eigen::VectorXd **get_eigenvector**() const
 
-            + void **solve**(ci::solver::SolverType solver_type, const bmqc::AddressingScheme& addressing_scheme)
+            + void **solve**(ci::solver::SolverType solver_type)
     }
 
 

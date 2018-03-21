@@ -1,6 +1,6 @@
 #include "DenseSolver.hpp"
 
-
+#include <iostream>
 
 namespace ci {
 namespace solver {
@@ -16,7 +16,9 @@ namespace solver {
 DenseSolver::DenseSolver(size_t dim) :
     BaseMatrixSolver(dim),
     hamiltonian (Eigen::MatrixXd::Zero(this->dim, this->dim))
-{}
+{
+    std::cout << "Made a dense solver with dimension " << dim << std::endl;
+}
 
 
 
@@ -46,6 +48,10 @@ void DenseSolver::solve() {
  */
 void DenseSolver::addToMatrix(double value, size_t index1, size_t index2) {
 
+    std::cout << "Adding to dense matrix: "
+              << "value " << value
+              << "\tindex1:" << index1
+              << "\tindex2:" << index2 << std::endl;
     this->hamiltonian(index1, index2) += value;
 }
 
