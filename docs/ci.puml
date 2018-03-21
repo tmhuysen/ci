@@ -168,15 +168,12 @@ namespace ci {
             - const size_t N_alpha
             - const size_t N_beta
             - const size_t K
-            - const size_t dimension
         __ private methods __
             - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver, bmqc::AddressingScheme& addressing_scheme) override
             - Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) override
             - Eigen::VectorXd **calculateDiagonal**(const bmqc::AddressingScheme& addressing_scheme) override
         == constructors ==
                 **FCI**(const libwint::SOBasis& so_basis, const libwint::Molecule& molecule)
-        __ public methods __
-            + void **solve**() override
     }
 
 
@@ -184,15 +181,12 @@ namespace ci {
         __ private members __
             - const size_t N_P
             - const size_t K
-            - const size_t dimension
         __ private methods __
             - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver, bmqc::AddressingScheme& addressing_scheme) override
             - Eigen::VectorXd **matrixVectorProduct**(const bmqc::AddressingScheme& addressing_scheme) override
             - Eigen::VectorXd **calculateDiagonal**(const bmqc::AddressingScheme& addressing_scheme) override
         == constructors ==
             **DOCI**(const libwint::SOBasis& so_basis, const libwint::Molecule& molecule)
-        __ public methods __
-            + void **solve**() override
     }
 
 
@@ -225,25 +219,3 @@ ci.DOCI o--> libwint.Molecule
 
 
 @enduml
-
-
-
-        class DavidsonSolver {
-            __ private members __
-                numopt::DavidsonSolver numopt_davidson_solver
-            == constructors ==
-                **DavidsonSolver**(const numopt::VectorFunction& matrixVectorProduct, const Eigen::VectorXd& t_0, const Eigen::VectorXd& diagonal, double residue_tolerance = 1.0e-08, double correction_threshold = 1.0e-03, size_t maximum_subspace_dimension = 15);
-            __ public methods __
-                + virtual void **solve**()
-
-                + double **get_eigenvalue**() const
-                + Eigen::VectorXd **get_eigenvector**() const
-        }
-
-
-                abstract class BaseSolver {
-                    == destructor ==
-                        virtual ~ **BaseSolver**() = default
-                    __ public methods __
-                        + virtual void **solve**() = 0
-                }
