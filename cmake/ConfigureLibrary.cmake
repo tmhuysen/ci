@@ -21,5 +21,11 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC hf)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${bmqc_INCLUDE_DIRS})
 target_link_libraries(${LIBRARY_NAME} PUBLIC bmqc)
 
+
+# Include rdm
+target_include_directories(${LIBRARY_NAME} PUBLIC ${rdm_INCLUDE_DIRS})
+target_link_libraries(${LIBRARY_NAME} PUBLIC rdm)
+
 # Include Spectra
 target_include_directories(${LIBRARY_NAME} PUBLIC ${spectra_INCLUDE_DIRS})
+

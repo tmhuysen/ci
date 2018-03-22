@@ -1,3 +1,4 @@
+#include <RDMdoci.hpp>
 #include "DOCI.hpp"
 
 /**
@@ -92,6 +93,34 @@ doci::DOCI::DOCI( doci::CI_basis *ciBasis) : CI(ciBasis) {
 	calculateCI(0,this->nbf);
 	this->hamiltonian->solve();
 	this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
+
+
+
+}
+
+doci::DOCI::DOCI(
+        doci::CI_basis_mulliken *ciBasis,
+         double constraint,
+        std::vector<size_t> set_of_AO)
+        : CI(ciBasis, constraint, set_of_AO){
+    double threshold = 1e-6;
+    construct();
+    this->hamiltonian = Hamiltonian::make_hamiltonian(nbf);
+    calculateCI(0,this->nbf);
+    this->hamiltonian->solve();
+    this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
+    rdm::RDMdoci rdm_doci = rdm::RDMdoci(lowestEigenState.getEvec(),this->K,this->npairs);
+
+    ciBasis->calculateMullikenMatrix(set_of_AO);
+    double population = ciBasis->mullikenPopulationCI(&rdm_doci);
+    std::cout<<std::endl<<"mulliken starting pop for our AO set :"<<population;
+    double error = constraint - population;
+    /*
+    while(std::abs(error) > threshold){
+
+    }
+    */
+
 
 
 

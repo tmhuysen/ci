@@ -4,48 +4,58 @@
 #include "State.hpp"
 #include "Hamiltonian.hpp"
 #include "CI_basis.hpp"
+#include "CI_basis_mulliken.hpp"
 
 
 namespace doci {
 class CI {
 
 protected:
-	size_t nelec; // number of electrons
-	size_t K; // number of spatial orbitals
-	size_t nbf; // number of basis functions
-	doci::State lowestEigenState;
-	doci::CI_basis* basis; //contains all information required to do a CI calculation
-	doci::Hamiltonian* hamiltonian; //abstract hamiltonian
+    size_t nelec; // number of electrons
+    size_t K; // number of spatial orbitals
+    size_t nbf; // number of basis functions
+    doci::State lowestEigenState;
+    doci::CI_basis *basis; //contains all information required to do a CI calculation
+    doci::Hamiltonian *hamiltonian; //abstract hamiltonian
 
 protected:
-	/**
-	* calculate hamiltonian elements.
-	* @param start,end : indicates the bf you want to start with and where the iteration ends(excluded).
-	*/
-	virtual void calculateCI(size_t start, size_t end)=0;
-	/**
-	 * Helper function for the constructors
-	 */
-	virtual void construct()=0;
+    /**
+    * calculate hamiltonian elements.
+    * @param start,end : indicates the bf you want to start with and where the iteration ends(excluded).
+    */
+    virtual void calculateCI(size_t start, size_t end)=0;
+
+    /**
+     * Helper function for the constructors
+    */
+    virtual void construct()=0;
 
 public:
-	/** Constructor based on a given CI_basis
-	 * Initializes the base variables of the class, and calculates the number of basis functions (nbf)
-	 * Hamiltonian is picked by the program based on the nbf
-	 */
-	CI(CI_basis *ciBasis);
+    /** Constructor based on a given CI_basis
+     * Initializes the base variables of the class, and calculates the number of basis functions (nbf)
+     * Hamiltonian is picked by the program based on the nbf
+     */
+    CI(CI_basis *ciBasis);
 
-	/**
-	 * Default constructor
-	 */
-	CI();
+    /** Constructor based on a given CI_basis_mulliken
+     * Initializes the base variables of the class, and calculates the number of basis functions (nbf)
+     * does a constrained CI calculation for the constraint and given (indexes) AO set.
+     */
+    CI(CI_basis_mulliken *ciBasis, double constraint, std::vector<size_t> set_of_AO);
 
-	/**
-	 * Getters
-	 */
-	const State &getLowestEigenState() const;
-	Hamiltonian *getHamiltonian() const;
+    /**
+     * Default constructor
+     */
+    CI();
+
+    /**
+     * Getters
+     */
+    const State &getLowestEigenState() const;
+
+    Hamiltonian *getHamiltonian() const;
 };
+
 
 }  // namespace doci
 

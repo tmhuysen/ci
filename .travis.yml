@@ -91,6 +91,14 @@ install:
   - cd bmqc
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
+
+    # Install rdm
+    - mkdir /tmp/rdm && cd /tmp/rdm
+    - git clone https://github.com/GQCG/rdm.git
+    - cd rdm
+    - mkdir build && cd build
+    - cmake .. && make && make test && sudo make install
+
   # 'Install' Spectra
   - mkdir /opt/local/ && cd /opt/local/
   - git clone https://github.com/yixuan/spectra.git

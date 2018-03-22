@@ -20,3 +20,10 @@ const doci::State &doci::CI::getLowestEigenState() const {
 doci::Hamiltonian *doci::CI::getHamiltonian() const {
 	return hamiltonian;
 }
+
+doci::CI::CI(doci::CI_basis_mulliken *ciBasis, double constraint, std::vector<size_t> set_of_AO) {
+    basis = ciBasis;
+
+
+}
+

@@ -11,12 +11,14 @@ namespace doci {
             # doci::Hamiltonian* hamiltonian
         __ protected methods __
             # virtual void **calculateCI**(size_t start, size_t end)=0
-	        # virtual void **construct**()=0
+            # virtual void **construct**()=0
         == constructors ==
-	        **CI**()
-	        **CI**(CI_basis *ciBasis)
-	    __ public methods __
-	        + Hamiltonian* **getHamiltonian**() const
+            **CI**()
+            **CI**(CI_basis *ciBasis)
+            **CI**(CI_basis_mulliken *ciBasis)
+        __ public methods __
+            + Hamiltonian* **getHamiltonian**() const
+            + const State &getLowestEigenState() const;
     }
 
 
@@ -81,8 +83,8 @@ namespace doci {
         == constructors ==
             +CI_basis_mulliken(hf::rhf::RHF& rhf)
         __ public methods __
-           +void calculateMullikenMatrix(std::vector<size_t> set_of_AO)
-
+            +void calculateMullikenMatrix(std::vector<size_t> set_of_AO)
+            +double mullikenPopulationCI(std::vector<size_t> set_of_AO, rdm::RDM_class *rdm)
         }
 
 

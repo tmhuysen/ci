@@ -1,4 +1,5 @@
 #include "CI_basis_mulliken.hpp"
+#include <functional>
 
 doci::CI_basis_mulliken::CI_basis_mulliken(hf::rhf::RHF &rhf) : CI_basis(rhf) {
     this->S = rhf.basis.S;
@@ -55,4 +56,18 @@ double doci::CI_basis_mulliken::getOne_int(size_t index1, size_t index2) const {
 
 void doci::CI_basis_mulliken::set_lagrange_multiplier(double lagrange_multiplier) {
     CI_basis_mulliken::lagrange_multiplier = lagrange_multiplier;
+}
+
+double doci::CI_basis_mulliken::mullikenPopulationCI(rdm::RDM_class *rdm) {
+    rdm->compute1RDM();
+    const Eigen::MatrixXd &RDMaa = rdm->getOneRDMaa();
+    const Eigen::MatrixXd &RDMbb = rdm->getOneRDMbb();
+    double mulliken_population = 0;
+    for(size_t i = 0; i<this->K;i++) {
+        mulliken_population += mulliken_matrix(i,i)*(RDMaa(i,i)+RDMbb(i,i));
+    }
+    return mulliken_population;
+
+
+
 }

@@ -27,6 +27,7 @@ private:
 
 public:
 	DOCI(CI_basis *ciBasis);
+	DOCI(CI_basis_mulliken *ciBasis, double constraint, std::vector<size_t> set_of_AO);
 };
 
 }  // namespace doci

@@ -1,12 +1,14 @@
 #ifndef CI_CI_BASIS_MULLIKEN_HPP
 #define CI_CI_BASIS_MULLIKEN_HPP
 
+#include <RDMdoci.hpp>
 #include "CI_basis.hpp"
 namespace doci {
 
 class CI_basis_mulliken : public CI_basis {
 private:
     double lagrange_multiplier = 0;
+
 
     Eigen::MatrixXd C; //Canonical mat hf
     Eigen::MatrixXd S; //Overlap matrix
@@ -19,13 +21,18 @@ public:
     /** Constructor based on a given RHF instance
      */
     CI_basis_mulliken(hf::rhf::RHF& rhf);
-    /** Calculates the mulliken matrix for a set of AO's
+    /** Calculates the mulliken matrix for a set of AO's, this is the evaluation of the one electron mulliken (herm) in MO basis.
      */
     void calculateMullikenMatrix(std::vector<size_t> set_of_AO);
 
     /** getOne_int now returns the one electron value + langrange multiplied corresponding value of the mulliken matrix.
      */
     double getOne_int(size_t index1, size_t index2) const override;
+
+    /** Calculate the mulliken population for a set of AO's of a CI a wavefunction (traces the 1RDMs).
+     */
+    double mullikenPopulationCI(rdm::RDM_class *rdm);
+
     /** Setters
      */
     void set_lagrange_multiplier(double lagrange_multiplier);
