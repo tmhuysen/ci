@@ -107,22 +107,20 @@ doci::DOCI::DOCI(
 
     // evaluate all mulliken operator values for the AO set.
     ciBasis->calculateMullikenMatrix(set_of_AO);
-    double threshold = 1e-6; // set a threshold
+    double threshold = 1e-4; // set a threshold
     construct(); // define the CI dims
-
+    std::cout<<std::setprecision(12);
     double error = this->npairs*2; //maximum value
     std::cout<<error<<"start";
-    double langrange_multiplier = 0; //no constraint
-    double max = 1;
-    double min = -1;
-    double std_dev = 0.3;
+    double langrange_multiplier = 0.736430722293; //no constraint
+    double max =  langrange_multiplier + 0.1;
+    double min = langrange_multiplier -0.1;
+    double std_dev = 0.01;
     double transform_mag = 0.9999;
-    double interval = 0.00002;
     size_t iterations = 0;
     NormalGenerator langrange_generator(langrange_multiplier,std_dev,min,max);
 
     while(std::abs(error) > threshold){
-        std::cout<<std::endl<<" multi : "<<langrange_multiplier;
         ciBasis->set_lagrange_multiplier(langrange_multiplier);
         this->basis=ciBasis;
         this->hamiltonian = Hamiltonian::make_hamiltonian(nbf);
@@ -145,7 +143,7 @@ doci::DOCI::DOCI(
         langrange_multiplier = langrange_generator.generate();
         //std::cout<<std::endl<<" multiplier: "<<langrange_multiplier;
         iterations++;
-        if(iterations > 1000000){
+        if(iterations > 10000){
             throw std::overflow_error("to many iterations");
 
         }
