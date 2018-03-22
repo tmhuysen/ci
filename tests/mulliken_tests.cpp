@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE ( constrained_doci_test ) {
     doci::CI_basis_mulliken ci_basis_mulliken (rhf);
 
     // Do a DOCI calculation based on the RHF calculation
-    doci::DOCI doci_test = doci::DOCI(&ci_basis_mulliken,8,{0,1,2,3,4});
+    doci::DOCI doci_test = doci::DOCI(&ci_basis_mulliken,9,{0,1,2,3,4});
     doci::State ground = doci_test.getLowestEigenState();
     double test_doci_energy = ground.getEval() + ci_basis_mulliken.getInternuclear_repulsion();
 

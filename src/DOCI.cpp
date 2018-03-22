@@ -107,48 +107,41 @@ doci::DOCI::DOCI(
 
     // evaluate all mulliken operator values for the AO set.
     ciBasis->calculateMullikenMatrix(set_of_AO);
-    double threshold = 1e-6; // set a threshold
+    double threshold = 1e-2; // set a threshold
     construct(); // define the CI dims
 
     double error = this->npairs*2; //maximum value
     std::cout<<error<<"start";
-    double langrange_multiplier = 0; //no constraint
+    double langrange_multiplier = -1; //no constraint
     double max = 1;
     double min = -1;
     double std_dev = 0.3;
     double transform_mag = 0.9999;
-    double interval = 0.00002;
-    size_t iterations = 0;
+    double interval = 0.001;
+    int max_iterations = 2000;
+    int iterations = 0;
     NormalGenerator langrange_generator(langrange_multiplier,std_dev,min,max);
 
-    while(std::abs(error) > threshold){
-        std::cout<<std::endl<<" multi : "<<langrange_multiplier;
+    while(std::abs(error) > threshold && iterations < max_iterations){
+        langrange_multiplier += interval;
         ciBasis->set_lagrange_multiplier(langrange_multiplier);
         this->basis=ciBasis;
         this->hamiltonian = Hamiltonian::make_hamiltonian(nbf);
         calculateCI(0,this->nbf);
         this->hamiltonian->solve();
         this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
-        delete(hamiltonian);
         rdm::RDMdoci rdm_doci = rdm::RDMdoci(lowestEigenState.getEvec(),this->K,this->npairs);
+        delete(hamiltonian);
         double population = ciBasis->mullikenPopulationCI(&rdm_doci);
         //std::cout<<std::endl<<" pop: "<<population;
         double new_error = constraint - population;
-        //std::cout<<std::endl<<"error: "<<new_error<< " v.s " <<error;
         if(std::abs(error)>std::abs(new_error)){
             std::cout<<std::endl<<" winner : "<<"error: "<<new_error<< " v.s " <<error<< " with lambda : "<<langrange_multiplier;
-            langrange_generator.setMean(langrange_multiplier);
-            langrange_generator.transform(transform_mag);
             error = new_error;
 
         }
-        langrange_multiplier = langrange_generator.generate();
         //std::cout<<std::endl<<" multiplier: "<<langrange_multiplier;
         iterations++;
-        if(iterations > 1000000){
-            throw std::overflow_error("to many iterations");
-
-        }
     }
 
 
