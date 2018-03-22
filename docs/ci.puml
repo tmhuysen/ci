@@ -139,7 +139,7 @@ namespace ci {
         __ protected methods __
             # void **solveMatrixEigenvalueProblem**(ci::solver::BaseMatrixSolver* matrix_solver)
         == destructor ==
-            virtual ~ **BaseCI**() = default
+            virtual **~BaseCI**()
         __ public methods __
             + double **get_eigenvalue**() const
             + Eigen::VectorXd **get_eigenvector**() const
@@ -163,6 +163,8 @@ namespace ci {
             - Eigen::VectorXd **calculateDiagonal**() override
         == constructors ==
             **DOCI**(const libwint::SOBasis& so_basis, size_t N)
+        == destructor ==
+            **~DOCI**()
     }
 
 

@@ -108,22 +108,36 @@ Eigen::VectorXd DOCI::calculateDiagonal() {
  *  Constructor based on a given @param so_basis and a number of electrons @param N.
  */
 DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
-    BaseCI(this->calculateDimension(so_basis.get_K(), N / 2), so_basis),
+    BaseCI(so_basis),
+    K (so_basis.get_K()),
     N_P (N / 2),
-    K (so_basis.get_K())
-
+    dim (this->calculateDimension(so_basis.get_K(), N / 2))
 {
 
-    // Do some input checks
+    // Do some input checks.
     if ((N % 2) != 0) {
-        throw std::invalid_argument("Your basis contains an odd amount of electrons and is not suitable for DOCI");
+        throw std::invalid_argument("You gave an odd amount of electrons, which is not suitable for DOCI.");
     }
 
     if (this->K < this->N_P) {
-        throw std::invalid_argument("Too many electrons to place into the given number of spatial orbitals");
+        throw std::invalid_argument("Too many electrons to place into the given number of spatial orbitals.");
     }
 
+
+    // Create an addressing scheme.
+    // Since in DOCI, alpha==beta, we should make an addressing scheme with the number of PAIRS.
+    this->addressing_scheme_ptr = new bmqc::AddressingScheme(this->K, this->N_P);
 }
+
+
+
+/*
+ *  DESTRUCTOR
+ */
+DOCI::~DOCI() {
+    delete[] this->addressing_scheme_ptr;
+}
+
 
 
 /*

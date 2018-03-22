@@ -36,15 +36,15 @@ private:
 
 
 public:
-    // DESTRUCTOR
-    ~DOCI() override = default;
-
-
     // CONSTRUCTORS
     /**
      *  Constructor based on a given @param so_basis and a number of electrons @param N.
      */
     DOCI(libwint::SOBasis& so_basis, size_t N);
+
+
+    // DESTRUCTOR
+    ~DOCI() override;
 
 
     // STATIC PUBLIC METHODS
