@@ -30,15 +30,12 @@ BaseCI::BaseCI(libwint::SOBasis& so_basis) :
 
 /**
  *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a pointer
- *  to a @param matrix_solver.
+ *  to a @param matrix_solver_ptr.
  */
-void BaseCI::solveMatrixEigenvalueProblem() {
-
-    // Check if we gave the right pointer: it should be derived from BaseMatrixSolver
-    assert(dynamic_cast<numopt::eigenproblem::BaseMatrixSolver*>(this->eigensolver_ptr));
+void BaseCI::solveMatrixEigenvalueProblem(numopt::eigenproblem::BaseMatrixSolver* matrix_solver_ptr) {
 
     // Initialize the Hamiltonian matrix and solve the eigenvalue problem associated to it.
-    this->constructHamiltonian();
+    this->constructHamiltonian(matrix_solver_ptr);
     this->eigensolver_ptr->solve();
 }
 
@@ -49,7 +46,7 @@ void BaseCI::solveMatrixEigenvalueProblem() {
  */
 
 BaseCI::~BaseCI() {
-    delete[] this->eigensolver_ptr;
+    delete this->eigensolver_ptr;
 }
 
 
@@ -67,13 +64,19 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
     switch (solver_type) {
 
         case numopt::eigenproblem::SolverType::DENSE: {
-            this->eigensolver_ptr = new numopt::eigenproblem::DenseSolver(this->dim);
-            this->solveMatrixEigenvalueProblem();
+            auto dense_solver = new numopt::eigenproblem::DenseSolver(this->dim);
+            this->solveMatrixEigenvalueProblem(dense_solver);
+            this->eigensolver_ptr = dense_solver;  // prevent data from going out of scope
+                                                   // we are only assigning this->eigensolver_ptr now, because
+                                                   // this->solveMatrixEigenvalueProblem only accepts BaseMatrixSolver*
         }
 
         case numopt::eigenproblem::SolverType::SPARSE: {
-            this->eigensolver_ptr= new numopt::eigenproblem::SparseSolver(this->dim);
-            this->solveMatrixEigenvalueProblem();
+            auto sparse_solver = new numopt::eigenproblem::SparseSolver(this->dim);
+            this->solveMatrixEigenvalueProblem(sparse_solver);
+            this->eigensolver_ptr = sparse_solver;  // prevent data from going out of scope
+                                                    // we are only assigning this->eigensolver_ptr now, because
+                                                    // this->solveMatrixEigenvalueProblem only accepts BaseMatrixSolver*
         }
 
         case numopt::eigenproblem::SolverType::DAVIDSON: {

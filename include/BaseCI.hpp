@@ -37,7 +37,7 @@ protected:
     /**
      *  Given a @param matrix_solver, construct the Hamiltonian matrix in the solver's matrix representation.
      */
-    virtual void constructHamiltonian() = 0;
+    virtual void constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) = 0;
 
     /**
      *  @return the action of the Hamiltonian of the coefficient vector @param x.
@@ -52,9 +52,10 @@ protected:
 
     // PROTECTED METHODS
     /**
-     *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class.
+     *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a @param
+     *  matrix_solver_ptr.
      */
-    void solveMatrixEigenvalueProblem();
+    void solveMatrixEigenvalueProblem(numopt::eigenproblem::BaseMatrixSolver* matrix_solver_ptr);
 
 
 

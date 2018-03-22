@@ -18,15 +18,14 @@ private:
 
     // OVERRIDDEN PRIVATE METHODS
     /**
-     *  Given a @param matrix_solver, construct the DOCI Hamiltonian matrix in the solver's matrix representation. An
-     *  @param addressing_scheme is used to speed up the searches for the addresses of coupling spin strings.
+     *  Given a @param matrix_solver, construct the DOCI Hamiltonian matrix in the solver's matrix representation.
      */
-    void constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) override;
+    void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) override;
 
     /**
-     *  Given a @param addressing_scheme, @return the action of the DOCI Hamiltonian of the coefficient vector @param x.
+     *  @return the action of the DOCI Hamiltonian of the coefficient vector @param x.
      */
-    Eigen::VectorXd matrixVectorProduct(const bmqc::AddressingScheme& addressing_scheme, const Eigen::VectorXd& x) override;
+    Eigen::VectorXd matrixVectorProduct(const Eigen::VectorXd& x) override;
 
     /**
      *  @return the diagonal of the matrix representation of the DOCI Hamiltonian.

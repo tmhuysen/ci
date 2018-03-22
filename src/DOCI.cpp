@@ -15,18 +15,15 @@ namespace ci {
  */
 
 /**
- *  Given a @param matrix_solver, construct the DOCI Hamiltonian matrix in the solver's matrix representation. An
- *  @param addressing_scheme is used to speed up the searches for the addresses of coupling spin strings.
+ *  Given a @param matrix_solver, construct the DOCI Hamiltonian matrix in the solver's matrix representation.
  */
-void DOCI::constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver, const bmqc::AddressingScheme& addressing_scheme) {
-
-
+void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) {
 
     std::cout << "I got to constructHamiltonian." << std::endl;
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
-    bmqc::SpinString<unsigned long> spin_string (0, addressing_scheme);  // spin string with address 0
+    bmqc::SpinString<unsigned long> spin_string (0, *(this->addressing_scheme_ptr));  // spin string with address 0
 
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
         if (I > 0) {
@@ -49,7 +46,7 @@ void DOCI::constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver, con
                 for(size_t q = 0; q < p; q++){// q loops over SOs creation l=j is covered in the first loop and since we can't annihilate twice this combination would be redundant.
                     std::cout << "q is " << q << std::endl;
                     if (spin_string.create(q)){ //we can never excite a single electron to a new site we have to do it in pairs.
-                        size_t address = spin_string.address(addressing_scheme);
+                        size_t address = spin_string.address(*(this->addressing_scheme_ptr));
                         std::cout << "q is unoccupied in I and the resulting address is: " << address << std::endl;
                         //integrals parameters are entered in chemical notation!
                         // This means that first 2 parameters are for the first electrons and subsequent ones are for the second
@@ -71,7 +68,6 @@ void DOCI::constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver, con
                         //multiply by 2 again because alpha,alpha is the same as beta,beta combinations.
                         //same_spin (positive) = mixed, so multiply that by 2 again.
                         matrix_solver->addToMatrix(4*same_spin_two_int + 2*same_spin_two_int_negative, I, I);
-
                     }
 
                 }
@@ -85,9 +81,9 @@ void DOCI::constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver, con
 
 
 /**
- *  Given a @param addressing_scheme, @return the action of the DOCI Hamiltonian of the coefficient vector @param x.
+ *  @return the action of the DOCI Hamiltonian of the coefficient vector @param x.
  */
-Eigen::VectorXd DOCI::matrixVectorProduct(const bmqc::AddressingScheme& addressing_scheme, const Eigen::VectorXd& x) {
+Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
 }
 
@@ -135,7 +131,7 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
  *  DESTRUCTOR
  */
 DOCI::~DOCI() {
-    delete[] this->addressing_scheme_ptr;
+    delete this->addressing_scheme_ptr;
 }
 
 
