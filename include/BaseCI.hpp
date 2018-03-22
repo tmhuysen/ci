@@ -17,20 +17,16 @@ namespace ci {
 class BaseCI {
 protected:
     libwint::SOBasis& so_basis;
-
-    // Every derived class should have the following two members. However, until runtime we don't know anything about
-    // their exact value.
-    size_t dim = 0;  // a good value for an uninitialized state, since the real dimension is always greater than 0
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
 
-    bmqc::AddressingScheme* addressing_scheme_ptr = nullptr;  // this is set by any derived class
+    const size_t dim;  // the dimension of the CI space
 
 
     // PROTECTED CONSTRUCTORS
     /**
-     *  Protected constructor to initialize the reference @member so_basis by @param so_basis.
+     *  Protected constructor given a @param so_basis and a dimension @dim.
      */
-    explicit BaseCI(libwint::SOBasis& so_basis);
+    explicit BaseCI(libwint::SOBasis& so_basis, size_t dim);
 
 
     // PURE VIRTUAL PROTECTED METHODS

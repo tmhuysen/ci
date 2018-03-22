@@ -23,7 +23,7 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
-    bmqc::SpinString<unsigned long> spin_string (0, *(this->addressing_scheme_ptr));  // spin string with address 0
+    bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
 
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
         if (I > 0) {
@@ -46,7 +46,7 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
                 for(size_t q = 0; q < p; q++){// q loops over SOs creation l=j is covered in the first loop and since we can't annihilate twice this combination would be redundant.
                     std::cout << "q is " << q << std::endl;
                     if (spin_string.create(q)){ //we can never excite a single electron to a new site we have to do it in pairs.
-                        size_t address = spin_string.address(*(this->addressing_scheme_ptr));
+                        size_t address = spin_string.address(this->addressing_scheme);
                         std::cout << "q is unoccupied in I and the resulting address is: " << address << std::endl;
                         //integrals parameters are entered in chemical notation!
                         // This means that first 2 parameters are for the first electrons and subsequent ones are for the second
@@ -104,12 +104,12 @@ Eigen::VectorXd DOCI::calculateDiagonal() {
  *  Constructor based on a given @param so_basis and a number of electrons @param N.
  */
 DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
-    BaseCI(so_basis),
+    BaseCI(so_basis, this->calculateDimension(so_basis.get_K(), N / 2)),
     K (so_basis.get_K()),
     N_P (N / 2),
-    dim (this->calculateDimension(so_basis.get_K(), N / 2))
+    addressing_scheme (bmqc::AddressingScheme(this->K, this->N_P)) // since in DOCI, alpha==beta, we should make an
+                                                                   // addressing scheme with the number of PAIRS.
 {
-
     // Do some input checks.
     if ((N % 2) != 0) {
         throw std::invalid_argument("You gave an odd amount of electrons, which is not suitable for DOCI.");
@@ -118,20 +118,6 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
     if (this->K < this->N_P) {
         throw std::invalid_argument("Too many electrons to place into the given number of spatial orbitals.");
     }
-
-
-    // Create an addressing scheme.
-    // Since in DOCI, alpha==beta, we should make an addressing scheme with the number of PAIRS.
-    this->addressing_scheme_ptr = new bmqc::AddressingScheme(this->K, this->N_P);
-}
-
-
-
-/*
- *  DESTRUCTOR
- */
-DOCI::~DOCI() {
-    delete this->addressing_scheme_ptr;
 }
 
 

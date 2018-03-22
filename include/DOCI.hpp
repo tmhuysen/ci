@@ -14,13 +14,14 @@ class DOCI : public ci::BaseCI {
 private:
     const size_t K;  // number of spatial orbitals
     const size_t N_P;  // number of electron pairs
+    const bmqc::AddressingScheme addressing_scheme;
 
 
     // OVERRIDDEN PRIVATE METHODS
     /**
      *  Given a @param matrix_solver, construct the DOCI Hamiltonian matrix in the solver's matrix representation.
      */
-    void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) override;
+    void constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) override;
 
     /**
      *  @return the action of the DOCI Hamiltonian of the coefficient vector @param x.
@@ -43,7 +44,7 @@ public:
 
 
     // DESTRUCTOR
-    ~DOCI() override;
+    ~DOCI() override = default;
 
 
     // STATIC PUBLIC METHODS

@@ -16,10 +16,11 @@ namespace ci {
  */
 
 /**
- *  Protected constructor to initialize the reference @member so_basis by @param so_basis.
+ *  Protected constructor given a @param so_basis and a dimension @dim.
  */
-BaseCI::BaseCI(libwint::SOBasis& so_basis) :
-    so_basis (so_basis)
+BaseCI::BaseCI(libwint::SOBasis& so_basis, size_t dim) :
+    so_basis (so_basis),
+    dim (dim)
 {}
 
 
