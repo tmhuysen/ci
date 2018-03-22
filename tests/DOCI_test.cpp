@@ -24,13 +24,9 @@ BOOST_AUTO_TEST_CASE ( DOCI_beh_cation_klaas_dense ) {
 
 
     // Do a DOCI calculation based on a given FCIDUMP file
-    size_t K = 16;
-    size_t N = 4;
-    libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", K);
-    ci::DOCI doci (so_basis, N);
-
-    bmqc::AddressingScheme addressing_scheme (K, N);
-    doci.solve(ci::solver::SolverType::DENSE, addressing_scheme);
+    libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    ci::DOCI doci (so_basis, 4);  // 4 electrons
+    doci.solve(numopt::eigenproblem::SolverType::DENSE);
 
 
     // Calculate the total energy
