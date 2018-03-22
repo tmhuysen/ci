@@ -48,6 +48,16 @@ void BaseCI::solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_s
 
 
 /*
+ *  DESTRUCTOR
+ */
+
+virtual BaseCI::~BaseCI() {
+    delete[] this->eigensolver_ptr;
+}
+
+
+
+/*
  *  PUBLIC METHODS
  */
 

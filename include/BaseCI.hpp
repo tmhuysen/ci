@@ -6,9 +6,7 @@
 #include <libwint.hpp>
 #include <bmqc.hpp>
 
-#include "SolverType.hpp"
-
-#include "BaseMatrixSolver.hpp"
+#include "numopt.hpp"
 
 
 
@@ -23,6 +21,8 @@ protected:
     // Every derived class should have the following two members. However, until runtime we don't know anything about
     // their exact value.
     size_t dim = 0;  // a good value for an uninitialized state, since the real dimension is always greater than 0
+    numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
+
     bmqc::AddressingScheme* addressing_scheme_ptr = nullptr;
 
     bool is_solved = false;
@@ -32,16 +32,17 @@ protected:
 
     // PROTECTED CONSTRUCTORS
     /**
-     *  Protected constructor to initialize the reference @member so_basis by @param so_basis
+     *  Protected constructor to initialize the reference @member so_basis by @param so_basis and the @param
+     *  eigensolver_ptr.
      */
-    explicit BaseCI(libwint::SOBasis& so_basis);
+    explicit BaseCI(libwint::SOBasis& so_basis, numopt::eigenproblem::SolverType solver_type);
 
 
     // PURE VIRTUAL PROTECTED METHODS
     /**
      *  Given a @param matrix_solver, construct the Hamiltonian matrix in the solver's matrix representation.
      */
-    virtual void constructHamiltonian(ci::solver::BaseMatrixSolver* matrix_solver) = 0;
+    virtual void constructHamiltonian() = 0;
 
     /**
      *  @return the action of the Hamiltonian of the coefficient vector @param x.
@@ -65,12 +66,12 @@ protected:
 
 public:
     // DESTRUCTOR
-    virtual ~BaseCI() = default;
+    virtual ~BaseCI();
 
 
     // GETTERS
-    double get_eigenvalue() const;
-    Eigen::VectorXd get_eigenvector() const;
+    double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
+    Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
 
 
     // PUBLIC METHODS
