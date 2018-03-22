@@ -16,7 +16,7 @@ namespace ci {
  */
 
 /**
- *  Protected constructor to initialize the reference @member so_basis by @param so_basis
+ *  Protected constructor to initialize the reference @member so_basis by @param so_basis.
  */
 BaseCI::BaseCI(libwint::SOBasis& so_basis) :
     so_basis (so_basis)
@@ -32,17 +32,14 @@ BaseCI::BaseCI(libwint::SOBasis& so_basis) :
  *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a pointer
  *  to a @param matrix_solver.
  */
-void BaseCI::solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver) {
+void BaseCI::solveMatrixEigenvalueProblem() {
+
+    // Check if we gave the right pointer: it should be derived from BaseMatrixSolver
+    assert(dynamic_cast<numopt::eigenproblem::BaseMatrixSolver*>(this->eigensolver_ptr));
 
     // Initialize the Hamiltonian matrix and solve the eigenvalue problem associated to it.
-    this->constructHamiltonian(matrix_solver);
-    matrix_solver->solve();
-
-
-    // Set the eigenvalues and eigenvectors
-    this->is_solved = true;
-    this->eigenvalue = matrix_solver->get_eigenvalue();
-    this->eigenvector = matrix_solver->get_eigenvector();
+    this->constructHamiltonian();
+    this->eigensolver_ptr->solve();
 }
 
 
@@ -51,7 +48,7 @@ void BaseCI::solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_s
  *  DESTRUCTOR
  */
 
-virtual BaseCI::~BaseCI() {
+BaseCI::~BaseCI() {
     delete[] this->eigensolver_ptr;
 }
 
@@ -64,61 +61,34 @@ virtual BaseCI::~BaseCI() {
 /**
  *  Find the lowest energy eigenpair of the Hamiltonian, using a @param solver_type.
  */
-void BaseCI::solve(ci::solver::SolverType solver_type) {
+void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
 
+    // Depending on how the user wants to solve the eigenvalue problem, construct the appropriate solver
     switch (solver_type) {
 
-        case ci::solver::SolverType::DENSE: {
-            auto *dense_solver = new ci::solver::DenseSolver(this->dim);
-            this->solveMatrixEigenvalueProblem(dense_solver);
+        case numopt::eigenproblem::SolverType::DENSE: {
+            this->eigensolver_ptr = new numopt::eigenproblem::DenseSolver(this->dim);
+            this->solveMatrixEigenvalueProblem();
         }
 
-        case ci::solver::SolverType::SPARSE: {
-            auto *sparse_solver = new ci::solver::SparseSolver(this->dim);
-            this->solveMatrixEigenvalueProblem(sparse_solver);
+        case numopt::eigenproblem::SolverType::SPARSE: {
+            this->eigensolver_ptr= new numopt::eigenproblem::SparseSolver(this->dim);
+            this->solveMatrixEigenvalueProblem();
         }
 
-        case ci::solver::SolverType::DAVIDSON: {
+        case numopt::eigenproblem::SolverType::DAVIDSON: {
             numopt::VectorFunction matrixVectorProduct = [this] (const Eigen::VectorXd& x) { return this->matrixVectorProduct(x); };
             Eigen::VectorXd diagonal = this->calculateDiagonal();
 
             Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
             t_0(this->dim) = 1;  // in reverse lexical notation, the Hartree-Fock determinant has the highest address
 
-            numopt::DavidsonSolver davidson_solver (matrixVectorProduct, t_0, diagonal);
-
-            // Set the eigenvalues and eigenvectors
-            this->is_solved = true;
-            this->eigenvalue = davidson_solver.get_eigenvalue();
-            this->eigenvector = davidson_solver.get_eigenvector();
+            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, t_0, diagonal);
+            this->eigensolver_ptr->solve();
         }
 
     }
 
-}
-
-
-
-/*
- *  GETTERS
- */
-
-double BaseCI::get_eigenvalue () const {
-
-    if (this->is_solved) {
-        return this->eigenvalue;
-    } else {
-        throw std::runtime_error("The eigenvalue problem hasn't been solved yet and you are trying to get the eigenvalue.");
-    }
-}
-
-Eigen::VectorXd BaseCI::get_eigenvector () const {
-
-    if (this->is_solved) {
-        return this->eigenvector;
-    } else {
-        throw std::runtime_error("The eigenvalue problem hasn't been solved yet and you are trying to get the eigenvector.");
-    }
 }
 
 

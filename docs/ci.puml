@@ -119,9 +119,6 @@ namespace libwint {
 namespace ci {
 
 
-
-
-
     abstract class BaseCI {
         __ protected members __
             # libwint::SOBasis& so_basis
@@ -159,9 +156,7 @@ namespace ci {
     class DOCI {
         __ private members __
             - const size_t K
-            - const size_t dim
             - const size_t N_P
-            - const bmqc::AddressingScheme addressing_scheme
         __ private methods __
             - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver) override
             - Eigen::VectorXd **matrixVectorProduct**() override

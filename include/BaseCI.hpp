@@ -23,19 +23,14 @@ protected:
     size_t dim = 0;  // a good value for an uninitialized state, since the real dimension is always greater than 0
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
 
-    bmqc::AddressingScheme* addressing_scheme_ptr = nullptr;
-
-    bool is_solved = false;
-    double eigenvalue;
-    Eigen::VectorXd eigenvector;
+    bmqc::AddressingScheme* addressing_scheme_ptr = nullptr;  // this is set by any derived class
 
 
     // PROTECTED CONSTRUCTORS
     /**
-     *  Protected constructor to initialize the reference @member so_basis by @param so_basis and the @param
-     *  eigensolver_ptr.
+     *  Protected constructor to initialize the reference @member so_basis by @param so_basis.
      */
-    explicit BaseCI(libwint::SOBasis& so_basis, numopt::eigenproblem::SolverType solver_type);
+    explicit BaseCI(libwint::SOBasis& so_basis);
 
 
     // PURE VIRTUAL PROTECTED METHODS
@@ -57,10 +52,9 @@ protected:
 
     // PROTECTED METHODS
     /**
-     *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class, using a pointer
-     *  to a @param matrix_solver.
+     *  Initialize and subsequently solve the eigenvalue problem associated to the derived CI class.
      */
-    void solveMatrixEigenvalueProblem(ci::solver::BaseMatrixSolver* matrix_solver);
+    void solveMatrixEigenvalueProblem();
 
 
 
@@ -78,7 +72,7 @@ public:
     /**
      *  Find the lowest energy eigenpair of the Hamiltonian, using a @param solver_type.
      */
-    void solve(ci::solver::SolverType solver_type);
+    void solve(numopt::eigenproblem::SolverType solver_type);
 };
 
 
