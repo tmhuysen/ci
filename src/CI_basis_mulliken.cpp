@@ -55,7 +55,7 @@ double doci::CI_basis_mulliken::getOne_int(size_t index1, size_t index2) const {
 }
 
 void doci::CI_basis_mulliken::set_lagrange_multiplier(double lagrange_multiplier) {
-    CI_basis_mulliken::lagrange_multiplier = lagrange_multiplier;
+    this->lagrange_multiplier = lagrange_multiplier;
 }
 
 double doci::CI_basis_mulliken::mullikenPopulationCI(rdm::RDM_class *rdm) {

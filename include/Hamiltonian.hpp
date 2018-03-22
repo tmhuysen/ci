@@ -30,6 +30,8 @@ public:
 	const std::vector<doci::State>& getGroundstates() const;
 
 	//Virtuals
+
+    virtual ~Hamiltonian()=0;
 	/**
 	 * Adds a value as an element of the hamiltonian matrix.
 	 * Virtual: when implementing this class one can opt for many ways to represent the hamiltonian.

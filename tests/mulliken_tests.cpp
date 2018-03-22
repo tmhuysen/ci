@@ -89,9 +89,25 @@ BOOST_AUTO_TEST_CASE ( doci_mulliken_population_test ) {
     ci_basis_mulliken.calculateMullikenMatrix({6});
     BOOST_CHECK((ci_basis_mulliken.mullikenPopulationCI(&rdm_test) - 0.877537) < threshold);
 
+}
 
+BOOST_AUTO_TEST_CASE ( constrained_doci_test ) {
+    // Do a RHF calculation
+    const std::string xyzfilename = "../tests/reference_data/h2o.xyz";
+    double threshold = 1.0e-06;
+    std::string basis_name = "STO-3G";
+    libwint::Molecule water (xyzfilename);
+    libwint::Basis basis (water, basis_name);
+    hf::rhf::RHF rhf (basis, threshold);
+    doci::CI_basis_mulliken ci_basis_mulliken (rhf);
 
+    // Do a DOCI calculation based on the RHF calculation
+    doci::DOCI doci_test = doci::DOCI(&ci_basis_mulliken,8,{0,1,2,3,4});
+    doci::State ground = doci_test.getLowestEigenState();
+    double test_doci_energy = ground.getEval() + ci_basis_mulliken.getInternuclear_repulsion();
 
+    std::cout<<std::endl<<" energy base : "<< test_doci_energy;
+    BOOST_CHECK(true);
 
 
 }
