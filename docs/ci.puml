@@ -4,25 +4,66 @@
 namespace numopt {
 
 
-    class DavidsonSolver {
-        __ private members __
-            - const double residue_tolerance
-            - const double correction_threshold
-            - const size_t maximum_subspace_dimension
+namespace eigenproblem {
 
-            - const Eigen::VectorXd t0
-            - const numopt::VectorFunction matrixVectorProduct
 
-            - double eigenvalue
-            - Eigen::VectorXd eigenvector
-        == constructors ==
-            **DavidsonSolver**(const numopt::VectorFunction& matrixVectorProduct, const Eigen::VectorXd& t_0, const Eigen::VectorXd& diagonal, double residue_tolerance = 1.0e-08, double correction_threshold = 1.0e-03, size_t maximum_subspace_dimension = 15)
-            **DavidsonSolver**(const Eigen::MatrixXd& A, const Eigen::VectorXd& t_0, double residue_tolerance = 1.0e-08, double correction_threshold = 1.0e-03, size_t maximum_subspace_dimension = 15);
-        __ public methods __
-            + **get_eigenvalue**()
-            + **get_eigenvector**()
+        abstract class BaseEigenproblemSolver {
+            == protected constructors ==
+                # explicit **BaseEigenproblemSolver**(size_t dim)
+            == destructor ==
+                virtual ~ **BaseEigenproblemSolver**() = default
+            __ public pure virtual methods __
+                + virtual void **solve**() = 0
+            __ public methods __
+                + **get_eigenvalue**() const
+                + **get_eigenvector**() const
+        }
 
-            + **solve**()
+        BaseMatrixSolver --|> BaseEigenproblemSolver
+        abstract class BaseMatrixSolver {
+            == destructor ==
+                **~BaseMatrixSolver**() override = default
+            __ public pure virtual methods __
+                + virtual void **addToMatrix**(double value, size_t index1, size_t index2) = 0
+        }
+
+
+        DenseSolver --|> BaseMatrixSolver
+        class DenseSolver {
+            == constructors ==
+                explicit **DenseSolver**(size_t dim)
+            == destructor ==
+                 **~DenseSolver**() override = default
+            __ public methods __
+                + void **solve**() override
+                + void **addToMatrix**(double value, size_t index1, size_t index2) override
+        }
+
+
+        SparseSolver --|> BaseMatrixSolver
+        class SparseSolver {
+            == constructors ==
+                explicit **SparseSolver**(size_t dim)
+            == destructor ==
+                 **~SparseSolver**() override = default
+            __ public methods __
+                + virtual void **solve**() override
+                + void **addToMatrix**(double value, size_t index1, size_t index2) override
+        }
+
+
+        DavidsonSolver --|> BaseEigenproblemSolver
+        class DavidsonSolver {
+            == constructors ==
+                **DavidsonSolver**(const numopt::VectorFunction& matrixVectorProduct, const Eigen::VectorXd& t_0, const Eigen::VectorXd& diagonal,
+                                   double residue_tolerance = 1.0e-08, double correction_threshold = 1.0e-03, size_t maximum_subspace_dimension = 15)
+            == destructor ==
+                 **~DavidsonSolver**() override = default
+            __ public methods __
+                + void **solve**() override
+        }
+
+
     }
 
 
@@ -66,8 +107,8 @@ namespace libwint {
     class SOBasis {
         __ public methods __
             + const size_t **get_K**() const
-            + double get_h_SO(size_t i, size_t j) const
-            + double get_g_SO(size_t i, size_t j, size_t k, size_t l) const
+            + double **get_h_SO**(size_t i, size_t j) const
+            + double **get_g_SO**(size_t i, size_t j, size_t k, size_t l) const
     }
 
 
@@ -76,7 +117,6 @@ namespace libwint {
 
 
 namespace ci {
-
 
 
 
@@ -109,8 +149,13 @@ namespace ci {
 
             + void **solve**(ci::solver::SolverType solver_type)
     }
+    ci.BaseCI *--> numopt.eigenproblem.BaseEigenproblemSolver
+    ci.BaseCI *--> bmqc.SpinString
+    ci.BaseCI o--> bmqc.AddressingScheme
+    ci.BaseCI o--> libwint.SOBasis
 
 
+    ci.DOCI --|> ci.BaseCI
     class DOCI {
         __ private members __
             - const size_t K
@@ -127,27 +172,6 @@ namespace ci {
 
 
 }
-
-
-
-
-ci.solver.DenseSolver --|> ci.solver.BaseMatrixSolver
-
-
-ci.solver.SparseSolver --|> ci.solver.BaseMatrixSolver
-
-
-
-ci.BaseCI *--> ci.solver.BaseMatrixSolver
-ci.BaseCI *--> numopt.DavidsonSolver
-ci.BaseCI *--> bmqc.SpinString
-ci.BaseCI o--> bmqc.AddressingScheme
-ci.BaseCI o--> libwint.SOBasis
-
-
-
-
-ci.DOCI --|> ci.BaseCI
 
 
 
