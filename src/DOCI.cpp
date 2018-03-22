@@ -19,8 +19,6 @@ namespace ci {
  */
 void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) {
 
-    std::cout << "I got to constructHamiltonian." << std::endl;
-
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
@@ -29,12 +27,8 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
         if (I > 0) {
             spin_string.nextPermutation();
         }
-        std::cout << "I is " << I << std::endl;
-
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
-            std::cout << "p is " << p << std::endl;
             if (spin_string.annihilate(p)) { // single excitation
-                std::cout << "p is occupied in I" << std::endl;
                 //A single excitation in doci can only be done in place.
                 //Exciting only one electron to a vacant SO, will break the double occupancy(not part of the basis).
                 double one_int = this->so_basis.get_h_SO(p,p);
@@ -44,10 +38,8 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
                 matrix_solver->addToMatrix(two_int, I, I);
 
                 for(size_t q = 0; q < p; q++){// q loops over SOs creation l=j is covered in the first loop and since we can't annihilate twice this combination would be redundant.
-                    std::cout << "q is " << q << std::endl;
                     if (spin_string.create(q)){ //we can never excite a single electron to a new site we have to do it in pairs.
                         size_t address = spin_string.address(this->addressing_scheme);
-                        std::cout << "q is unoccupied in I and the resulting address is: " << address << std::endl;
                         //integrals parameters are entered in chemical notation!
                         // This means that first 2 parameters are for the first electrons and subsequent ones are for the second
                         //Multiply by 2 getting rid of 1/2 two electron term because we have 2 equal combinations:
@@ -75,8 +67,6 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
             }
         }
     }
-
-    std::cout << "I got out of constructHamiltonian." << std::endl;
 }
 
 
@@ -132,13 +122,8 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
  */
 size_t DOCI::calculateDimension(size_t K, size_t N_P) {
 
-    std::cout << "I got to calculateDimension"
-              << " with K=" << K
-              << " and N_P=" << N_P << std::endl;
-
     // K and N_P are expected to be small, so static-casting them to unsigned (what boost needs) is permitted.
     auto dim_double = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_P));
-    std::cout << "dim_double: " << dim_double << std::endl;
 
     // Check if the resulting dimension is appropriate to be stored in size_t
     return boost::numeric::converter<double, size_t>::convert(dim_double);

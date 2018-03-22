@@ -28,7 +28,6 @@ BOOST_AUTO_TEST_CASE ( DOCI_beh_cation_klaas_dense ) {
     ci::DOCI doci (so_basis, 4);  // 4 electrons
     doci.solve(numopt::eigenproblem::SolverType::DENSE);
 
-
     // Calculate the total energy
     double internuclear_repulsion_energy = 1.5900757460937498e+00;  // this comes straight out of the FCIDUMP file
     double test_doci_energy = doci.get_eigenvalue() + internuclear_repulsion_energy;

@@ -37,7 +37,7 @@ void BaseCI::solveMatrixEigenvalueProblem(numopt::eigenproblem::BaseMatrixSolver
 
     // Initialize the Hamiltonian matrix and solve the eigenvalue problem associated to it.
     this->constructHamiltonian(matrix_solver_ptr);
-    this->eigensolver_ptr->solve();
+    matrix_solver_ptr->solve();
 }
 
 
@@ -70,6 +70,7 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
             this->eigensolver_ptr = dense_solver;  // prevent data from going out of scope
                                                    // we are only assigning this->eigensolver_ptr now, because
                                                    // this->solveMatrixEigenvalueProblem only accepts BaseMatrixSolver*
+            break;
         }
 
         case numopt::eigenproblem::SolverType::SPARSE: {
@@ -78,6 +79,7 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
             this->eigensolver_ptr = sparse_solver;  // prevent data from going out of scope
                                                     // we are only assigning this->eigensolver_ptr now, because
                                                     // this->solveMatrixEigenvalueProblem only accepts BaseMatrixSolver*
+            break;
         }
 
         case numopt::eigenproblem::SolverType::DAVIDSON: {
@@ -89,6 +91,7 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
 
             this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, t_0, diagonal);
             this->eigensolver_ptr->solve();
+            break;
         }
 
     }
