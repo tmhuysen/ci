@@ -16,6 +16,17 @@ namespace ci {
 
 class BaseCI {
 protected:
+
+    bool one_rdms_computed = false; // bool indicating if one reduced density matrix are computed.
+    bool two_rdms_computed = false; // bool indicating if one reduced density matrix are computed.
+
+    Eigen::MatrixXd one_rdm_aa; //reduced density matrix of one electron operators (alpha alpha)
+    Eigen::MatrixXd one_rdm_bb; //reduced density matrix of one electron operators (beta beta)
+    Eigen::Tensor<double, 4> two_rdm_aaaa; //reduced density matrix two electron operators
+    Eigen::Tensor<double, 4> two_rdm_abba; //reduced density matrix two electron operators
+    Eigen::Tensor<double, 4> two_rdm_baab; //reduced density matrix two electron operators
+    Eigen::Tensor<double, 4> two_rdm_bbbb; //reduced density matrix two electron operators
+
     libwint::SOBasis& so_basis;
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
 
@@ -53,23 +64,38 @@ protected:
      */
     void solveMatrixEigenvalueProblem(numopt::eigenproblem::BaseMatrixSolver* matrix_solver_ptr);
 
-
-
 public:
     // DESTRUCTOR
     virtual ~BaseCI();
 
 
     // GETTERS
+    // Eigenvalue problem
     double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
     Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
-
+    // RDMS
+    Eigen::MatrixXd get_one_rdm_aa() const;
+    Eigen::MatrixXd get_one_rdm_bb() const;
+    Eigen::Tensor<double, 4> get_two_rdm_aaaa() const;
+    Eigen::Tensor<double, 4> get_two_rdm_abba() const;
+    Eigen::Tensor<double, 4> get_two_rdm_baab() const;
+    Eigen::Tensor<double, 4> get_two_rdm_bbbb() const;
 
     // PUBLIC METHODS
     /**
      *  Find the lowest energy eigenpair of the Hamiltonian, using a @param solver_type.
      */
     void solve(numopt::eigenproblem::SolverType solver_type);
+
+    /**
+     *  Computes all of the one reduced density matrix.
+     */
+    virtual void compute1RDM()=0;
+
+    /**
+     *  Computes all of the two reduced density matrix.
+     */
+    virtual void compute2RDM()=0;
 };
 
 
