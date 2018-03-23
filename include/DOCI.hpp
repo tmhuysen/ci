@@ -1,34 +1,63 @@
 #ifndef CI_DOCI_HPP
 #define CI_DOCI_HPP
 
-#include "CI_Abstract_Class.hpp"
-
-#include <bmqc.hpp>
-#include <iostream>
 
 
-namespace doci {
+#include "BaseCI.hpp"
 
-class DOCI : public CI {
+
+
+namespace ci {
+
+
+class DOCI : public ci::BaseCI {
 private:
-	size_t npairs; // number of electron pairs
-	bmqc::AddressingScheme ad_mat;
+    const size_t K;  // number of spatial orbitals
+    const size_t N_P;  // number of electron pairs
+    const bmqc::AddressingScheme addressing_scheme;
 
-	/**
-	* calculate hamiltonian elements.
-	* @param start,end : indicates the bf you want to start with and where the iteration ends(excluded).
-	*/
-	void calculateCI(size_t start, size_t end) override;
 
-	/**
-	 * Helper function for the constructors
-	 */
-	void construct() override;
+    // OVERRIDDEN PRIVATE METHODS
+    /**
+     *  Given a @param matrix_solver, construct the DOCI Hamiltonian matrix in the solver's matrix representation.
+     */
+    void constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) override;
+
+    /**
+     *  @return the action of the DOCI Hamiltonian of the coefficient vector @param x.
+     */
+    Eigen::VectorXd matrixVectorProduct(const Eigen::VectorXd& x) override;
+
+    /**
+     *  @return the diagonal of the matrix representation of the DOCI Hamiltonian.
+     */
+    Eigen::VectorXd calculateDiagonal() override;
+
+
 
 public:
-	DOCI(CI_basis *ciBasis);
+    // CONSTRUCTORS
+    /**
+     *  Constructor based on a given @param so_basis and a number of electrons @param N.
+     */
+    DOCI(libwint::SOBasis& so_basis, size_t N);
+
+
+    // DESTRUCTOR
+    ~DOCI() override = default;
+
+
+    // STATIC PUBLIC METHODS
+    /**
+     *  Given a number of spatial orbitals @param K and a number of electron pairs @param N_P, @return the dimension of
+     *  the DOCI space.
+     */
+    static size_t calculateDimension(size_t K, size_t N_P);
 };
 
-}  // namespace doci
 
-#endif // CI_DOCI_HPP
+}  // namespace ci
+
+
+
+#endif  // CI_DOCI_HPP

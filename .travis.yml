@@ -69,9 +69,17 @@ install:
   - export LIBINT_DATA_PATH=/usr/local/libint/2.3.1/share/libint/2.3.1/basis
 
 
+  # Install the cpputil library
+  - mkdir /tmp/cpputil && cd /tmp/cpputil
+  - git clone https://github.com/GQCG/cpputil.git --branch master --single-branch
+  - cd cpputil
+  - mkdir build && cd build
+  - cmake .. && make && make test && sudo make install
+
+
   # Install the libint wrapper
   - mkdir /tmp/libwint && cd /tmp/libwint
-  - git clone https://github.com/GQCG/libwint.git
+  - git clone https://github.com/GQCG/libwint.git --branch master --single-branch
   - cd libwint
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
@@ -79,21 +87,33 @@ install:
 
   # Install the hf library
   - mkdir /tmp/hf && cd /tmp/hf
-  - git clone https://github.com/GQCG/hf.git
+  - git clone https://github.com/GQCG/hf.git --branch master --single-branch
   - cd hf
-  - sudo cp tests/reference/sto-6g.g94 ${LIBINT_DATA_PATH}  # copy the extra basis set
+  - sudo cp docs/sto-6g.g94 ${LIBINT_DATA_PATH}  # copy the extra basis set
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
 
+
   # Install bmqc
   - mkdir /tmp/bmqc && cd /tmp/bmqc
-  - git clone https://github.com/GQCG/bmqc.git
+  - git clone https://github.com/GQCG/bmqc.git --branch master --single-branch
   - cd bmqc
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
-  # 'Install' Spectra
-  - mkdir /opt/local/ && cd /opt/local/
-  - git clone https://github.com/yixuan/spectra.git
+
+
+  # Install Spectra
+  - cd /usr/local/
+  - sudo git clone https://github.com/yixuan/spectra.git
+
+
+  # Install the numopt library
+  - mkdir /tmp/numopt && cd /tmp/numopt
+  - git clone https://github.com/GQCG/numopt.git --branch master --single-branch
+  - cd numopt
+  - mkdir build && cd build
+  - cmake .. && make && make test && sudo make install
+
 
 
 # Run the build script
