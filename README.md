@@ -1,4 +1,4 @@
-# ci
+# ci v1.0.0
 [![Build Status](https://travis-ci.org/GQCG/ci.svg?branch=master)](https://travis-ci.org/GQCG/ci)
 
 A C++ library for performing configuration interaction (CI) calculations.
