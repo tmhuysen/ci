@@ -89,7 +89,7 @@ install:
   - mkdir /tmp/hf && cd /tmp/hf
   - git clone https://github.com/GQCG/hf.git --branch master --single-branch
   - cd hf
-  - sudo cp tests/reference/sto-6g.g94 ${LIBINT_DATA_PATH}  # copy the extra basis set
+  - sudo cp docs/sto-6g.g94 ${LIBINT_DATA_PATH}  # copy the extra basis set
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
 
