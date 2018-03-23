@@ -8,7 +8,7 @@ A C++ library for performing configuration interaction (CI) calculations.
 [![bmqc Dependency](https://img.shields.io/badge/bmqc-1.0.1+-blue.svg)](https://github.com/GQCG/bmqc)
 [![libwint Dependency](https://img.shields.io/badge/libwrp-3.0.0+-blue.svg)](https://github.com/GQCG/libwrp)
 [![hf Dependency](https://img.shields.io/badge/hf-3.0.0+-blue.svg)](https://github.com/GQCG/hf)
-[![bmqc Dependency](https://img.shields.io/badge/bmqc-1.0.1+-blue.svg)](https://github.com/GQCG/bmqc)
+[![numopt Dependency](https://img.shields.io/badge/bmqc-1.0.0+-blue.svg)](https://github.com/GQCG/numopt)
 
 
 ## Installation
