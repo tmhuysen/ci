@@ -1,153 +1,190 @@
 @startuml
 
-namespace doci {
-    abstract class CI {
-        __ protected members __
-            # size_t nelec
-            # size_t K
-            # size_t nbf
-            # doci::State lowestEigenState
-            # doci::CI_basis* basis
-            # doci::Hamiltonian* hamiltonian
-        __ protected methods __
-            # virtual void **calculateCI**(size_t start, size_t end)=0
-	        # virtual void **construct**()=0
-        == constructors ==
-	        **CI**()
-	        **CI**(CI_basis *ciBasis)
-	    __ public methods __
-	        + Hamiltonian* **getHamiltonian**() const
+
+namespace numopt {
+
+
+namespace eigenproblem {
+
+
+        abstract class BaseEigenproblemSolver {
+            == protected constructors ==
+                # explicit **BaseEigenproblemSolver**(size_t dim)
+            == destructor ==
+                virtual ~ **BaseEigenproblemSolver**() = default
+            __ public pure virtual methods __
+                + virtual void **solve**() = 0
+            __ public methods __
+                + **get_eigenvalue**() const
+                + **get_eigenvector**() const
+        }
+
+        BaseMatrixSolver --|> BaseEigenproblemSolver
+        abstract class BaseMatrixSolver {
+            == destructor ==
+                **~BaseMatrixSolver**() override = default
+            __ public pure virtual methods __
+                + virtual void **addToMatrix**(double value, size_t index1, size_t index2) = 0
+        }
+
+
+        DenseSolver --|> BaseMatrixSolver
+        class DenseSolver {
+            == constructors ==
+                explicit **DenseSolver**(size_t dim)
+            == destructor ==
+                 **~DenseSolver**() override = default
+            __ public methods __
+                + void **solve**() override
+                + void **addToMatrix**(double value, size_t index1, size_t index2) override
+        }
+
+
+        SparseSolver --|> BaseMatrixSolver
+        class SparseSolver {
+            == constructors ==
+                explicit **SparseSolver**(size_t dim)
+            == destructor ==
+                 **~SparseSolver**() override = default
+            __ public methods __
+                + virtual void **solve**() override
+                + void **addToMatrix**(double value, size_t index1, size_t index2) override
+        }
+
+
+        DavidsonSolver --|> BaseEigenproblemSolver
+        class DavidsonSolver {
+            == constructors ==
+                **DavidsonSolver**(const numopt::VectorFunction& matrixVectorProduct, const Eigen::VectorXd& t_0, const Eigen::VectorXd& diagonal,
+                                   double residue_tolerance = 1.0e-08, double correction_threshold = 1.0e-03, size_t maximum_subspace_dimension = 15)
+            == destructor ==
+                 **~DavidsonSolver**() override = default
+            __ public methods __
+                + void **solve**() override
+        }
+
+
     }
 
 
-    class DOCI {
-        __ private members __
-            - size_t npairs
-            - bmqc::AddressingScheme ad_mat
-        __ private methods __
-            - void **calculateCI**(size_t start, size_t end) override
-            - void **construct**() override
-        == constructors ==
-            **DOCI**(CI_basis *ciBasis)
-    }
-
-
-    class State {
-        __ private members __
-            - double eval
-            - Eigen::VectorXd evec
-        == constructors ==
-            **State**()
-            **State**(double eval, Eigen::VectorXd evec)
-        __ public methods __
-            + double **getEval**()
-            + const Eigen::VectorXd& **getEvec**() const
-
-            + bool **operator<**(const doci::State& rhs)
-            + bool **operator>**(const doci::State& rhs)
-            + bool **operator==**(const doci::State& rhs)
-    }
-
-
-    class CI_basis {
-        __ private members __
-            - Eigen::MatrixXd one_ints
-            - Eigen::Tensor<double, 4> two_ints
-            - double internuclear_repulsion
-            - size_t K
-            - size_t nelec
-        == constructors ==
-            **CI_basis**()
-            **CI_basis**(hf::rhf::RHF& rhf)
-            **CI_basis**(const std::string& filename)
-        __ public methods __
-            + void **rotate**(double rot, size_t index1, size_t index2)
-            + double **getOne_int**(size_t index1, size_t index2) const
-            + double **getTwo_int**(size_t index1, size_t index2, size_t index3, size_t index4) const
-            + double **getInternuclear_repulsion**() const
-            + size_t **getK**() const
-            + size_t **getNelec**() const
-    }
-
-
-    abstract class Hamiltonian {
-        __ protected members __
-            # size_t nbf
-            # Eigen::VectorXd eigenvalues
-            # Eigen::MatrixXd eigenvectors
-            # std::vector<doci::State> groundstates= { doci::State (std::numeric_limits<double>::max(), Eigen::VectorXd()) }
-        __ protected methods __
-            # void **groundStates**(doci::State state)
-        __ public methods __
-            + const std::vector<doci::State>& **getGroundstates**() const
-            + virtual void **add**(double value, size_t index1, size_t index2)=0
-            + virtual void **solve**()=0
-            + {static} Hamiltonian* **make_hamiltonian**(size_t nbf);
-    }
-
-
-    class DenseHamiltonian {
-        __ private members __
-            - Eigen::MatrixXd hamiltonian
-        == constructors ==
-            **DenseHamiltonian**(size_t nbf)
-        __ public methods __
-            + const Eigen::MatrixXd& **getHamiltonian**() const
-
-            + void **solve**() override
-            + void **add**(double value, size_t index1, size_t index2) override
-    }
 }
+
 
 
 namespace bmqc {
+
     class AddressingScheme {
         == constructors ==
-            AddressingScheme(size_t K, size_t N)
+            **AddressingScheme**(size_t K, size_t N)
         __ public methods __
-            + const Matrixi& get_vertex_weights() const
-            + size_t fetchAddress(const boost::dynamic_bitset<> bitVector)
-            + boost::dynamic_bitset<> **generateBitVector_bitset**(size_t address)
+            + const bmqc::Matrixi **get_vertex_weights**() const
     }
 
-    class global {
-        .. bitset ..
-            void next_bitset_permutation(boost::dynamic_bitset<>& v)
+    class SpinString<T> {
+        == constructors ==
+            **SpinString**<T>(T representation, size_t K)
+            **SpinString**<T>(size_t address, const bmqc::AddressingScheme& addressing_scheme)
+        __ public methods __
+            + T **get_representation**() const
+            + size_t **get_K**() const
+            + size_t **get_N**() const
+
+            + size_t **address**(const bmqc::AddressingScheme& addressing_scheme) const
+            + void **nextPermutation**()
+            + bool **annihilate**(size_t p)
+            + bool **annihilate**(size_t p, int& sign)
+            + bool **create**(size_t p)
+            + bool **create**(size_t p, int& sign)
     }
 
 
 }
+
+
 
 namespace libwint {
-    class global {
-        Eigen::MatrixXd **transform_AO_to_SO**(Eigen::MatrixXd& f_AO, Eigen::MatrixXd& C)
-    }
-}
 
-namespace hf {
-    namespace rhf {
-        class RHF {
-            __ public data __
-                + libwint::Basis &basis
-        }
+    class SOBasis {
+        __ public methods __
+            + const size_t **get_K**() const
+            + double **get_h_SO**(size_t i, size_t j) const
+            + double **get_g_SO**(size_t i, size_t j, size_t k, size_t l) const
     }
+
+
 }
 
 
-doci.CI_basis ..> libwint.global
-doci.CI_basis o--> hf.rhf.RHF
 
-doci.Hamiltonian o--> doci.State
+namespace ci {
 
-doci.DenseHamiltonian --|> doci.Hamiltonian
 
-doci.CI *--> doci.State
-doci.CI o--> doci.CI_basis
-doci.CI *--> doci.Hamiltonian
+    abstract class BaseCI {
+        __ protected members __
+            # libwint::SOBasis& so_basis
 
-doci.DOCI --|> doci.CI
-doci.DOCI *--> bmqc.AddressingScheme
-doci.DOCI ..> bmqc.global
+            # size_t dim = 0
+            # bmqc::AddressingScheme* addressing_scheme_ptr = nullptr
+            # numopt::BaseSolver* solver_ptr = nullptr
+
+            # bool is_solved = false
+            # double eigenvalue
+            # Eigen::VectorXd eigenvector
+        == protected constructors ==
+            # explicit **BaseCI**(libwint::SOBasis& so_basis)
+        __ protected pure virtual methods __
+            # virtual void **constructHamiltonian**(ci::solver::BaseMatrixSolver* matrix_solver) = 0
+            # virtual Eigen::VectorXd **matrixVectorProduct**() = 0
+            # virtual Eigen::VectorXd **calculateDiagonal**() = 0
+        __ protected methods __
+            # void **solveMatrixEigenvalueProblem**(ci::solver::BaseMatrixSolver* matrix_solver)
+        == destructor ==
+            virtual **~BaseCI**()
+        __ public methods __
+            + double **get_eigenvalue**() const
+            + Eigen::VectorXd **get_eigenvector**() const
+
+            + void **solve**(ci::solver::SolverType solver_type)
+    }
+    ci.BaseCI *--> numopt.eigenproblem.BaseEigenproblemSolver
+    ci.BaseCI *--> bmqc.SpinString
+    ci.BaseCI o--> bmqc.AddressingScheme
+    ci.BaseCI o--> libwint.SOBasis
+
+
+    ci.DOCI --|> ci.BaseCI
+    class DOCI {
+        __ private members __
+            - const size_t K
+            - const size_t N_P
+        __ private methods __
+            - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver) override
+            - Eigen::VectorXd **matrixVectorProduct**() override
+            - Eigen::VectorXd **calculateDiagonal**() override
+        == constructors ==
+            **DOCI**(const libwint::SOBasis& so_basis, size_t N)
+        == destructor ==
+            **~DOCI**()
+    }
+
+
+}
+
 
 
 @enduml
+
+    class FCI {
+        __ private members __
+            - const size_t N_alpha
+            - const size_t N_beta
+            - const size_t K
+        __ private methods __
+            - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver) override
+            - Eigen::VectorXd **matrixVectorProduct**() override
+            - Eigen::VectorXd **calculateDiagonal**() override
+        == constructors ==
+                **FCI**(const libwint::SOBasis& so_basis, size_t N_alpha, size_t N_beta)
+    }
+
+    ci.FCI --|> ci.BaseCI

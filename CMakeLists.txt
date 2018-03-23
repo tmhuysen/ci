@@ -1,18 +1,23 @@
 # src-level CMakeLists.txt
-cmake_minimum_required(VERSION 3.8)
 
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
 
+# Specify the project, its version and the used language
 project(ci
-        VERSION 0.0.1
+        VERSION 1.0.0
         LANGUAGES CXX)
 
+# To enable the C++11 standard, we have to add flags like -std=gnu+11 or so. CMake can take care of this:
 set(CMAKE_CXX_STANDARD 11)
 
+# Set some compiler optimizations (https://stackoverflow.com/a/41361741/7930415)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 
-# Install FindSpectra.cmake. This is done before FindPackages.cmake, since we are using find_package(Spectra)
-# CMake looks for Find<package>.cmake files in its ${CMAKE_MODULE_PATH}. By default, this is empty. Since we don't want to bother with installing our custom-made FindSpectra.cmake, we will set the ${CMAKE_MODULE_PATH} accordingly
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake")
 
 # Set CMake variables
 include(${CMAKE_SOURCE_DIR}/cmake/SetCMakeEnvironment.cmake)

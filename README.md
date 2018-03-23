@@ -1,19 +1,21 @@
-# ci
+# ci v1.0.0
 [![Build Status](https://travis-ci.org/GQCG/ci.svg?branch=master)](https://travis-ci.org/GQCG/ci)
 
 A C++ library for performing configuration interaction (CI) calculations.
 
 ## Dependencies
 [![Eigen3 Dependency](https://img.shields.io/badge/Eigen-3+-blue.svg)](http://eigen.tuxfamily.org/index.php?title=Main_Page)
-[![bmqc Dependency](https://img.shields.io/badge/bmqc-0.2.0+-blue.svg)](https://github.com/GQCG/bmqc)
-[![libwint Dependency](https://img.shields.io/badge/libwrp-2.3.0+-blue.svg)](https://github.com/GQCG/libwrp)
-[![hf Dependency](https://img.shields.io/badge/hf-2.0.2+-blue.svg)](https://github.com/GQCG/hf)
+[![bmqc Dependency](https://img.shields.io/badge/bmqc-1.0.1+-blue.svg)](https://github.com/GQCG/bmqc)
+[![libwint Dependency](https://img.shields.io/badge/libwrp-3.0.0+-blue.svg)](https://github.com/GQCG/libwrp)
+[![hf Dependency](https://img.shields.io/badge/hf-3.0.0+-blue.svg)](https://github.com/GQCG/hf)
+[![numopt Dependency](https://img.shields.io/badge/bmqc-1.0.0+-blue.svg)](https://github.com/GQCG/numopt)
+
 
 ## Installation
 To install this library:
-1. clone the master branch
+1. clone the master branch, which contains the latest release
 
-        https://github.com/GQCG/ci.git
+        https://github.com/GQCG/ci.git --branch master --single-branch
         cd ci
 
 2. perform an out-of-source cmake build:
