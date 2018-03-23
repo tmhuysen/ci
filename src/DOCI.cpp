@@ -85,6 +85,33 @@ Eigen::VectorXd DOCI::calculateDiagonal() {
 
 }
 
+/**
+ *  Computes all of the one reduced density matrix.
+ */
+void DOCI::compute1RDM(){
+        //initialize
+        this->one_rdm_aa = Eigen::MatrixXd::Zero(this->K,this->K);
+        // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
+        // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
+        bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
+
+        for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
+            if (I > 0) {
+                spin_string.nextPermutation();
+            }for (size_t p = 0; p < this->K; p++) {// p loops over SOs
+                if(spin_string.annihilate(p)){
+                    one_rdm_aa(p,p) +=
+                }
+
+            }
+        }
+
+    }
+
+/**
+ *  Computes all of the two reduced density matrix.
+ */
+void DOCI::compute2RDM(){}
 
 
 /*

@@ -32,7 +32,6 @@ protected:
 
     const size_t dim;  // the dimension of the CI space
 
-
     // PROTECTED CONSTRUCTORS
     /**
      *  Protected constructor given a @param so_basis and a dimension @dim.

@@ -33,6 +33,16 @@ private:
      */
     Eigen::VectorXd calculateDiagonal() override;
 
+    /**
+     *  Computes all of the one reduced density matrix.
+     */
+    void compute1RDM();
+
+    /**
+     *  Computes all of the two reduced density matrix.
+     */
+    void compute2RDM();
+
 
 
 public:
