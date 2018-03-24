@@ -19,6 +19,11 @@ namespace ci {
  */
 void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) {
 
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+
+
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
@@ -66,7 +71,17 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
                 spin_string.create(p);
             }
         }
-    }
+    }  // address (I) loop
+
+
+    auto stop = std::chrono::high_resolution_clock::now();
+
+
+    // Print the timings.
+    std::cout << "Constructing the Hamiltonian took "
+              << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()
+              << " microseconds to complete." << std::endl;
+
 }
 
 
