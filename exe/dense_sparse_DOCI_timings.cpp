@@ -9,7 +9,9 @@
 #include <Eigen/Dense>
 #include <cpputil.hpp>
 
-#include "numopt.hpp"
+#include <numopt.hpp>
+#include <libwint.hpp>
+#include <ci.hpp>
 
 
 
@@ -17,70 +19,56 @@
  *  HELPER FUNCTIONS
  */
 
+
 /**
- *  Given a dimension @param dim, construct an example matrix. The example matrix can be found in liu1978
+ *  Solve a dense DOCI problem (full diagonalization of the DOCI Hamiltonian matrix).
  */
-Eigen::MatrixXd constructLiuExampleMatrix(size_t dim) {
+void solveDenseDoci() {
 
-    Eigen::MatrixXd A = Eigen::MatrixXd::Ones(dim, dim);
-    for (size_t i = 0; i < dim; i++) {
-        if (i < 5) {
-            A(i, i) = 1 + 0.1 * i;
-        } else {
-            A(i, i) = 2 * (i + 1) - 1;
-        }
-    }
+    // Do a DOCI calculation based on a given FCIDUMP file
+    libwint::SOBasis so_basis ("../../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    ci::DOCI doci (so_basis, 4);  // 4 electrons
+    doci.solve(numopt::eigenproblem::SolverType::DENSE);
 
-    return A;
+
+    // Calculate the total energy
+    double internuclear_repulsion_energy = 1.5900757460937498e+00;  // this comes straight out of the FCIDUMP file
+    double test_doci_energy = doci.get_eigenvalue() + internuclear_repulsion_energy;
 }
 
 
 /**
- *  Solve the full eigenvalue problem for a matrix @param A using the SelfAdjointEigenSolver.
+ *  Solve a sparse DOCI problem (find the lowest eigenpair of the DOCI Hamiltonian matrix).
  */
-void solveEigenvalueProblemWithEigen(const Eigen::MatrixXd& A) {
+void solveSparseDoci() {
 
-    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigensolver (A);
+    // Do a DOCI calculation based on a given FCIDUMP file
+    libwint::SOBasis so_basis ("../../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    ci::DOCI doci (so_basis, 4);  // 4 electrons
+    doci.solve(numopt::eigenproblem::SolverType::SPARSE);
+
+
+    // Calculate the total energy
+    double internuclear_repulsion_energy = 1.5900757460937498e+00;  // this comes straight out of the FCIDUMP file
+    double test_doci_energy = doci.get_eigenvalue() + internuclear_repulsion_energy;
 }
 
 
 /**
- *  Find the lowest eigenpair of a matrix @param A using Davidson's diagonalization method.
+ *  Print how long it takes to solve the dense DOCI problem.
  */
-void solveEigenvalueProblemWithDavidson(const Eigen::MatrixXd& A) {
+void printDenseTimings() {
 
-    Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(A.cols());
-    t_0(0) = 1;
-    numopt::eigenproblem::DavidsonSolver davidson_solver (A, t_0);
-    davidson_solver.solve();
+    cpputil::printExecutionTime("Dense DOCI", solveDenseDoci);  // (void *)() is implicitly converted to std::function<void ()>
 }
 
 
 /**
- *  Print how long it takes to solve the full eigenvalue problem for a matrix @param A using Eigen.
+ *  Print how long it takes to solve the sparse DOCI problem.
  */
-void printEigenTimings(const Eigen::MatrixXd& A) {
+void printSparseTimings() {
 
-    // Since our timer wrapper expects a std::function<void ()>, we should 'bind' the argument A to the function call
-    // We can use this easily using a lambda function
-    std::function<void ()> callable_eigen_function = [A] { solveEigenvalueProblemWithEigen(A); };
-
-
-    cpputil::printExecutionTime("Eigen", callable_eigen_function);
-}
-
-
-/**
- *  Print how long it takes to find the lowest eigenpair of a matrix @param A using Davidson's diagonalization method.
- */
-void printDavidsonTimings(const Eigen::MatrixXd& A) {
-
-    // Since our timer wrapper expects a std::function<void ()>, we should 'bind' the argument A to the function call
-    // We can use this easily using a lambda function
-    std::function<void ()> callable_eigen_function = [A] { solveEigenvalueProblemWithDavidson(A); };
-
-
-    cpputil::printExecutionTime("Davidson", callable_eigen_function);
+    cpputil::printExecutionTime("Sparse DOCI", solveSparseDoci);  // (void *)() is implicitly converted to std::function<void ()>
 }
 
 
@@ -91,9 +79,6 @@ void printDavidsonTimings(const Eigen::MatrixXd& A) {
 
 int main () {
 
-    Eigen::MatrixXd A = constructLiuExampleMatrix(1000);
-
-
-    printEigenTimings(A);
-    printDavidsonTimings(A);
+    printDenseTimings();
+    printSparseTimings();
 }

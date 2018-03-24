@@ -18,3 +18,6 @@ find_package(bmqc 1.0.1 REQUIRED)
 
 # Find numopt
 find_package(numopt 1.0.0 REQUIRED)
+
+# Find cpputil
+find_package(cpputil 1.2.1 REQUIRED)

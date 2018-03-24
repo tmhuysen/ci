@@ -25,4 +25,9 @@ function(configure_executable EXECUTABLE_NAME)
     target_include_directories(${EXECUTABLE_NAME} PUBLIC ${bmqc_INCLUDE_DIRS})
     target_link_libraries(${EXECUTABLE_NAME} PUBLIC bmqc)
 
+
+    # Include cpputil
+    target_include_directories(${EXECUTABLE_NAME} PUBLIC ${cpputil_INCLUDE_DIRS})
+    target_link_libraries(${EXECUTABLE_NAME} PUBLIC cpputil)
+
 endfunction(configure_executable)
