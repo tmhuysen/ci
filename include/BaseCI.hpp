@@ -64,6 +64,8 @@ protected:
      */
     void solveMatrixEigenvalueProblem(numopt::eigenproblem::BaseMatrixSolver* matrix_solver_ptr);
 
+
+
 public:
     // DESTRUCTOR
     virtual ~BaseCI();
