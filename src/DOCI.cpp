@@ -107,7 +107,7 @@ void DOCI::compute1RDM(){
         }
     }
     this->one_rdm_bb = this->one_rdm_aa;  // For DOCI these are equal
-
+    one_rdms_computed = true;
 }
 
 
@@ -162,6 +162,9 @@ void DOCI::compute2RDM(){
             }
         }
     }
+    this->two_rdm_bbbb = this->two_rdm_aaaa;  // For DOCI these are equal
+    this->two_rdm_baab = this->two_rdm_abba;  // For CI these are equal
+    two_rdms_computed = true;
 }
 
 
