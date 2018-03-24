@@ -29,7 +29,7 @@ int main() {
     Eigen::MatrixXd coefficient_matrix = rhf.get_C_canonical();
     libwint::SOBasis so_basis (ao_basis, coefficient_matrix);
 
-    ci::DOCI doci (so_basis, 2);  // 2 electrons
+    ci::DOCI doci (so_basis, h2);
     doci.solve(numopt::eigenproblem::SolverType::DENSE);
 
 

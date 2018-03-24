@@ -42,6 +42,11 @@ public:
      */
     DOCI(libwint::SOBasis& so_basis, size_t N);
 
+    /**
+     *  Constructor based on a given @param so_basis and a @param molecule.
+     */
+    DOCI(libwint::SOBasis& so_basis, const libwint::Molecule& molecule);
+
 
     // DESTRUCTOR
     ~DOCI() override = default;

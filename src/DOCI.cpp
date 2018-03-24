@@ -99,6 +99,14 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
 }
 
 
+/**
+ *  Constructor based on a given @param so_basis and a @param molecule.
+ */
+DOCI::DOCI(libwint::SOBasis& so_basis, const libwint::Molecule& molecule) :
+    DOCI (so_basis, molecule.get_N())
+{}
+
+
 
 /*
  *  STATIC PUBLIC METHODS
