@@ -23,50 +23,38 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
 
+
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
-        if (I > 0) {
-            spin_string.nextPermutation();
-        }
+
+        double diagonal_element = 0.0;
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
-            if (spin_string.annihilate(p)) { // single excitation
-                //A single excitation in doci can only be done in place.
-                //Exciting only one electron to a vacant SO, will break the double occupancy(not part of the basis).
-                double one_int = this->so_basis.get_h_SO(p,p);
-                matrix_solver->addToMatrix(2 * one_int, I, I); //Twice : alpha and beta.
-                //There are also two in-place double excitations of abba en baab combination.
-                double two_int = this->so_basis.get_g_SO(p,p,p,p);
-                matrix_solver->addToMatrix(two_int, I, I);
+            if (spin_string.annihilate(p)) {  // if p in I
+                diagonal_element += 2 * this->so_basis.get_h_SO(p,p) + this->so_basis.get_g_SO(p,p,p,p);
 
-                for(size_t q = 0; q < p; q++){// q loops over SOs creation l=j is covered in the first loop and since we can't annihilate twice this combination would be redundant.
-                    if (spin_string.create(q)){ //we can never excite a single electron to a new site we have to do it in pairs.
-                        size_t address = spin_string.address(this->addressing_scheme);
-                        //integrals parameters are entered in chemical notation!
-                        // This means that first 2 parameters are for the first electrons and subsequent ones are for the second
-                        //Multiply by 2 getting rid of 1/2 two electron term because we have 2 equal combinations:
-                        //abba and baab. We do not correct for the truncated SO iteration because we only calculate the lower triagonal.
-                        //and then copy accordingly
-                        double mix_spin_two_int = this->so_basis.get_g_SO(p,q,p,q);
-                        matrix_solver->addToMatrix(mix_spin_two_int, I, address);
-                        matrix_solver->addToMatrix(mix_spin_two_int, address, I);
+                for (size_t q = 0; q < p; q++) {  // q loops over SOs
+                    if (spin_string.create(q)) {  // if q not in I
+                        size_t J = spin_string.address(this->addressing_scheme);  // J is the address of a string that couples to I
 
-                        spin_string.annihilate(q);//flip back (so we don't need to copy the set)
-                    }else{ //if we can't create we can annihilated (but only on the diagonal, no transform required
+                        // The loops are p->K and q<p. So, we should normally multiply by a factor 2 (since the summand is symmetric).
+                        // However, we are setting both of the symmetric indices of Hamiltonian, so no factor 2 is required.
+                        matrix_solver->addToMatrix(this->so_basis.get_g_SO(p,q,p,q), I, J);
+                        matrix_solver->addToMatrix(this->so_basis.get_g_SO(p,q,p,q), J, I);
 
-                        // Integral parameters are entered in chemical notation!
-                        double same_spin_two_int = this->so_basis.get_g_SO(p,p,q,q);//=mixed_spin_two_int (exciting a beta and an alpha in-place)
-                        double same_spin_two_int_negative = -this->so_basis.get_g_SO(p,q,q,p);//mixed_spin does not have this because it would result in 0 term (integral of alpha-beta)
-
-                        //We don't iterate over all the SO's the second time so multiply by 2 getting rid of 1/2 two electron term.
-                        //multiply by 2 again because alpha,alpha is the same as beta,beta combinations.
-                        //same_spin (positive) = mixed, so multiply that by 2 again.
-                        matrix_solver->addToMatrix(4*same_spin_two_int + 2*same_spin_two_int_negative, I, I);
+                        spin_string.annihilate(q);  // reset the spin string after the previous creation
                     }
 
-                }
-                spin_string.create(p);
+                    else {  // if q in I
+                        diagonal_element += 2 * (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p));
+                    }
+                }  // q
+
+                spin_string.create(p);  // reset the spin string after the previous annihilation
             }
-        }
-    }
+        }  // p
+
+        matrix_solver->addToMatrix(diagonal_element, I, I);
+        spin_string.nextPermutation();
+    }  // address (I) loop
 }
 
 
