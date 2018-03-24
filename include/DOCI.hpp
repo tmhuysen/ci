@@ -33,16 +33,6 @@ private:
      */
     Eigen::VectorXd calculateDiagonal() override;
 
-    /**
-     *  Compute all of the one reduced density matrix.
-     */
-    void compute1RDM() override;
-
-    /**
-     *  Compute all of the two reduced density matrix.
-     */
-    void compute2RDM()override;
-
 
 
 public:
@@ -56,6 +46,17 @@ public:
     // DESTRUCTOR
     ~DOCI() override = default;
 
+
+    // OVERRIDDEN PUBLIC METHODS
+    /**
+     *  Compute all of the one reduced density matrix.
+     */
+    void compute1RDM() override;
+
+    /**
+     *  Compute all of the two reduced density matrix.
+     */
+    void compute2RDM()override;
 
     // STATIC PUBLIC METHODS
     /**

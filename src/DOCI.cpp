@@ -133,9 +133,10 @@ void DOCI::compute2RDM(){
                 double coefficient = this->eigensolver_ptr->get_eigenvector()(I)*this->eigensolver_ptr->get_eigenvector()(I);
                 this->two_rdm_abba(p,p,p,p) += coefficient;
 
-                for(size_t q = 0;q<p; p++){  // q loops over SOs with a smaller index than p
+                for(size_t q = 0;q<p; q++){  // q loops over SOs with a smaller index than p
                     if(spin_string.create(q)){
-                        double coefficient = this->eigensolver_ptr->get_eigenvector()(spin_string.address(this->addressing_scheme))*this->eigensolver_ptr->get_eigenvector()(I);
+                        size_t address = spin_string.address(this->addressing_scheme);
+                        double coefficient = this->eigensolver_ptr->get_eigenvector()(address)*this->eigensolver_ptr->get_eigenvector()(I);
                         // Physical notation
                         this->two_rdm_abba(q,q,p,p) += coefficient;
                         // Symmetry
@@ -157,8 +158,8 @@ void DOCI::compute2RDM(){
                         this->two_rdm_abba(q, p, q, p) += coefficient;
                     }
                 }
+                spin_string.create(p);
             }
-            spin_string.create(p);
         }
     }
 }
