@@ -51,3 +51,7 @@ set(PROJECT_INSTALL_DIR ${INSTALLATION_PREFIX}/${PROJECT_NAME_LOWERCASE})
 set(INCLUDE_INSTALL_DIR ${PROJECT_INSTALL_DIR}/include)
 set(CMAKE_INSTALL_DIR ${PROJECT_INSTALL_DIR}/cmake)
 set(LIBRARY_INSTALL_DIR ${PROJECT_INSTALL_DIR}/lib)
+
+
+# Include the function that configures the executables
+include(${CMAKE_SOURCE_DIR}/cmake/ConfigureExecutable.cmake)
