@@ -210,20 +210,20 @@ FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
  *  STATIC PUBLIC METHODS
  */
 
-    /**
-     *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
-     *  the FCI space.
-     */
+/**
+ *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
+ *  the FCI space.
+ */
 size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
 
     // K N_A, N_B are expected to be small, so static-casting them to unsigned (what boost needs) is permitted.
     auto dim_double_alpha = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_A));
     auto dim_double_beta = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_B));
     auto dim_double_total = dim_double_alpha*dim_double_beta;
+
     // Check if the resulting dimension is appropriate to be stored in size_t
     return boost::numeric::converter<double, size_t>::convert(dim_double_total);
 }
-
 
 
 }  // namespace ci
