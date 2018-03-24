@@ -98,7 +98,12 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
 
 }
 
-//GETTERS
+
+
+/*
+ * GETTERS
+ */
+
 Eigen::MatrixXd BaseCI::get_one_rdm_aa() const {
     if(!this->one_rdms_computed){
         throw std::logic_error("The requested reduced density matrix is not computed yet");

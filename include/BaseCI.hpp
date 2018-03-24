@@ -17,20 +17,21 @@ namespace ci {
 class BaseCI {
 protected:
 
-    bool one_rdms_computed = false; // bool indicating if one reduced density matrix are computed.
-    bool two_rdms_computed = false; // bool indicating if one reduced density matrix are computed.
-
-    Eigen::MatrixXd one_rdm_aa; //reduced density matrix of one electron operators (alpha alpha)
-    Eigen::MatrixXd one_rdm_bb; //reduced density matrix of one electron operators (beta beta)
-    Eigen::Tensor<double, 4> two_rdm_aaaa; //reduced density matrix two electron operators
-    Eigen::Tensor<double, 4> two_rdm_abba; //reduced density matrix two electron operators
-    Eigen::Tensor<double, 4> two_rdm_baab; //reduced density matrix two electron operators
-    Eigen::Tensor<double, 4> two_rdm_bbbb; //reduced density matrix two electron operators
-
     libwint::SOBasis& so_basis;
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
 
     const size_t dim;  // the dimension of the CI space
+
+    bool one_rdms_computed = false;
+    bool two_rdms_computed = false;
+
+    Eigen::MatrixXd one_rdm_aa;  // 1-RDM for alpha-alpha
+    Eigen::MatrixXd one_rdm_bb;  // 1-RDM for beta-beta
+    Eigen::Tensor<double, 4> two_rdm_aaaa;  // 2-RDM for a-a-a-a
+    Eigen::Tensor<double, 4> two_rdm_abba;  // 2-RDM for a-b-b-a
+    Eigen::Tensor<double, 4> two_rdm_baab;  // 2-RDM for b-a-a-b
+    Eigen::Tensor<double, 4> two_rdm_bbbb;  // 2-RDM for b-b-b-b
+
 
     // PROTECTED CONSTRUCTORS
     /**
@@ -69,16 +70,15 @@ public:
 
 
     // GETTERS
-    // Eigenvalue problem
     double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
     Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
-    // RDMS
     Eigen::MatrixXd get_one_rdm_aa() const;
     Eigen::MatrixXd get_one_rdm_bb() const;
     Eigen::Tensor<double, 4> get_two_rdm_aaaa() const;
     Eigen::Tensor<double, 4> get_two_rdm_abba() const;
     Eigen::Tensor<double, 4> get_two_rdm_baab() const;
     Eigen::Tensor<double, 4> get_two_rdm_bbbb() const;
+
 
     // PUBLIC METHODS
     /**
@@ -87,12 +87,12 @@ public:
     void solve(numopt::eigenproblem::SolverType solver_type);
 
     /**
-     *  Computes all of the one reduced density matrix.
+     *  Compute all of the one reduced density matrix.
      */
     virtual void compute1RDM()=0;
 
     /**
-     *  Computes all of the two reduced density matrix.
+     *  Compute all of the two reduced density matrix.
      */
     virtual void compute2RDM()=0;
 };

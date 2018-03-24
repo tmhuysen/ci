@@ -99,7 +99,7 @@ void DOCI::compute1RDM(){
             if (I > 0) {
                 spin_string.nextPermutation();
             }for (size_t p = 0; p < this->K; p++) {// p loops over SOs
-                if(spin_string.annihilate(p)){
+                if(spin_string.isOccupied(p)){
                     one_rdm_aa(p,p) +=
                 }
 
