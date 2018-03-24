@@ -22,8 +22,8 @@ protected:
 
     const size_t dim;  // the dimension of the CI space
 
-    bool one_rdms_computed = false;
-    bool two_rdms_computed = false;
+    bool are_computed_one_rdm = false;
+    bool are_computed_two_rdm = false;
 
     Eigen::MatrixXd one_rdm_aa;  // 1-RDM for alpha-alpha
     Eigen::MatrixXd one_rdm_bb;  // 1-RDM for beta-beta
