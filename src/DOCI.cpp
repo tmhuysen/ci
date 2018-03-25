@@ -72,30 +72,37 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
-        for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
-            if (spin_string.annihilate(p)) {  // if p in I
+        for (size_t p = 0; p < this->K; p++) {
+            if (spin_string.isOccupied(p)) {
                 matvec(I) += 2 * this->so_basis.get_h_SO(p,p) * x(I);
                 matvec(I) += this->so_basis.get_g_SO(p,p,p,p) * x(I);
 
-                for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
-                    if (spin_string.create(q)) {  // if q not in I, so q!=p automatically
-                        size_t J = spin_string.address(this->addressing_scheme);  // J is the address of a string that couples to I
-
-                        matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);
-
-                        spin_string.annihilate(q);  // reset the spin string after the previous creation
+                for (size_t q = 0; q < p; q++) {
+                    if (spin_string.isOccupied(q)) {
+                        matvec(I) += 2 * (2 * this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p)) * x(I);
                     }
 
-                    else {  // if q in I
-                        if (p != q) {
-                            matvec(I) += (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p)) * x(I);
+                }
+            }
+        }
+
+
+        for (size_t p = 0; p < this->K; p++) {
+            if (spin_string.annihilate(p)) {
+                for (size_t q = 0; q < this->K; q++) {
+                    if (q != p) {
+                        if (spin_string.create(q)) {
+                            size_t J = spin_string.address(this->addressing_scheme);
+                            matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);
+
+                            spin_string.annihilate(q);
                         }
                     }
-                }  // q
+                }
 
-                spin_string.create(p);  // reset the spin string after the previous annihilation
+                spin_string.create(p);
             }
-        }  // p
+        }
 
         spin_string.nextPermutation();
     }  // address (I) loop
@@ -159,8 +166,6 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
     if (this->K < this->N_P) {
         throw std::invalid_argument("Too many electrons to place into the given number of spatial orbitals.");
     }
-
-    std::cout << "DOCI instance was created." << std::endl;
 }
 
 
