@@ -99,6 +99,8 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
         matvec(I) += diagonal_prefactor * x(I);
         spin_string.nextPermutation();
     }  // address (I) loop
+
+    return matvec;
 }
 
 
@@ -131,6 +133,7 @@ Eigen::VectorXd DOCI::calculateDiagonal() {
         spin_string.nextPermutation();
     }  // address (I) loop
 
+    return diagonal;
 }
 
 
@@ -156,6 +159,8 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
     if (this->K < this->N_P) {
         throw std::invalid_argument("Too many electrons to place into the given number of spatial orbitals.");
     }
+
+    std::cout << "DOCI instance was created." << std::endl;
 }
 
 

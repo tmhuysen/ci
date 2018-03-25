@@ -85,9 +85,12 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
         case numopt::eigenproblem::SolverType::DAVIDSON: {
             numopt::VectorFunction matrixVectorProduct = [this] (const Eigen::VectorXd& x) { return this->matrixVectorProduct(x); };
             Eigen::VectorXd diagonal = this->calculateDiagonal();
+//            Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
+            Eigen::VectorXd t_0 = Eigen::VectorXd::Random(this->dim);
+            std::cout << "dimension: " << this->dim << std::endl;
 
-            Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
-            t_0(this->dim) = 1;  // in reverse lexical notation, the Hartree-Fock determinant has the highest address
+//            t_0(this->dim-1) = 1;  // in reverse lexical notation, the Hartree-Fock determinant has the highest address
+            std::cout << "initial guess was created" << std::endl;
 
             this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, t_0, diagonal);
             this->eigensolver_ptr->solve();
