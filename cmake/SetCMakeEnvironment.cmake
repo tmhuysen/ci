@@ -40,7 +40,7 @@ file(GLOB PROJECT_TEST_SOURCE_FILES ${PROJECT_TESTS_FOLDER}/*.cpp)
 set(PROJECT_EXECUTABLES_FOLDER ${CMAKE_SOURCE_DIR}/exe)
 
 # Find the source files for the executables
-file(GLOB PROJECT_EXECUTABLES_FOLDER ${PROJECT_EXECUTABLES_FOLDER})
+file(GLOB PROJECT_EXECUTABLE_SOURCE_FILES ${PROJECT_EXECUTABLES_FOLDER}/*.cpp)
 
 
 # Give the user the option to specify an installation prefix. If not given as -DINSTALLATION_PREFIX, defaults to /usr/local.
