@@ -71,6 +71,28 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
  */
 Eigen::VectorXd DOCI::calculateDiagonal() {
 
+    Eigen::VectorXd diagonal = Eigen::VectorXd::Zero(this->dim);
+
+    // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
+    bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);
+
+    for (size_t I = 0; I < this->dim; I++) {  // I loops over addresses of spin strings
+
+        for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
+            if (spin_string.isOccupied(p)) {  // p is in I
+                diagonal(I) += 2 * this->so_basis.get_h_SO(p,p) + this->so_basis.get_g_SO(p,p,p,p);
+
+                for (size_t q = 0; q < p; q++) {  // q loops over SOs
+                    if (spin_string.isOccupied(q)) {  // q is in I
+
+                        // Since we are doing a restricted summation q<p, we should multiply by 2 since the summand argument is symmetric.
+                        diagonal(I) += 2 * (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p));
+                    }
+                }  // q loop
+            }
+        }  // p loop
+    }  // address (I) loop
+
 }
 
 
