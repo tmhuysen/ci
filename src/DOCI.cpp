@@ -72,23 +72,24 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
-        double diagonal_prefactor = 0.0;
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
             if (spin_string.annihilate(p)) {  // if p in I
-                diagonal_prefactor += 2 * this->so_basis.get_h_SO(p,p) + this->so_basis.get_g_SO(p,p,p,p);
+                matvec(I) += 2 * this->so_basis.get_h_SO(p,p) * x(I);
+                matvec(I) += this->so_basis.get_g_SO(p,p,p,p) * x(I);
 
-                for (size_t q = 0; q < p; q++) {  // q loops over SOs
-                    if (spin_string.create(q)) {  // if q not in I
+                for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
+                    if (spin_string.create(q)) {  // if q not in I, so q!=p automatically
                         size_t J = spin_string.address(this->addressing_scheme);  // J is the address of a string that couples to I
 
-                        // Since we are doing a restricted summation q<p, we should multiply by 2 since the summand argument is symmetric.
-                        matvec(J) += 2 * this->so_basis.get_g_SO(p,q,p,q) * x(J);
+                        matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);
 
                         spin_string.annihilate(q);  // reset the spin string after the previous creation
                     }
 
                     else {  // if q in I
-                        diagonal_prefactor += 2 * (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p));
+                        if (p != q) {
+                            matvec(I) += (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p)) * x(I);
+                        }
                     }
                 }  // q
 
@@ -96,7 +97,6 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
             }
         }  // p
 
-        matvec(I) += diagonal_prefactor * x(I);
         spin_string.nextPermutation();
     }  // address (I) loop
 
