@@ -29,10 +29,8 @@ BOOST_AUTO_TEST_CASE ( FCI_He_Cristina ) {
     // Calculate the total energy
     double internuclear_repulsion_energy = helium.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
     double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
-    std::cout<<std::endl<<test_fci_energy<<std::endl;
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }
-
 
 BOOST_AUTO_TEST_CASE ( FCI_H2_Cristina ) {
     // Cristina's H2 FCI energy/OO-DOCI energy

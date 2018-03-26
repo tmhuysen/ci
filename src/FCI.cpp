@@ -221,7 +221,6 @@ size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
     auto dim_double_alpha = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_A));
     auto dim_double_beta = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_B));
     auto dim_double_total = dim_double_alpha*dim_double_beta;
-
     // Check if the resulting dimension is appropriate to be stored in size_t
     return boost::numeric::converter<double, size_t>::convert(dim_double_total);
 }
