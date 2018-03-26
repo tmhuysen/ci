@@ -46,7 +46,7 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
                     else {  // if q in I
                         diagonal_element += 2 * (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p));
                     }
-                }  // q
+                }  // q < p
 
                 spin_string.create(p);  // reset the spin string after the previous annihilation
             }
@@ -72,36 +72,28 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
-        for (size_t p = 0; p < this->K; p++) {
-            if (spin_string.isOccupied(p)) {
-                matvec(I) += 2 * this->so_basis.get_h_SO(p,p) * x(I);
-                matvec(I) += this->so_basis.get_g_SO(p,p,p,p) * x(I);
+        for (size_t p = 0; p < this->K; p++) {  // p loops over all SOs
+            if (spin_string.annihilate(p)) {  // p in I
+                matvec(I) += 2 * this->so_basis.get_h_SO(p,p) * x(I);  // diagonal contribution 1
+                matvec(I) += this->so_basis.get_g_SO(p,p,p,p) * x(I);  // diagonal contribution 3
 
-                for (size_t q = 0; q < p; q++) {
-                    if (spin_string.isOccupied(q)) {
-                        matvec(I) += 2 * (2 * this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p)) * x(I);
-                    }
-
-                }
-            }
-        }
-
-
-        for (size_t p = 0; p < this->K; p++) {
-            if (spin_string.annihilate(p)) {
-                for (size_t q = 0; q < p; q++) {
-                    if (spin_string.create(q)) {
+                for (size_t q = 0; q < p; q++) {  // q loops over all SOs smaller than p
+                    if (spin_string.create(q)) {  // q not in I
                         size_t J = spin_string.address(this->addressing_scheme);
-                        matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);
-                        matvec(J) += this->so_basis.get_g_SO(p,q,p,q) * x(I);
+                        matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);  // off-diagonal contribution
+                        matvec(J) += this->so_basis.get_g_SO(p,q,p,q) * x(I);  // off-diagonal contribution for q > p (not explicitly in sum)
 
-                        spin_string.annihilate(q);
+                        spin_string.annihilate(q);  // reset the spin string after previous creation
                     }
-                }
 
-                spin_string.create(p);
+                    else {  // q in I
+                        matvec(I) += 2 * (2 * this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p)) * x(I);  // diagonal contribution 2
+                    }
+                } // q < p
+
+                spin_string.create(p);  // reset the spin string after previous annihilation
             }
-        }
+        }  // p
 
         spin_string.nextPermutation();
     }  // address (I) loop
