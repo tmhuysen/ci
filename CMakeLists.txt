@@ -24,6 +24,12 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # Set CMake variables
 include(${CMAKE_SOURCE_DIR}/cmake/SetCMakeEnvironment.cmake)
 
+
+
+message(STATUS "Building ${LIBRARY_NAME} for ${CMAKE_BUILD_TYPE}")
+
+
+
 # Find all required packages
 include(${CMAKE_SOURCE_DIR}/cmake/FindPackages.cmake)
 
