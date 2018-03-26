@@ -73,25 +73,30 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over all SOs
-            if (spin_string.annihilate(p)) {  // p in I
+            if (spin_string.isOccupied(p)) {  // p in I  // TODO check with .isOccupiedNoCheck
                 matvec(I) += 2 * this->so_basis.get_h_SO(p,p) * x(I);  // diagonal contribution 1
                 matvec(I) += this->so_basis.get_g_SO(p,p,p,p) * x(I);  // diagonal contribution 3
 
                 for (size_t q = 0; q < p; q++) {  // q loops over all SOs smaller than p
-                    if (spin_string.create(q)) {  // q not in I
+                    if (!spin_string.isOccupied(q)) {  // q not in I // TODO check with .isOccupiedNoCheck
+
+
+                        // TODO check with making a copy and then not resetting
+                        spin_string.annihilateBare(p);
+                        spin_string.createBare(q);
+
                         size_t J = spin_string.address(this->addressing_scheme);
                         matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);  // off-diagonal contribution
                         matvec(J) += this->so_basis.get_g_SO(p,q,p,q) * x(I);  // off-diagonal contribution for q > p (not explicitly in sum)
 
-                        spin_string.annihilate(q);  // reset the spin string after previous creation
+                        spin_string.annihilateBare(q);  // reset the spin string after previous creation
+                        spin_string.createBare(p);  // reset the spin string after previous annihilation
                     }
 
                     else {  // q in I
                         matvec(I) += 2 * (2 * this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p)) * x(I);  // diagonal contribution 2
                     }
                 } // q < p
-
-                spin_string.create(p);  // reset the spin string after previous annihilation
             }
         }  // p
 
