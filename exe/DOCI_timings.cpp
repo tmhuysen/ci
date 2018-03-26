@@ -130,9 +130,9 @@ void printDavidsonCOTimings() {
 
 int main () {
 
-    printDenseLiHTimings();
-    printSparseLiHTimings();
-    printDavidsonLiHTimings();
+//    printDenseLiHTimings();
+//    printSparseLiHTimings();
+//    printDavidsonLiHTimings();
 
     printDavidsonCOTimings();
 }
