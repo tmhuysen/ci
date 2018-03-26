@@ -89,14 +89,13 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
         for (size_t p = 0; p < this->K; p++) {
             if (spin_string.annihilate(p)) {
-                for (size_t q = 0; q < this->K; q++) {
-                    if (q != p) {
-                        if (spin_string.create(q)) {
-                            size_t J = spin_string.address(this->addressing_scheme);
-                            matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);
+                for (size_t q = 0; q < p; q++) {
+                    if (spin_string.create(q)) {
+                        size_t J = spin_string.address(this->addressing_scheme);
+                        matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);
+                        matvec(J) += this->so_basis.get_g_SO(p,q,p,q) * x(I);
 
-                            spin_string.annihilate(q);
-                        }
+                        spin_string.annihilate(q);
                     }
                 }
 
