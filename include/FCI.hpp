@@ -22,17 +22,17 @@ private:
 
     // OVERRIDDEN PRIVATE METHODS
     /**
-     *  Given a @param matrix_solver, construct the DOCI Hamiltonian matrix in the solver's matrix representation.
+     *  Given a @param matrix_solver, construct the FCI Hamiltonian matrix in the solver's matrix representation.
      */
     void constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) override;
 
     /**
-     *  @return the action of the DOCI Hamiltonian of the coefficient vector @param x.
+     *  @return the action of the FCI Hamiltonian of the coefficient vector @param x.
      */
     Eigen::VectorXd matrixVectorProduct(const Eigen::VectorXd& x) override;
 
     /**
-     *  @return the diagonal of the matrix representation of the DOCI Hamiltonian.
+     *  @return the diagonal of the matrix representation of the FCI Hamiltonian.
      */
     Eigen::VectorXd calculateDiagonal() override;
 
@@ -41,7 +41,7 @@ private:
 public:
     // CONSTRUCTORS
     /**
-     *  Constructor based on a given @param so_basis and a number of electrons @param N.
+     *  Constructor based on a given @param so_basis and a number of alpha electron and beta electrons @param N_A and N_B respectively.
      */
     FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B);
 
