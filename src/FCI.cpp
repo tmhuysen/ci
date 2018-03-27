@@ -33,40 +33,42 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                 // alpha branch
                 int sign_p = 1;  // sign for the operator acting on the p-th SO
                 if (spin_string_alpha.annihilate(p, sign_p)) {
-                    for (size_t q = 0; q < this->K; q++) {
+                    for (size_t q = 0; q < this->K; q++) {  // SO iteration 2
 
                         // alpha one-electron branch
-                        int sign_q = sign_p; // sign for the operator acting on the q-th SO
+                        int sign_q = sign_p;  // sign for the operator acting on the q-th SO
                         if (spin_string_alpha.create(q, sign_q)) {
+                            // Retrieve address of the transformed SpinString
                             size_t Ja = spin_string_alpha.address(this->addressing_scheme_alpha);
-                            // if alpha is major relative address in the total basis is multiplied by all beta combinations
-                            matrix_solver->addToMatrix(sign_q*this->so_basis.get_h_SO(p, q), Ia * dim_beta + Ib,
-                                                       Ja * dim_beta + Ib);
+                            // If alpha is major relative address in the total basis is multiplied by all beta combinations
+                            matrix_solver->addToMatrix(sign_q*this->so_basis.get_h_SO(p, q),
+                                                       Ia * dim_beta + Ib, Ja * dim_beta + Ib);
                             spin_string_alpha.annihilate(q);  // undo
 
-                        }
+                        }  // create q alpha
                         // alpha-alpha two-electron branch
-                        sign_q = sign_p;
+                        sign_q = sign_p;  // sign for the operator acting on the q-th SO
                         if (spin_string_alpha.annihilate(q, sign_q)) {
                             for (size_t r = 0; r < this->K; r++) {
-                                int sign_r = sign_q;
+                                int sign_r = sign_q;  // sign for the operator acting on the r-th SO
                                 if (spin_string_alpha.create(r, sign_r)) {
                                     for (size_t s = 0; s < this->K; s++) {
-                                        int sign_s = sign_r;
+                                        int sign_s = sign_r;  // sign for the operator acting on the s-th SO
                                         if (spin_string_alpha.create(s, sign_s)) {
 
                                             size_t Ja = spin_string_alpha.address(this->addressing_scheme_alpha);
 
                                             matrix_solver->addToMatrix(sign_s*this->so_basis.get_g_SO(p, s, q, r)/2,
                                                                        Ia * dim_beta + Ib, Ja * dim_beta + Ib);
-                                            spin_string_alpha.annihilate(s);
-                                        }
-                                    }
-                                    spin_string_alpha.annihilate(r);
-                                }
-                            }
-                            spin_string_alpha.create(q);
-                        }
+                                            spin_string_alpha.annihilate(s);  // undo
+                                        }  // create s alpha
+                                    }  // s
+                                    spin_string_alpha.annihilate(r);  // undo
+                                }  // create r alpha
+                            }  // r
+                            spin_string_alpha.create(q);  // undo
+                        }  // annihilate q alpha
+
                         // alpha-beta two-electron branch
                         sign_q = sign_p;
                         if (spin_string_beta.annihilate(q, sign_q)) {
@@ -76,39 +78,37 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                                     for (size_t s = 0; s < this->K; s++) {
                                         int sign_s = sign_r;
                                         if (spin_string_alpha.create(s, sign_s)) {
-
+                                            // Retrieve address of the transformed SpinString alpha
                                             size_t Ja = spin_string_alpha.address(this->addressing_scheme_alpha);
+                                            // Retrieve address of the transformed SpinString beta
                                             size_t Jb = spin_string_beta.address(this->addressing_scheme_beta);
-
 
                                             matrix_solver->addToMatrix(sign_s*this->so_basis.get_g_SO(p, s, q, r),
                                                                        Ia * dim_beta + Ib, Ja * dim_beta + Jb);  // We do not divide by 2 because we will not evaluate this branch in the beta branch.
-                                            spin_string_alpha.annihilate(s);
-                                        }
-                                    }
-                                    spin_string_beta.annihilate(r);
-                                }
-                            }
-                            spin_string_beta.create(q);
-                        }
-                    }
-                    spin_string_alpha.create(p);
-                }
+                                            spin_string_alpha.annihilate(s);  // undo
+                                        }  // create s alpha
+                                    }  // s
+                                    spin_string_beta.annihilate(r);  // undo
+                                }  // annihilate r beta
+                            }  // r
+                            spin_string_beta.create(q);  // undo
+                        }  // annihilate q beta
+                    }  // q
+                    spin_string_alpha.create(p);  // undo
+                }  // annihilate p alpha
                 sign_p = 1;
                 // beta branch 
                 if (spin_string_beta.annihilate(p, sign_p)) {
                     for (size_t q = 0; q < this->K; q++) {
-
                         // beta one-electron branch
-                        int sign_q = sign_p; // sign for the operator acting on the q-th SO
+                        int sign_q = sign_p;
                         if (spin_string_beta.create(q, sign_q)) {
                             size_t Jb = spin_string_beta.address(this->addressing_scheme_beta);
-                            // if alpha is major relative address in the total basis is multiplied by all beta combinations
-                            matrix_solver->addToMatrix(sign_q*this->so_basis.get_h_SO(p, q), Ia * dim_beta + Ib,
-                                                       Ia * dim_beta + Jb);
+                            matrix_solver->addToMatrix(sign_q*this->so_basis.get_h_SO(p, q),
+                                                       Ia * dim_beta + Ib, Ia * dim_beta + Jb);
                             spin_string_beta.annihilate(q);  // undo
 
-                        }
+                        }  // create q
                         // beta-beta two-electron branch
                         sign_q = sign_p;
                         if (spin_string_beta.annihilate(q, sign_q)) {
@@ -123,26 +123,25 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
                                             matrix_solver->addToMatrix(sign_s*this->so_basis.get_g_SO(p, s, q, r)/2,
                                                                        Ia * dim_beta + Ib, Ia * dim_beta + Jb);
-                                            spin_string_beta.annihilate(s);
-                                        }
-                                    }
-                                    spin_string_beta.annihilate(r);
-                                }
-                            }
-                            spin_string_beta.create(q);
-                        }
-                    }
-                    spin_string_beta.create(p);
-                }
-            }
-            if(Ib < dim_beta-1){
+                                            spin_string_beta.annihilate(s);  // undo
+                                        }  // create s beta
+                                    }  // s
+                                    spin_string_beta.annihilate(r);  // undo
+                                }  // create r beta
+                            }  // r
+                            spin_string_beta.create(q);  // undo
+                        }  // annihilate q beta
+                    }  // q
+                    spin_string_beta.create(p);  // undo
+                } // annihilate p beta
+            }  // p
+            if(Ib < dim_beta-1){  // prevent last permutation to occur.
                 spin_string_beta.nextPermutation();
             }
         }
-        if(Ia < dim_alpha-1){
+        if(Ia < dim_alpha-1){  // prevent last permutation to occur.
             spin_string_alpha.nextPermutation();
         }
-
     }
 }
 
@@ -168,7 +167,7 @@ Eigen::VectorXd FCI::calculateDiagonal() {
  *  CONSTRUCTORS
  */
 /**
- *  Constructor based on a given @param so_basis and a number of alpha electron and beta electrons @param N_A and N_B respectivily.
+ *  Constructor based on a given @param so_basis and a number of alpha electron and beta electrons @param N_A and N_B respectively.
  */
 FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
         BaseCI(so_basis, this->calculateDimension(so_basis.get_K(), N_A, N_B)),
@@ -191,10 +190,10 @@ FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
  *  STATIC PUBLIC METHODS
  */
 
-/**
- *  Given a number of spatial orbitals @param K and a number of electron pairs @param N_P, @return the dimension of
- *  the FCI space.
- */
+    /**
+     *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
+     *  the FCI space.
+     */
 size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
 
     // K N_A, N_B are expected to be small, so static-casting them to unsigned (what boost needs) is permitted.
