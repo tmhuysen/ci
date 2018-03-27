@@ -185,8 +185,7 @@ namespace ci {
         __ public methods __
             + void calculate1RDMs() override
             + void calculate2RDMs() override
-            + {static} calculateDimension
-
+            + {static} calculateDimension(size_t K, size_t N_P)
     }
 
     ci.FCI --|> ci.BaseCI
