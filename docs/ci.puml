@@ -157,6 +157,7 @@ namespace ci {
         __ private members __
             - const size_t K
             - const size_t N_P
+            - const bmqc::AddressingScheme addressing_scheme
         __ private methods __
             - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver) override
             - Eigen::VectorXd **matrixVectorProduct**() override
@@ -165,7 +166,30 @@ namespace ci {
             **DOCI**(const libwint::SOBasis& so_basis, size_t N)
         == destructor ==
             **~DOCI**()
+        __ public methods __
+            + {static} calculateDimension(size_t K, size_t N_P)
     }
+
+    ci.FCI --|> ci.BaseCI
+    class FCI {
+        __ private members __
+            - const size_t K
+            - const size_t N_A
+            - const size_t N_B
+            - const bmqc::AddressingScheme addressing_scheme_alpha
+            - const bmqc::AddressingScheme addressing_scheme_beta
+        __ private methods __
+            - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver) override
+            - Eigen::VectorXd **matrixVectorProduct**() override
+            - Eigen::VectorXd **calculateDiagonal**() override
+        == constructors ==
+            **DOCI**(const libwint::SOBasis& so_basis, size_t N_A, size_t N_B)
+        == destructor ==
+            **~DOCI**()
+        __ public methods __
+            + {static} calculateDimension(size_t K, size_t N_A, size_t N_B)
+    }
+
 
 
 }
