@@ -69,20 +69,21 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    Eigen::VectorXd matvec = Eigen::VectorXd::Zero(this->dim);
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
 
 
+    // Diagonal contributions
+    Eigen::VectorXd matvec = this->diagonal.cwiseProduct(x);
+
+
+    // Off-diagonal contributions
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over all SOs
             if (spin_string.isOccupied(p)) {  // p in I
-                matvec(I) += 2 * this->so_basis.get_h_SO(p,p) * x(I);  // diagonal contribution 1
-                matvec(I) += this->so_basis.get_g_SO(p,p,p,p) * x(I);  // diagonal contribution 3
-
                 for (size_t q = 0; q < p; q++) {  // q loops over all SOs smaller than p
                     if (!spin_string.isOccupied(q)) {  // q not in I
 
@@ -96,10 +97,6 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
                         spin_string.annihilate(q);  // reset the spin string after previous creation
                         spin_string.create(p);  // reset the spin string after previous annihilation
-                    }
-
-                    else {  // q in I
-                        matvec(I) += 2 * (2 * this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p)) * x(I);  // diagonal contribution 2
                     }
                 } // q < p
             }
@@ -118,11 +115,9 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
 
 /**
- *  @return the diagonal of the matrix representation of the DOCI Hamiltonian.
+ *  @set the diagonal of the matrix representation of the DOCI Hamiltonian.
  */
-Eigen::VectorXd DOCI::calculateDiagonal() {
-
-    Eigen::VectorXd diagonal = Eigen::VectorXd::Zero(this->dim);
+void DOCI::calculateDiagonal() {
 
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);
@@ -131,13 +126,13 @@ Eigen::VectorXd DOCI::calculateDiagonal() {
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
             if (spin_string.isOccupied(p)) {  // p is in I
-                diagonal(I) += 2 * this->so_basis.get_h_SO(p,p) + this->so_basis.get_g_SO(p,p,p,p);
+                this->diagonal(I) += 2 * this->so_basis.get_h_SO(p,p) + this->so_basis.get_g_SO(p,p,p,p);
 
                 for (size_t q = 0; q < p; q++) {  // q loops over SOs
                     if (spin_string.isOccupied(q)) {  // q is in I
 
                         // Since we are doing a restricted summation q<p, we should multiply by 2 since the summand argument is symmetric.
-                        diagonal(I) += 2 * (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p));
+                        this->diagonal(I) += 2 * (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p));
                     }
                 }  // q loop
             }
@@ -145,8 +140,6 @@ Eigen::VectorXd DOCI::calculateDiagonal() {
 
         spin_string.nextPermutation();
     }  // address (I) loop
-
-    return diagonal;
 }
 
 
@@ -164,7 +157,7 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
     addressing_scheme (bmqc::AddressingScheme(this->K, this->N_P)) // since in DOCI, alpha==beta, we should make an
                                                                    // addressing scheme with the number of PAIRS.
 {
-    // Do some input checks.
+    // Do some input checks
     if ((N % 2) != 0) {
         throw std::invalid_argument("You gave an odd amount of electrons, which is not suitable for DOCI.");
     }
