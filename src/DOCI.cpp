@@ -25,38 +25,37 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
-    bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
+    bmqc::SpinString<unsigned long> spin_string(0, this->addressing_scheme);  // spin string with address 0
 
 
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
-        double diagonal_element = 0.0;
-        for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
-            if (spin_string.annihilate(p)) {  // if p in I
-                diagonal_element += 2 * this->so_basis.get_h_SO(p,p) + this->so_basis.get_g_SO(p,p,p,p);
+        // Diagonal contribution
+        matrix_solver->addToMatrix(this->diagonal(I), I, I);
 
+        // Off-diagonal contribution
+        for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
+            if (spin_string.isOccupied(p)) {  // if p in I
                 for (size_t q = 0; q < p; q++) {  // q loops over SOs
-                    if (spin_string.create(q)) {  // if q not in I
+                    if (!spin_string.isOccupied(q)) {  // if q not in I
+
+                        spin_string.annihilate(p);
+                        spin_string.create(q);
+
                         size_t J = spin_string.address(this->addressing_scheme);  // J is the address of a string that couples to I
 
-                        // The loops are p->K and q<p. So, we should normally multiply by a factor 2 (since the summand is symmetric).
-                        // However, we are setting both of the symmetric indices of Hamiltonian, so no factor 2 is required.
-                        matrix_solver->addToMatrix(this->so_basis.get_g_SO(p,q,p,q), I, J);
-                        matrix_solver->addToMatrix(this->so_basis.get_g_SO(p,q,p,q), J, I);
+                        // The loops are p->K and q<p. So, we should normally multiply by a factor 2 (since the summand is symmetric)
+                        // However, we are setting both of the symmetric indices of Hamiltonian, so no factor 2 is required
+                        matrix_solver->addToMatrix(this->so_basis.get_g_SO(p, q, p, q), I, J);
+                        matrix_solver->addToMatrix(this->so_basis.get_g_SO(p, q, p, q), J, I);
 
-                        spin_string.annihilate(q);  // reset the spin string after the previous creation
+                        spin_string.annihilate(q);  // reset the spin string after previous creation
+                        spin_string.create(p);  // reset the spin string after previous annihilation
                     }
-
-                    else {  // if q in I
-                        diagonal_element += 2 * (2*this->so_basis.get_g_SO(p,p,q,q) - this->so_basis.get_g_SO(p,q,q,p));
-                    }
-                }  // q < p
-
-                spin_string.create(p);  // reset the spin string after the previous annihilation
+                }  // q < p loop
             }
-        }  // p
+        }  // p loop
 
-        matrix_solver->addToMatrix(diagonal_element, I, I);
         spin_string.nextPermutation();
     }  // address (I) loop
 }
@@ -90,7 +89,7 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
                         spin_string.annihilate(p);
                         spin_string.create(q);
 
-                        size_t J = spin_string.address(this->addressing_scheme);
+                        size_t J = spin_string.address(this->addressing_scheme);  // J is the address of a string that couples to I
 
                         matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);  // off-diagonal contribution
                         matvec(J) += this->so_basis.get_g_SO(p,q,p,q) * x(I);  // off-diagonal contribution for q > p (not explicitly in sum)
@@ -98,9 +97,9 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
                         spin_string.annihilate(q);  // reset the spin string after previous creation
                         spin_string.create(p);  // reset the spin string after previous annihilation
                     }
-                } // q < p
+                } // q < p loop
             }
-        }  // p
+        }  // p loop
 
         spin_string.nextPermutation();
     }  // address (I) loop
