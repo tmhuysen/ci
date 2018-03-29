@@ -85,7 +85,27 @@ void solveDavidsonCO() {
     // Calculate the total energy
     double internuclear_repulsion_energy = 2.2141305786610879e+01;  // this comes straight out of the FCIDUMP file
     double test_doci_energy = doci.get_eigenvalue() + internuclear_repulsion_energy;
+    std::cout << "DOCI ENERGY: " << test_doci_energy << std::endl;
 }
+
+
+/**
+ *  Solve the DOCI problem for Li2 using Davidson's algorithm.
+ */
+void solveDavidsonLiLi() {
+
+    // Do a DOCI calculation based on a given FCIDUMP file
+    libwint::SOBasis so_basis ("../../tests/reference_data/lili_321g_klaas.FCIDUMP", 18);  // 18 SOs
+    ci::DOCI doci (so_basis, 6);  // 6 electrons
+    doci.solve(numopt::eigenproblem::SolverType::DAVIDSON);
+
+
+    // Calculate the total energy
+    double internuclear_repulsion_energy = 3.0036546888874875e+00;  // this comes straight out of the FCIDUMP file
+    double test_doci_energy = doci.get_eigenvalue() + internuclear_repulsion_energy;
+    std::cout << "DOCI ENERGY: " << test_doci_energy << std::endl;
+}
+
 
 
 /**
@@ -124,6 +144,15 @@ void printDavidsonCOTimings() {
 }
 
 
+/**
+ *  Print how long it takes to solve the DOCI problem for CO with Davidson's algorithm.
+ */
+void printDavidsonLiLiTimings() {
+
+    cpputil::printExecutionTime("LI Davidson DOCI", solveDavidsonLiLi);  // (void *)() is implicitly converted to std::function<void ()>
+}
+
+
 /*
  *  MAIN FUNCTION
  */
@@ -134,5 +163,7 @@ int main () {
 //    printSparseLiHTimings();
 //    printDavidsonLiHTimings();
 
-    printDavidsonCOTimings();
+//    printDavidsonCOTimings();
+    printDavidsonLiLiTimings();
+
 }
