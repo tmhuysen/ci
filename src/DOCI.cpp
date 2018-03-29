@@ -163,7 +163,7 @@ void DOCI::compute2RDM(){
 /**
  *  Constructor based on a given @param so_basis and a number of electrons @param N.
  */
-DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
+DOCI::DOCI(libwint::SOMullikenBasis& so_basis, size_t N) :
     BaseCI(so_basis, this->calculateDimension(so_basis.get_K(), N / 2)),
     K (so_basis.get_K()),
     N_P (N / 2),
@@ -199,5 +199,25 @@ size_t DOCI::calculateDimension(size_t K, size_t N_P) {
     return boost::numeric::converter<double, size_t>::convert(dim_double);
 }
 
+double DOCI::computeE(){
+    compute1RDM();
+    compute2RDM();
+    double energy = 0;
+    for(int i =0;i<this->K;i++){
+
+        for(int j =0;j<this->K;j++){
+            energy += 2*so_basis.get_h_SO(i,j)*one_rdm_aa(i,j);
+            for(int k =0;k<this->K;k++){
+                for(int l =0;l<this->K;l++){
+                    energy += so_basis.get_g_SO(i,j,k,l)*two_rdm_aaaa(i,k,j,l); // RDM's in physical notation
+                    energy += so_basis.get_g_SO(i,j,k,l)*two_rdm_abba(i,k,j,l);
+                }
+            }
+        }
+
+    }
+    return energy;
+
+}
 
 }  // namespace ci

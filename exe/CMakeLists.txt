@@ -1,7 +1,7 @@
 # exe-level CMakeLists
 
 # Add an executable for davidson timings
-add_executable(dense_sparse_DOCI_timings ${PROJECT_EXECUTABLES_FOLDER}/dense_sparse_DOCI_timings.cpp)
+add_executable(fci_NO_data ${PROJECT_EXECUTABLES_FOLDER}/fci_NO_data.cpp)
 
 # Add this project's headers
-configure_executable(dense_sparse_DOCI_timings)
+configure_executable(fci_NO_data)

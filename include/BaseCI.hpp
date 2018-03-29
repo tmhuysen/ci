@@ -2,7 +2,7 @@
 #define CI_BASECI_HPP
 
 
-
+#include "NormalGenerator.hpp"
 #include <libwint.hpp>
 #include <bmqc.hpp>
 
@@ -17,7 +17,7 @@ namespace ci {
 class BaseCI {
 protected:
 
-    libwint::SOBasis& so_basis;
+    libwint::SOMullikenBasis& so_basis;
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
 
     const size_t dim;  // the dimension of the CI space
@@ -37,7 +37,7 @@ protected:
     /**
      *  Protected constructor given a @param so_basis and a dimension @dim.
      */
-    explicit BaseCI(libwint::SOBasis& so_basis, size_t dim);
+    explicit BaseCI(libwint::SOMullikenBasis &so_basis, size_t dim);
 
 
     // PURE VIRTUAL PROTECTED METHODS
@@ -87,6 +87,11 @@ public:
      *  Find the lowest energy eigenpair of the Hamiltonian, using a @param solver_type.
      */
     void solve(numopt::eigenproblem::SolverType solver_type);
+
+    /**
+     *  Solves the eigenvalue problem with a mulliken constraint and returns the energy.
+     */
+    double solveConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double constraint );
 
     /**
      *  Compute all of the one reduced density matrix.

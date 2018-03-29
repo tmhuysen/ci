@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE "DOCI_sparse_test"
+#define BOOST_TEST_MODULE "DOCI_dense_test"
 
 
 
@@ -7,18 +7,18 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test.hpp>
 
+/*
 
-
-BOOST_AUTO_TEST_CASE ( DOCI_beh_cation_klaas_sparse ) {
+BOOST_AUTO_TEST_CASE ( DOCI_beh_cation_klaas_dense ) {
 
     // Klaas' reference DOCI energy for BeH+ (obtained through Caitlin)
     double reference_doci_energy = -14.8782216937;
 
 
     // Do a DOCI calculation based on a given FCIDUMP file
-    libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    libwint::SOMullikenBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
     ci::DOCI doci (so_basis, 4);  // 4 electrons
-    doci.solve(numopt::eigenproblem::SolverType::SPARSE);
+    doci.solve(numopt::eigenproblem::SolverType::DENSE);
 
 
     // Calculate the total energy
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_beh_cation_klaas_sparse ) {
 }
 
 
-BOOST_AUTO_TEST_CASE ( DOCI_lih_klaas_sparse ) {
+BOOST_AUTO_TEST_CASE ( DOCI_lih_klaas_dense ) {
 
 
     // Klaas' reference DOCI energy for LiH (obtained through Caitlin)
@@ -38,9 +38,9 @@ BOOST_AUTO_TEST_CASE ( DOCI_lih_klaas_sparse ) {
 
 
     // Do a DOCI calculation based on a given FCIDUMP file
-    libwint::SOBasis so_basis ("../tests/reference_data/lih_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    libwint::SOMullikenBasis so_basis ("../tests/reference_data/lih_631g_caitlin.FCIDUMP", 16);  // 16 SOs
     ci::DOCI doci (so_basis, 4);  // 4 electrons
-    doci.solve(numopt::eigenproblem::SolverType::SPARSE);
+    doci.solve(numopt::eigenproblem::SolverType::DENSE);
 
 
     // Calculate the total energy
@@ -50,3 +50,4 @@ BOOST_AUTO_TEST_CASE ( DOCI_lih_klaas_sparse ) {
 
     BOOST_CHECK(std::abs(test_doci_energy - (reference_doci_energy)) < 1.0e-9);
 }
+*/

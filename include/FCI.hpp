@@ -43,7 +43,7 @@ public:
     /**
      *  Constructor based on a given @param so_basis and a number of alpha electron and beta electrons @param N_A and N_B respectively.
      */
-    FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B);
+    FCI(libwint::SOMullikenBasis& so_basis, size_t N_A, size_t N_B);
 
 
     // DESTRUCTOR

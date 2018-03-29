@@ -237,7 +237,7 @@ void FCI::compute1RDM(){
                 spin_string_beta.create(p);
             }  // anni p
         }  // p
-    } //  I
+    }  // I
     this->are_computed_one_rdm = true;
 }
 
@@ -249,13 +249,15 @@ void FCI::compute2RDM(){
 
 }
 
+
+
 /*
  *  CONSTRUCTORS
  */
 /**
  *  Constructor based on a given @param so_basis and a number of alpha electron and beta electrons @param N_A and N_B respectively.
  */
-FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
+FCI::FCI(libwint::SOMullikenBasis& so_basis, size_t N_A, size_t N_B) :
         BaseCI(so_basis, this->calculateDimension(so_basis.get_K(), N_A, N_B)),
         K (so_basis.get_K()),
         N_A (N_A),N_B (N_B),
@@ -276,10 +278,10 @@ FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
  *  STATIC PUBLIC METHODS
  */
 
-    /**
-     *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
-     *  the FCI space.
-     */
+/**
+ *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
+ *  the FCI space.
+ */
 size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
 
     // K N_A, N_B are expected to be small, so static-casting them to unsigned (what boost needs) is permitted.

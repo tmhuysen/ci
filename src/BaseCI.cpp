@@ -1,6 +1,8 @@
 #include "BaseCI.hpp"
 
 #include <numopt.hpp>
+#include <iomanip>
+#include <limits>
 
 #include "DenseSolver.hpp"
 #include "SparseSolver.hpp"
@@ -18,7 +20,7 @@ namespace ci {
 /**
  *  Protected constructor given a @param so_basis and a dimension @dim.
  */
-BaseCI::BaseCI(libwint::SOBasis& so_basis, size_t dim) :
+BaseCI::BaseCI(libwint::SOMullikenBasis &so_basis, size_t dim) :
     so_basis (so_basis),
     dim (dim)
 {}
@@ -98,6 +100,58 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
 
 }
 
+/**
+ *  Solves the eigenvalue problem with a mulliken constraint and returns the energy.
+ */
+double BaseCI::solveConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double constraint ){
+
+    //init the procedure
+    this->so_basis.calculateMullikenMatrix(AO_set);
+    this->solve(solver_type);
+    this->compute1RDM();
+    double threshold = 1e-6;
+    double population = so_basis.mullikenPopulationFCI(this->one_rdm_aa,this->one_rdm_bb);
+    double error = std::abs(population - constraint);
+    // Iteration variables
+    size_t iterations = 0;
+    size_t max_iterations = 4;
+    double lagrange_multiplier = 0;
+    double range = 3;
+    double max_bounds = lagrange_multiplier + range;
+    double min_bounds = lagrange_multiplier - range;
+    double interval = range/10;
+
+    while(error > threshold && iterations<max_iterations){
+        iterations++;
+        for(double i = max_bounds; i>min_bounds;i -= interval) {
+            so_basis.set_lagrange_multiplier(i);
+            this->solve(solver_type);
+            this->compute1RDM();
+            double new_population = so_basis.mullikenPopulationFCI(this->one_rdm_aa, this->one_rdm_bb);
+            double new_error = std::abs(new_population - constraint);
+            if (new_error < error) {
+                lagrange_multiplier = i;
+                error = new_error;
+                population = new_population;
+            }
+
+        }
+        range = range/10;
+        max_bounds = lagrange_multiplier + range;
+        min_bounds = lagrange_multiplier - range;
+        interval = range/10;
+
+    }
+    so_basis.set_lagrange_multiplier(lagrange_multiplier);
+    this->solve(solver_type);
+    this->compute1RDM();
+    double energy = this->get_eigenvalue()-lagrange_multiplier*population;
+    if(error > threshold){
+        std::cout<<std::endl<<" WARNING THE ERROR = "<<error<<std::endl;
+        std::cout<<std::endl<<" with multiplier = "<<lagrange_multiplier<<std::endl;
+    }
+    return energy;
+}
 
 
 /*

@@ -40,7 +40,7 @@ public:
     /**
      *  Constructor based on a given @param so_basis and a number of electrons @param N.
      */
-    DOCI(libwint::SOBasis& so_basis, size_t N);
+    DOCI(libwint::SOMullikenBasis& so_basis, size_t N);
 
 
     // DESTRUCTOR
@@ -58,6 +58,10 @@ public:
      */
     void compute2RDM()override;
 
+    /**
+     * test
+     */
+    double computeE();
     // STATIC PUBLIC METHODS
     /**
      *  Given a number of spatial orbitals @param K and a number of electron pairs @param N_P, @return the dimension of
