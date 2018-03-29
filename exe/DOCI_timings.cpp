@@ -95,7 +95,7 @@ void solveDavidsonCO() {
 void solveDavidsonLiLi() {
 
     // Do a DOCI calculation based on a given FCIDUMP file
-    libwint::SOBasis so_basis ("../../tests/reference_data/lili_321g_klaas.FCIDUMP", 18);  // 18 SOs
+    libwint::SOBasis so_basis ("../../tests/reference_data/li2_321g_klaas.FCIDUMP", 18);  // 18 SOs
     ci::DOCI doci (so_basis, 6);  // 6 electrons
     doci.solve(numopt::eigenproblem::SolverType::DAVIDSON);
 
@@ -164,6 +164,7 @@ int main () {
 //    printDavidsonLiHTimings();
 
 //    printDavidsonCOTimings();
-    printDavidsonLiLiTimings();
+//    printDavidsonLiLiTimings();
 
+    solveDavidsonLiLi();
 }
