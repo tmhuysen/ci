@@ -76,10 +76,6 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
     bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
 
 
-    auto intermediate = std::chrono::high_resolution_clock::now();
-    auto address_duration = std::chrono::duration_cast<std::chrono::microseconds>(intermediate - start).count();
-    auto operator_duration = std::chrono::duration_cast<std::chrono::microseconds>(intermediate - start).count();
-
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over all SOs
@@ -90,25 +86,16 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
                 for (size_t q = 0; q < p; q++) {  // q loops over all SOs smaller than p
                     if (!spin_string.isOccupied(q)) {  // q not in I
 
-//                        auto start_operator = std::chrono::high_resolution_clock::now();
                         spin_string.annihilate(p);
                         spin_string.create(q);
 
-//                        auto start_address = std::chrono::high_resolution_clock::now();
                         size_t J = spin_string.address(this->addressing_scheme);
-//                        auto stop_address = std::chrono::high_resolution_clock::now();
-
-//                        address_duration += std::chrono::duration_cast<std::chrono::microseconds>(stop_address - start_address).count();
 
                         matvec(I) += this->so_basis.get_g_SO(p,q,p,q) * x(J);  // off-diagonal contribution
                         matvec(J) += this->so_basis.get_g_SO(p,q,p,q) * x(I);  // off-diagonal contribution for q > p (not explicitly in sum)
 
                         spin_string.annihilate(q);  // reset the spin string after previous creation
                         spin_string.create(p);  // reset the spin string after previous annihilation
-//                        auto stop_operator = std::chrono::high_resolution_clock::now();
-//                        operator_duration += std::chrono::duration_cast<std::chrono::microseconds>(stop_operator - start_operator).count();
-//                        operator_duration -= std::chrono::duration_cast<std::chrono::microseconds>(stop_address - start_address).count();
-
                     }
 
                     else {  // q in I
@@ -125,11 +112,6 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
     std::cout << '\t' << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()
                       << " microseconds in matvec." << std::endl;
-
-
-//    std::cout << '\t' << address_duration << " microseconds calculating addresses." << std::endl;
-//    std::cout << '\t' << operator_duration << " microseconds performing operator operations." << std::endl;
-
 
     return matvec;
 }
