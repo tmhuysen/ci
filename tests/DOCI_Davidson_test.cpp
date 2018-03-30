@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_h2_631g_dense_vs_Davidson ) {
     ci::DOCI doci_dense (so_basis, h2);
     doci_dense.solve(numopt::eigenproblem::SolverType::DENSE);
     double doci_energy_dense = doci_dense.get_eigenvalue() + internuclear_repulsion_energy;
-    std::cout << doci_dense.get_dim() << std::endl;
+
 
     // Calculate the DOCI energy using the Davidson algorithm
     ci::DOCI doci_davidson (so_basis, h2);
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_n2_sto3g_klaas_Davidson ) {
 // dim = 120
 BOOST_AUTO_TEST_CASE ( DOCI_lih_631g_klaas_Davidson ) {
     
-    // Klaas' reference DOCI energy for LiH (obtained through Caitlin)
+    // Klaas' reference DOCI energy for LiH
     double reference_doci_energy = -8.0029560313;
 
 
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_h2o_631g_klaas_Davidson ) {
 BOOST_AUTO_TEST_CASE ( DOCI_lif_631g_klaas_Davidson ) {
 
     // Klaas' reference DOCI energy for LiF
-    double reference_doci_energy = -112.8392190587;
+    double reference_doci_energy = -107.0007150075;
 
 
     // Do a DOCI calculation based on a given FCIDUMP file
@@ -264,5 +264,5 @@ BOOST_AUTO_TEST_CASE ( DOCI_co_631g_klaas_Davidson ) {
     double test_doci_energy = doci.get_eigenvalue() + internuclear_repulsion_energy;
 
 
-    BOOST_CHECK(std::abs(test_doci_energy - (reference_doci_energy)) < 1.0e-9);
+    BOOST_CHECK(std::abs(test_doci_energy - (reference_doci_energy)) < 1.0e-8);
 }
