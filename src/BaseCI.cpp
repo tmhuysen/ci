@@ -93,12 +93,12 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
 
             // HARTREE-FOCK INITIAL GUESS
             Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
-            t_0(0) = 1;  // in reverse lexical notation, the Hartree-Fock determinant has the highest address
+            t_0(this->dim-1) = 1;  // in reverse lexical notation, the Hartree-Fock determinant has the highest address
 
             // RANDOM INITIAL GUESS
 //            Eigen::VectorXd t_0 = Eigen::VectorXd::Random(this->dim);
 
-            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, t_0, this->diagonal);
+            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, this->diagonal, t_0);
             this->eigensolver_ptr->solve();
             break;
         }
