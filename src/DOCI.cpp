@@ -66,7 +66,7 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
  */
 Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 
-    auto start = std::chrono::high_resolution_clock::now();
+//    auto start = std::chrono::high_resolution_clock::now();
 
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
@@ -104,10 +104,10 @@ Eigen::VectorXd DOCI::matrixVectorProduct(const Eigen::VectorXd& x) {
         spin_string.nextPermutation();
     }  // address (I) loop
 
-    auto stop = std::chrono::high_resolution_clock::now();
-
-    std::cout << '\t' << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()
-                      << " microseconds in matvec." << std::endl;
+//    auto stop = std::chrono::high_resolution_clock::now();
+//
+//    std::cout << '\t' << std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count()
+//                      << " microseconds in matvec." << std::endl;
 
     return matvec;
 }

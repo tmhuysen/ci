@@ -98,7 +98,7 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
             // RANDOM INITIAL GUESS
 //            Eigen::VectorXd t_0 = Eigen::VectorXd::Random(this->dim);
 
-            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, this->diagonal, t_0);
+            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, this->diagonal, t_0);  // the diagonal has been calculated in the beginning of this method
             this->eigensolver_ptr->solve();
             break;
         }

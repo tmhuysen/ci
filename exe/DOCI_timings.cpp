@@ -92,7 +92,7 @@ void solveDavidsonCO() {
 /**
  *  Solve the DOCI problem for Li2 using Davidson's algorithm.
  */
-void solveDavidsonLiLi() {
+void solveDavidsonLi2() {
 
     // Do a DOCI calculation based on a given FCIDUMP file
     libwint::SOBasis so_basis ("../../tests/reference_data/li2_321g_klaas.FCIDUMP", 18);  // 18 SOs
@@ -147,9 +147,9 @@ void printDavidsonCOTimings() {
 /**
  *  Print how long it takes to solve the DOCI problem for CO with Davidson's algorithm.
  */
-void printDavidsonLiLiTimings() {
+void printDavidsonLi2Timings() {
 
-    cpputil::printExecutionTime("LI Davidson DOCI", solveDavidsonLiLi);  // (void *)() is implicitly converted to std::function<void ()>
+    cpputil::printExecutionTime("Li2 Davidson DOCI", solveDavidsonLi2);  // (void *)() is implicitly converted to std::function<void ()>
 }
 
 
@@ -163,8 +163,6 @@ int main () {
 //    printSparseLiHTimings();
 //    printDavidsonLiHTimings();
 
-//    printDavidsonCOTimings();
-//    printDavidsonLiLiTimings();
-
-    solveDavidsonLiLi();
+    printDavidsonCOTimings();
+//    printDavidsonLi2Timings();
 }
