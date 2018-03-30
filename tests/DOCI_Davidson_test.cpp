@@ -2,6 +2,7 @@
 
 
 #include <hf.hpp>
+#include <cpputil.hpp>
 
 #include "DOCI.hpp"
 
@@ -116,6 +117,21 @@ BOOST_AUTO_TEST_CASE ( DOCI_lih_klaas_Davidson ) {
 }
 
 
+BOOST_AUTO_TEST_CASE ( DOCI_li2_klaas_check_matvec_dense_Davidson ) {
+
+    // Check if the matrix-vector product from Davidson and from the full dense Hamiltonian gives the same answer
+    // I used a vector equal to ones
+    Eigen::VectorXd matvec_dense = Eigen::VectorXd::Zero(816);
+    Eigen::VectorXd matvec_davidson = Eigen::VectorXd::Zero(816);
+
+    cpputil::io::readVectorFromFile("../tests/reference_data/li2_321g_klaas_matvec_with_ones_dense.data", matvec_dense);
+    cpputil::io::readVectorFromFile("../tests/reference_data/li2_321g_klaas_matvec_with_ones_davidson.data", matvec_davidson);
+
+
+    BOOST_CHECK(matvec_dense.isApprox(matvec_davidson, 1.0e-08));
+}
+
+
 BOOST_AUTO_TEST_CASE ( DOCI_li2_klaas_Davidson ) {
 
     // Klaas' reference DOCI energy for Li2
@@ -132,6 +148,7 @@ BOOST_AUTO_TEST_CASE ( DOCI_li2_klaas_Davidson ) {
     double internuclear_repulsion_energy = 3.0036546888874875e+00;  // this comes straight out of the FCIDUMP file
     double test_doci_energy = doci.get_eigenvalue() + internuclear_repulsion_energy;
     std::cout << "DOCI ENERGY: " << test_doci_energy << std::endl;
+    std::cout << doci.get_dim() << std::endl;
 
     BOOST_CHECK(std::abs(test_doci_energy - (reference_doci_energy)) < 1.0e-9);
 }

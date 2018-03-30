@@ -138,6 +138,7 @@ namespace ci {
         == destructor ==
             virtual **~BaseCI**()
         __ public methods __
+            + size_t **get_dim**() const
             + double **get_eigenvalue**() const
             + Eigen::VectorXd **get_eigenvector**() const
 

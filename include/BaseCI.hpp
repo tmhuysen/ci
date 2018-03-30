@@ -63,6 +63,7 @@ public:
 
 
     // GETTERS
+    size_t get_dim() const { return this->dim; }
     double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
     Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
 
