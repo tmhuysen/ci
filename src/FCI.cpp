@@ -270,6 +270,7 @@ FCI::FCI(libwint::SOMullikenBasis& so_basis, size_t N_A, size_t N_B) :
     if (this->K < this->N_A || this->K < this->N_B) {
         throw std::invalid_argument("Too many electrons of one spin to place into the given number of spatial orbitals.");
     }
+    std::cout<<std::endl<<" THIS IS AGENT K : "<<K<<" "<<this->dim<<std::endl;
 }
 
 
