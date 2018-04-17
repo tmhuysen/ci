@@ -15,8 +15,8 @@ BOOST_AUTO_TEST_CASE ( compute_test ) {
     libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
     ci::DOCI doci (so_basis, 4);  // 4 electrons
     doci.solve(numopt::eigenproblem::SolverType::DENSE);
-    doci.compute1RDM();
-    doci.compute2RDM();
+    doci.compute1RDMs();
+    doci.compute2RDMs();
 
     BOOST_CHECK(true);
 }

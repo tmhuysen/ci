@@ -47,23 +47,24 @@ public:
     ~DOCI() override = default;
 
 
-    // OVERRIDDEN PUBLIC METHODS
-    /**
-     *  Compute all of the one reduced density matrix.
-     */
-    void compute1RDM() override;
-
-    /**
-     *  Compute all of the two reduced density matrix.
-     */
-    void compute2RDM()override;
-
     // STATIC PUBLIC METHODS
     /**
      *  Given a number of spatial orbitals @param K and a number of electron pairs @param N_P, @return the dimension of
      *  the DOCI space.
      */
     static size_t calculateDimension(size_t K, size_t N_P);
+
+
+    // OVERRIDDEN PUBLIC METHODS
+    /**
+     *  Compute all the 1-RDMS for DOCI.
+     */
+    void compute1RDMs() override;
+
+    /**
+     *  Compute all the 2-RDMS for DOCI.
+     */
+    void compute2RDMs() override;
 };
 
 

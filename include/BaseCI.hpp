@@ -22,10 +22,10 @@ protected:
 
     const size_t dim;  // the dimension of the CI space
 
-    bool are_computed_one_rdm = false;
-    bool are_computed_two_rdm = false;
+    bool are_computed_one_rdms = false;
+    bool are_computed_two_rdms = false;
 
-    Eigen::MatrixXd one_rdm_aa;  // 1-RDM for alpha-alpha
+    Eigen::MatrixXd one_rdm_aa;  // 1-RDM for alpha-alpha (a-a)
     Eigen::MatrixXd one_rdm_bb;  // 1-RDM for beta-beta
     Eigen::Tensor<double, 4> two_rdm_aaaa;  // 2-RDM for a-a-a-a
     Eigen::Tensor<double, 4> two_rdm_abba;  // 2-RDM for a-b-b-a
@@ -89,14 +89,14 @@ public:
     void solve(numopt::eigenproblem::SolverType solver_type);
 
     /**
-     *  Compute all of the one reduced density matrix.
+     *  Compute all the 1-RDMS.
      */
-    virtual void compute1RDM()=0;
+    virtual void compute1RDMs() = 0;
 
     /**
-     *  Compute all of the two reduced density matrix.
+     *  Compute all the 2-RDMS.
      */
-    virtual void compute2RDM()=0;
+    virtual void compute2RDMs() = 0;
 };
 
 

@@ -126,8 +126,8 @@ namespace ci {
 
             #const size_t dim
 
-            #bool are_computed_one_rdm = false
-            #bool are_computed_two_rdm = false
+            #bool are_computed_one_rdms = false
+            #bool are_computed_two_rdms = false
 
             #Eigen::MatrixXd one_rdm_aa
             #Eigen::MatrixXd one_rdm_bb
@@ -179,8 +179,8 @@ namespace ci {
         == destructor ==
             **~DOCI**()
         __ public methods __
-            + void compute1RDM() override
-            + void compute2RDM() override
+            + void compute1RDMs() override
+            + void compute2RDMs() override
             + {static} calculateDimension
     }
 
