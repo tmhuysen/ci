@@ -18,10 +18,10 @@ namespace ci {
  *  Given a @param matrix_solver, construct the FCI Hamiltonian matrix in the solver's matrix representation.
  */
 void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) {
-
+    auto start = std::chrono::high_resolution_clock::now();
     // Create the first spin string.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
-    bmqc::SpinString<boost::dynamic_bitset<>> spin_string_alpha (0, this->addressing_scheme_alpha);  // spin string with address 0
+    bmqc::SpinString<unsigned long> spin_string_alpha (0, this->addressing_scheme_alpha);  // spin string with address 0
 
 
     for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {  // Ib loops over all the addresses of the alpha spin strings
@@ -143,6 +143,12 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
             spin_string_alpha.nextPermutation();
         }
     }
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    // Process the chrono time and output
+    auto elapsed_time = stop - start;           // in nanoseconds
+    auto seconds = elapsed_time.count() / 1e9;  // in seconds
+    //std::cout << dim << " : " << seconds << std::endl;
 }
 
 
@@ -270,7 +276,6 @@ FCI::FCI(libwint::SOMullikenBasis& so_basis, size_t N_A, size_t N_B) :
     if (this->K < this->N_A || this->K < this->N_B) {
         throw std::invalid_argument("Too many electrons of one spin to place into the given number of spatial orbitals.");
     }
-    std::cout<<std::endl<<" THIS IS AGENT K : "<<K<<" "<<this->dim<<std::endl;
 }
 
 

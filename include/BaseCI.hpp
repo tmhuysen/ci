@@ -16,7 +16,7 @@ namespace ci {
 
 class BaseCI {
 protected:
-
+    double population_set;
     libwint::SOMullikenBasis& so_basis;
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
 
@@ -74,6 +74,7 @@ public:
     // GETTERS
     double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
     Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
+    double get_population() const { return this->population_set; }
     Eigen::MatrixXd get_one_rdm_aa() const;
     Eigen::MatrixXd get_one_rdm_bb() const;
     Eigen::Tensor<double, 4> get_two_rdm_aaaa() const;
@@ -91,7 +92,12 @@ public:
     /**
      *  Solves the eigenvalue problem with a mulliken constraint and returns the energy.
      */
-    double solveConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double constraint );
+    double findConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double constraint);
+
+    /**
+     *  Solves the eigenvalue problem with a for a langrange multiplier mulliken constraint and returns the energy.
+     */
+    double solveConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double multiplier);
 
     /**
      *  Compute all of the one reduced density matrix.
