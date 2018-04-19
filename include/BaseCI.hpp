@@ -28,8 +28,8 @@ protected:
     Eigen::MatrixXd one_rdm_aa;  // 1-RDM for alpha-alpha (a-a)
     Eigen::MatrixXd one_rdm_bb;  // 1-RDM for beta-beta
     Eigen::Tensor<double, 4> two_rdm_aaaa;  // 2-RDM for a-a-a-a
-    Eigen::Tensor<double, 4> two_rdm_abba;  // 2-RDM for a-b-b-a
-    Eigen::Tensor<double, 4> two_rdm_baab;  // 2-RDM for b-a-a-b
+    Eigen::Tensor<double, 4> two_rdm_aabb;  // 2-RDM for a-b-b-a
+    Eigen::Tensor<double, 4> two_rdm_bbaa;  // 2-RDM for b-a-a-b
     Eigen::Tensor<double, 4> two_rdm_bbbb;  // 2-RDM for b-b-b-b
 
 

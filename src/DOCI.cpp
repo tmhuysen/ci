@@ -127,6 +127,9 @@ size_t DOCI::calculateDimension(size_t K, size_t N_P) {
  */
 void DOCI::compute1RDMs() {
 
+    // The formulas for the DOCI 1-RDMs can be found in (https://github.com/lelemmen/electronic_structure)
+
+
     this->one_rdm_aa = Eigen::MatrixXd::Zero(this->K,this->K);
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
@@ -140,7 +143,7 @@ void DOCI::compute1RDMs() {
         }
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
-            if (spin_string.isOccupied(p)) {  // only if p is occupied in I, the 1-RDM will get a contribution from c_I
+            if (spin_string.isOccupied(p)) {  // if p is occupied in I
                 double c_I = this->eigensolver_ptr->get_eigenvector(I);  // coefficient of the I-th basis vector
                 this->one_rdm_aa(p,p) += std::pow(c_I, 2);
             }
@@ -157,10 +160,13 @@ void DOCI::compute1RDMs() {
  */
 void DOCI::compute2RDMs(){
 
+    // The formulas for the DOCI 2-RDMs can be found in (https://github.com/lelemmen/electronic_structure)
+
+
     this->two_rdm_aaaa = Eigen::Tensor<double, 4>(this->K,this->K,this->K,this->K);
     this->two_rdm_aaaa.setZero();
-    this->two_rdm_abba = Eigen::Tensor<double, 4>(this->K,this->K,this->K,this->K);
-    this->two_rdm_abba.setZero();
+    this->two_rdm_aabb = Eigen::Tensor<double, 4>(this->K,this->K,this->K,this->K);
+    this->two_rdm_aabb.setZero();
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
@@ -173,46 +179,47 @@ void DOCI::compute2RDMs(){
         }
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
-            if (spin_string.annihilate(p)) {
+            if (spin_string.annihilate(p)) {  // if p is occupied in I
 
-                double coefficient = this->eigensolver_ptr->get_eigenvector()(I)*this->eigensolver_ptr->get_eigenvector()(I);
-                this->two_rdm_abba(p,p,p,p) += coefficient;
+                double c_I = this->eigensolver_ptr->get_eigenvector(I);  // coefficient of the I-th basis vector
+                double c_I_2 = std::pow(c_I, 2);  // square of c_I
 
-                for (size_t q = 0;q<p; q++) {  // q loops over SOs with a smaller index than p
-                    if (spin_string.create(q)) {
-                        size_t address = spin_string.address(this->addressing_scheme);
-                        double coefficient = this->eigensolver_ptr->get_eigenvector()(address)*this->eigensolver_ptr->get_eigenvector()(I);
-                        // Physical notation
-                        this->two_rdm_abba(q,q,p,p) += coefficient;
-                        // Symmetry
-                        this->two_rdm_abba(p,p,q,q) += coefficient;
+                this->two_rdm_aabb(p,p,p,p) += c_I_2;
 
-                        spin_string.annihilate(q);
-                    } else {  // if we can't create we can annihilate
-                        // Physical notation
-                        // In-place and exchange excitation for 2 alpha electrons.
-                        this->two_rdm_aaaa(p, q, p, q) += coefficient;
-                        // Symmetry
-                        this->two_rdm_aaaa(q, p, q, p) += coefficient;
-                        // Anti-symmetry (exchange)
-                        this->two_rdm_aaaa(p, q, q, p) -= coefficient;
-                        this->two_rdm_aaaa(q, p, p, q) -= coefficient;
+                for (size_t q = 0; q < p; q++) {  // q loops over SOs with an index smaller than p
+                    if (spin_string.create(q)) {  // if q is not occupied in I
+                        size_t J = spin_string.address(this->addressing_scheme);  // the address of the coupling string
+                        double c_J = this->eigensolver_ptr->get_eigenvector(J);  // coefficient of the J-th basis vector
 
-                        // In-place excitation for alpha beta pair (abba)
-                        this->two_rdm_abba(p, q, p, q) += coefficient;
-                        this->two_rdm_abba(q, p, q, p) += coefficient;
+                        this->two_rdm_aabb(p,q,p,q) += c_I * c_J;
+                        this->two_rdm_aabb(q,p,q,p) += c_I * c_J;  // since we're looping for q < p
+
+                        spin_string.annihilate(q);  // reset the spin string after previous creation on q
+                    }
+
+                    else {  // if q is occupied in I
+                        this->two_rdm_aaaa(p,p,q,q) += c_I_2;
+                        this->two_rdm_aaaa(q,q,p,p) += c_I_2;  // since we're looping for q < p
+
+                        this->two_rdm_aaaa(p,q,q,p) -= c_I_2;
+                        this->two_rdm_aaaa(q,p,p,q) -= c_I_2;  // since we're looping for q < p
+
+                        this->two_rdm_aabb(p,p,q,q) += c_I_2;
+                        this->two_rdm_aabb(q,q,p,p) += c_I_2;  // since we're looping for q < p
                     }
                 }
-                spin_string.create(p);
+                spin_string.create(p);  // reset the spin string after previous annihilation on p
             }
         }
     }
 
-    this->two_rdm_bbbb = this->two_rdm_aaaa;  // for DOCI these are equal
-    this->two_rdm_baab = this->two_rdm_abba;  // for CI these are equal
+    // For DOCI, we have additional symmetries
+    this->two_rdm_bbbb = this->two_rdm_aaaa;
+    this->two_rdm_bbaa = this->two_rdm_aabb;
 
     this->are_computed_two_rdms = true;
 }
+
 
 
 }  // namespace ci

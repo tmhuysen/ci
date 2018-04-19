@@ -132,7 +132,7 @@ Eigen::Tensor<double, 4> BaseCI::get_two_rdm_abba() const {
     if (!this->are_computed_two_rdms) {
         throw std::logic_error("The requested reduced density matrix is not computed yet.");
     }
-    return this->two_rdm_abba;
+    return this->two_rdm_aabb;
 }
 
 
@@ -140,7 +140,7 @@ Eigen::Tensor<double, 4> BaseCI::get_two_rdm_baab() const {
     if (!this->are_computed_two_rdms) {
         throw std::logic_error("The requested reduced density matrix is not computed yet.");
     }
-    return this->two_rdm_baab;
+    return this->two_rdm_bbaa;
 }
 
 

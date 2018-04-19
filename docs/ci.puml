@@ -132,8 +132,8 @@ namespace ci {
             #Eigen::MatrixXd one_rdm_aa
             #Eigen::MatrixXd one_rdm_bb
             #Eigen::Tensor<double, 4> two_rdm_aaaa
-            #Eigen::Tensor<double, 4> two_rdm_abba
-            #Eigen::Tensor<double, 4> two_rdm_baab
+            #Eigen::Tensor<double, 4> two_rdm_aabb
+            #Eigen::Tensor<double, 4> two_rdm_bbaa
             #Eigen::Tensor<double, 4> two_rdm_bbbb
         == protected constructors ==
             # explicit **BaseCI**(libwint::SOBasis& so_basis)
