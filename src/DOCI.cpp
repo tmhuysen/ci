@@ -140,9 +140,9 @@ void DOCI::compute1RDMs() {
         }
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
-            if (spin_string.isOccupied(p)) {
-                double coefficient = this->eigensolver_ptr->get_eigenvector()(I)*this->eigensolver_ptr->get_eigenvector()(I);
-                this->one_rdm_aa(p,p) += coefficient;
+            if (spin_string.isOccupied(p)) {  // only if p is occupied in I, the 1-RDM will get a contribution from c_I
+                double c_I = this->eigensolver_ptr->get_eigenvector(I);  // coefficient of the I-th basis vector
+                this->one_rdm_aa(p,p) += std::pow(c_I, 2);
             }
         }
     }
