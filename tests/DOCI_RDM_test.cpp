@@ -93,23 +93,3 @@ BOOST_AUTO_TEST_CASE ( lih_1RDM_2RDM_trace_DOCI ) {
 
     BOOST_CHECK(D.isApprox(D_from_reduction, 1.0e-12));
 }
-
-
-BOOST_AUTO_TEST_CASE ( compute_test ) {
-
-    // Do a DOCI calculation based on a given FCIDUMP file
-    libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
-    ci::DOCI doci (so_basis, 4);  // 4 electrons
-    doci.solve(numopt::eigenproblem::SolverType::DENSE);
-    doci.calculate1RDMs();
-    doci.calculate2RDMs();
-
-    BOOST_CHECK(true);
-}
-
-
-BOOST_AUTO_TEST_CASE ( reference_tests ) {
-
-    // TODO: add reference
-    BOOST_CHECK(false);
-}
