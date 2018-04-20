@@ -77,8 +77,8 @@ public:
     Eigen::MatrixXd get_one_rdm_aa() const;
     Eigen::MatrixXd get_one_rdm_bb() const;
     Eigen::Tensor<double, 4> get_two_rdm_aaaa() const;
-    Eigen::Tensor<double, 4> get_two_rdm_abba() const;
-    Eigen::Tensor<double, 4> get_two_rdm_baab() const;
+    Eigen::Tensor<double, 4> get_two_rdm_aabb() const;
+    Eigen::Tensor<double, 4> get_two_rdm_bbaa() const;
     Eigen::Tensor<double, 4> get_two_rdm_bbbb() const;
 
 
