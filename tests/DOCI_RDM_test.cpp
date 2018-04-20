@@ -46,19 +46,6 @@ BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction_DOCI ) {
 }
 
 
-
-BOOST_AUTO_TEST_CASE ( contraction_test ) {
-
-    Eigen::Tensor<double, 2> A (2,2);
-    A.setValues({{2, 3}, {1, 0}});
-
-    Eigen::array<int, 1> red_dims ({1});
-
-    std::cout << A.sum(red_dims) << std::endl;
-
-}
-
-
 BOOST_AUTO_TEST_CASE ( lih_1RDM_2RDM_trace_DOCI ) {
 
     // Test if the relevant 2-RDM trace gives the 1-RDM for DOCI
