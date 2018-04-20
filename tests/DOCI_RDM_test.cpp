@@ -46,14 +46,28 @@ BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction_DOCI ) {
 }
 
 
-BOOST_AUTO_TEST_CASE ( lih_1RDM_2RDM_contraction_DOCI ) {
 
-    // Test if the relevant 2-RDM contraction gives the 1-RDM for DOCI
+BOOST_AUTO_TEST_CASE ( contraction_test ) {
+
+    Eigen::Tensor<double, 2> A (2,2);
+    A.setValues({{2, 3}, {1, 0}});
+
+    Eigen::array<int, 1> red_dims ({1});
+
+    std::cout << A.sum(red_dims) << std::endl;
+
+}
+
+
+BOOST_AUTO_TEST_CASE ( lih_1RDM_2RDM_trace_DOCI ) {
+
+    // Test if the relevant 2-RDM trace gives the 1-RDM for DOCI
 
 
     // Get the 1- and 2-RDMs from DOCI
     size_t N = 4;  // 4 electrons
-    libwint:: SOBasis so_basis ("../tests/reference_data/lih_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    size_t K = 16;  // 16 SOs
+    libwint:: SOBasis so_basis ("../tests/reference_data/lih_631g_caitlin.FCIDUMP", K);
     ci::DOCI doci (so_basis, N);
     doci.solve(numopt::eigenproblem::SolverType::DENSE);
     doci.calculate1RDMs();
@@ -63,33 +77,21 @@ BOOST_AUTO_TEST_CASE ( lih_1RDM_2RDM_contraction_DOCI ) {
     Eigen::Tensor<double, 4> d = doci.get_two_rdm();
 
 
-    // Contract the 2-RDM
-    //      Specify the dimension that should be 'reduced' over     1/(N-1) d(p q r r)
-    Eigen::array<int, 2> reductions ({2,3});
-    //      Perform the contraction
-    Eigen::Tensor<double, 2> reduction = d.sum(reductions);
-    std::cout <<  reduction << std::endl;
-
-
-    std::cout << D << std::endl;
-
-
-    // Test D(0,0)
-    double D00 = 0.0;
-    for (size_t r = 0; r < 16; r++) {
-        D00 += d(0,0,r,r);
+    // Trace the 2-RDM
+    //      Specify the dimension that should be 'reduced' over     d(p q r r)
+    //      In this case, the 'trace' tensor operation should be used, but the current Eigen3 (3.3.4) hasn't released that support yet
+    // TODO: when Eigen3 releases tensor.trace(), use it to implement the reduction
+    // Since Eigen3 hasn't released tensor.trace() yet, we will do the reduction ourselves
+    Eigen::MatrixXd D_from_reduction = Eigen::MatrixXd::Zero(K, K);
+    for (size_t p = 0; p < K; p++) {
+        for (size_t q = 0; q < K; q++) {
+            for (size_t r = 0; r < K; r++) {
+                D_from_reduction(p,q) += (1.0/(N-1)) * d(p,q,r,r);
+            }
+        }
     }
-    std::cout << D00 << std::endl;  //  this is correct by inspection with D(0,0)
 
-    // Test D(0,1)
-    double D01 = 0.0;
-    for (size_t r = 0; r < 16; r++) {
-        D01 += d(0,1,r,r);
-    }
-    std::cout << D01 << std::endl;  // this is correct by inspection with D(0,1)
-
-
-
+    BOOST_CHECK(D.isApprox(D_from_reduction, 1.0e-12));
 }
 
 
