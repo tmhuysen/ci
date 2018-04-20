@@ -9,7 +9,7 @@
 
 
 
-BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction ) {
+BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction_DOCI ) {
 
     // Test if the contraction of the 1- and 2-RDMs with the one- and two-electron integrals gives the DOCI energy
 
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction ) {
     // Specify the contractions for the relevant contraction of the two-electron integrals and the 2-RDM
     //      0.5 g(p q r s) d(p q r s)
     Eigen::array<Eigen::IndexPair<int>, 4> contractions = {Eigen::IndexPair<int>(0,0), Eigen::IndexPair<int>(1,1), Eigen::IndexPair<int>(2,2), Eigen::IndexPair<int>(3,3)};
-    // Perform the contraction
+    //      Perform the contraction
     Eigen::Tensor<double, 0> contraction = 0.5 * g.contract(d, contractions);
 
     // As the contraction is a scalar (a tensor of rank 0), we should access by (0).
@@ -43,6 +43,53 @@ BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction ) {
 
 
     BOOST_CHECK(std::abs(energy_by_eigenvalue - energy_by_contraction) < 1.0e-12);
+}
+
+
+BOOST_AUTO_TEST_CASE ( lih_1RDM_2RDM_contraction_DOCI ) {
+
+    // Test if the relevant 2-RDM contraction gives the 1-RDM for DOCI
+
+
+    // Get the 1- and 2-RDMs from DOCI
+    size_t N = 4;  // 4 electrons
+    libwint:: SOBasis so_basis ("../tests/reference_data/lih_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    ci::DOCI doci (so_basis, N);
+    doci.solve(numopt::eigenproblem::SolverType::DENSE);
+    doci.calculate1RDMs();
+    doci.calculate2RDMs();
+
+    Eigen::MatrixXd D = doci.get_one_rdm();
+    Eigen::Tensor<double, 4> d = doci.get_two_rdm();
+
+
+    // Contract the 2-RDM
+    //      Specify the dimension that should be 'reduced' over     1/(N-1) d(p q r r)
+    Eigen::array<int, 2> reductions ({2,3});
+    //      Perform the contraction
+    Eigen::Tensor<double, 2> reduction = d.sum(reductions);
+    std::cout <<  reduction << std::endl;
+
+
+    std::cout << D << std::endl;
+
+
+    // Test D(0,0)
+    double D00 = 0.0;
+    for (size_t r = 0; r < 16; r++) {
+        D00 += d(0,0,r,r);
+    }
+    std::cout << D00 << std::endl;  //  this is correct by inspection with D(0,0)
+
+    // Test D(0,1)
+    double D01 = 0.0;
+    for (size_t r = 0; r < 16; r++) {
+        D01 += d(0,1,r,r);
+    }
+    std::cout << D01 << std::endl;  // this is correct by inspection with D(0,1)
+
+
+
 }
 
 
