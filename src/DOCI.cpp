@@ -150,7 +150,11 @@ void DOCI::calculate1RDMs() {
         }
     }
 
-    this->one_rdm_bb = this->one_rdm_aa;  // for DOCI these are equal
+    // For DOCI, we have an additional symmetry
+    this->one_rdm_bb = this->one_rdm_aa;
+
+    this->one_rdm = this->one_rdm_aa + this->one_rdm_bb;
+
     this->are_computed_one_rdms = true;
 }
 
@@ -216,6 +220,8 @@ void DOCI::calculate2RDMs(){
     // For DOCI, we have additional symmetries
     this->two_rdm_bbbb = this->two_rdm_aaaa;
     this->two_rdm_bbaa = this->two_rdm_aabb;
+
+    this->two_rdm = this->two_rdm_aaaa + this->two_rdm_aabb + this->two_rdm_bbaa + this->two_rdm_bbbb;
 
     this->are_computed_two_rdms = true;
 }

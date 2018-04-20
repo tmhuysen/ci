@@ -120,6 +120,14 @@ Eigen::MatrixXd BaseCI::get_one_rdm_bb() const {
 }
 
 
+Eigen::MatrixXd BaseCI::get_one_rdm() const {
+    if (!this->are_computed_one_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this-> one_rdm;
+}
+
+
 Eigen::Tensor<double, 4> BaseCI::get_two_rdm_aaaa() const {
     if (!this->are_computed_two_rdms) {
         throw std::logic_error("The requested reduced density matrix is not computed yet.");
@@ -150,6 +158,15 @@ Eigen::Tensor<double, 4> BaseCI::get_two_rdm_bbbb() const {
     }
     return this->two_rdm_bbbb;
 }
+
+
+Eigen::Tensor<double, 4> BaseCI::get_two_rdm() const {
+    if (!this->are_computed_two_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this->two_rdm;
+}
+
 
 
 }  // namespace ci

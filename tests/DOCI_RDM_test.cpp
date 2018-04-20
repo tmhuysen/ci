@@ -13,6 +13,7 @@ BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction ) {
 
     // Test if the contraction of the 1- and 2-RDMs with the one- and two-electron integrals gives the DOCI energy
 
+
     // Get the DOCI energy as the lowest eigenvalue of the dense DOCI Hamiltonian
     libwint:: SOBasis so_basis ("../tests/reference_data/lih_631g_caitlin.FCIDUMP", 16);  // 16 SOs
     Eigen::MatrixXd h = so_basis.get_h_SO();
@@ -25,11 +26,11 @@ BOOST_AUTO_TEST_CASE ( lih_energy_RDM_contraction ) {
 
     // Calculate the DOCI energy as the relevant contraction with the one- and two-electron integrals
     doci.calculate1RDMs();
-    Eigen::MatrixXd D = doci.get_one_rdm_aa() + doci.get_one_rdm_bb();
+    Eigen::MatrixXd D = doci.get_one_rdm();
     double energy_by_contraction = (h * D).trace();
 
     doci.calculate2RDMs();
-    Eigen::Tensor<double, 4> d = doci.get_two_rdm_aaaa() + doci.get_two_rdm_aabb() + doci.get_two_rdm_bbaa() + doci.get_two_rdm_bbbb();
+    Eigen::Tensor<double, 4> d = doci.get_two_rdm();
 
     // Specify the contractions for the relevant contraction of the two-electron integrals and the 2-RDM
     //      0.5 g(p q r s) d(p q r s)

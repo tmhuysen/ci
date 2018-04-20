@@ -25,12 +25,15 @@ protected:
     bool are_computed_one_rdms = false;
     bool are_computed_two_rdms = false;
 
-    Eigen::MatrixXd one_rdm_aa;  // 1-RDM for alpha-alpha (a-a)
-    Eigen::MatrixXd one_rdm_bb;  // 1-RDM for beta-beta
-    Eigen::Tensor<double, 4> two_rdm_aaaa;  // 2-RDM for a-a-a-a
-    Eigen::Tensor<double, 4> two_rdm_aabb;  // 2-RDM for a-b-b-a
-    Eigen::Tensor<double, 4> two_rdm_bbaa;  // 2-RDM for b-a-a-b
-    Eigen::Tensor<double, 4> two_rdm_bbbb;  // 2-RDM for b-b-b-b
+    Eigen::MatrixXd one_rdm_aa;  // alpha-alpha (a-a) 1-RDM
+    Eigen::MatrixXd one_rdm_bb;  // beta-beta (b-b) 1-RDM
+    Eigen::MatrixXd one_rdm;  // spin-summed (total) 1-RDM
+
+    Eigen::Tensor<double, 4> two_rdm_aaaa;  // a-a-a-a 2-RDM
+    Eigen::Tensor<double, 4> two_rdm_aabb;  // a-a-b-b 2-RDM
+    Eigen::Tensor<double, 4> two_rdm_bbaa;  // b-a-a-b 2-RDM
+    Eigen::Tensor<double, 4> two_rdm_bbbb;  // b-b-b-b 2-RDM
+    Eigen::Tensor<double, 4> two_rdm;  // spin-summed (total) 2-RDM
 
 
     // PROTECTED CONSTRUCTORS
@@ -74,12 +77,16 @@ public:
     // GETTERS
     double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
     Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
+
     Eigen::MatrixXd get_one_rdm_aa() const;
     Eigen::MatrixXd get_one_rdm_bb() const;
+    Eigen::MatrixXd get_one_rdm() const;
+
     Eigen::Tensor<double, 4> get_two_rdm_aaaa() const;
     Eigen::Tensor<double, 4> get_two_rdm_aabb() const;
     Eigen::Tensor<double, 4> get_two_rdm_bbaa() const;
     Eigen::Tensor<double, 4> get_two_rdm_bbbb() const;
+    Eigen::Tensor<double, 4> get_two_rdm() const;
 
 
     // PUBLIC METHODS
