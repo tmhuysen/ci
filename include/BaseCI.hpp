@@ -89,14 +89,14 @@ public:
     void solve(numopt::eigenproblem::SolverType solver_type);
 
     /**
-     *  Compute all the 1-RDMS.
+     *  Calculate all the 1-RDMs.
      */
-    virtual void compute1RDMs() = 0;
+    virtual void calculate1RDMs() = 0;
 
     /**
-     *  Compute all the 2-RDMS.
+     *  Calculate all the 2-RDMS.
      */
-    virtual void compute2RDMs() = 0;
+    virtual void calculate2RDMs() = 0;
 };
 
 

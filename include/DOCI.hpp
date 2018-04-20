@@ -57,14 +57,14 @@ public:
 
     // OVERRIDDEN PUBLIC METHODS
     /**
-     *  Compute all the 1-RDMS for DOCI.
+     *  Calculate all the 1-RDMs for DOCI.
      */
-    void compute1RDMs() override;
+    void calculate1RDMs() override;
 
     /**
-     *  Compute all the 2-RDMS for DOCI.
+     *  Calculate all the 2-RDMS for DOCI.
      */
-    void compute2RDMs() override;
+    void calculate2RDMs() override;
 };
 
 

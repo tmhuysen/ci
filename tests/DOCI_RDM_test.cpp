@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE "RDM_test"
+#define BOOST_TEST_MODULE "DOCI_RDM_test"
 
 
 
@@ -15,11 +15,12 @@ BOOST_AUTO_TEST_CASE ( compute_test ) {
     libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
     ci::DOCI doci (so_basis, 4);  // 4 electrons
     doci.solve(numopt::eigenproblem::SolverType::DENSE);
-    doci.compute1RDMs();
-    doci.compute2RDMs();
+    doci.calculate1RDMs();
+    doci.calculate2RDMs();
 
     BOOST_CHECK(true);
 }
+
 
 BOOST_AUTO_TEST_CASE ( reference_tests ) {
 

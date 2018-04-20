@@ -123,9 +123,9 @@ size_t DOCI::calculateDimension(size_t K, size_t N_P) {
  */
 
 /**
- *  Compute all the 1-RDMS for DOCI.
+ *  Calculate all the 1-RDMS for DOCI.
  */
-void DOCI::compute1RDMs() {
+void DOCI::calculate1RDMs() {
 
     // The formulas for the DOCI 1-RDMs can be found in (https://github.com/lelemmen/electronic_structure)
 
@@ -156,9 +156,9 @@ void DOCI::compute1RDMs() {
 
 
 /**
- *  Compute all the 2-RDMS for DOCI.
+ *  Calculate all the 2-RDMS for DOCI.
  */
-void DOCI::compute2RDMs(){
+void DOCI::calculate2RDMs(){
 
     // The formulas for the DOCI 2-RDMs can be found in (https://github.com/lelemmen/electronic_structure)
 

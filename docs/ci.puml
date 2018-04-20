@@ -179,8 +179,8 @@ namespace ci {
         == destructor ==
             **~DOCI**()
         __ public methods __
-            + void compute1RDMs() override
-            + void compute2RDMs() override
+            + void calculate1RDMs() override
+            + void calculate2RDMs() override
             + {static} calculateDimension
     }
 
