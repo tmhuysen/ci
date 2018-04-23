@@ -79,11 +79,14 @@ BOOST_AUTO_TEST_CASE ( FCI_NO) {
     // Do a FCI calculation based on a given SObasis
     ci::FCI fci(so_basis,7,7);
 
+    std::cout<<" DO I GET HERE??";
+
     fci.solve(numopt::eigenproblem::SolverType::DAVIDSON);
 
     //Calculate the total energy
     double internuclear_repulsion_energy = hydrogen_gas.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
     double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
+
 
 
 
@@ -109,13 +112,54 @@ BOOST_AUTO_TEST_CASE ( FCI_H2O) {
     Eigen::MatrixXd C = gsaes.eigenvectors();
     libwint::SOMullikenBasis so_basis (ao_basis,C);
     // Do a FCI calculation based on a given SObasis
+    so_basis.rotateJacobi(3,6,14);
+    so_basis.rotateJacobi(3,6,14);
     ci::FCI fci(so_basis,5,5);
+
     fci.solveConstrained(numopt::eigenproblem::SolverType::DENSE,{1},0);
     std::cout<<std::setprecision(16);
+    double coeff = 0;
+    size_t aa = 0;
+    for (size_t a= 0;a<441;a++){
+        if(coeff<fci.get_eigenvector()(a)){
+            coeff = fci.get_eigenvector()(a);
+            aa = a;
+
+        }
+        a++;
+    }
+    std::cout<<"add and coef "<<aa<<" "<<coeff<<std::endl;
     // Calculate the total energy
     double internuclear_repulsion_energy = hydrogen_gas.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
     double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
 
+
+
+    std::cout<<test_fci_energy<< " HERE ";
+}
+
+BOOST_AUTO_TEST_CASE ( FCI_H2O_2) {
+
+
+    // Do a RHF calculation
+    const std::string xyzfilename = "../tests/reference_data/h2o.xyz";
+    double threshold = 1.0e-06;
+    std::string basis_name = "STO-3G";
+    libwint::Molecule hydrogen_gas (xyzfilename);
+    libwint::AOBasis ao_basis (hydrogen_gas, basis_name);
+    ao_basis.calculateIntegrals();
+    hf::rhf::RHF rhf (hydrogen_gas, ao_basis, threshold);
+    rhf.solve(hf::rhf::solver::SCFSolverType::DIIS);
+
+    libwint::SOMullikenBasis so_basis (ao_basis,rhf.get_C_canonical());
+    // Do a FCI calculation based on a given SObasis
+    ci::FCI fci(so_basis,5,5);
+    fci.solveConstrained(numopt::eigenproblem::SolverType::DAVIDSON,{1},0);
+    std::cout<<std::setprecision(16);
+    // Calculate the total energy
+    double internuclear_repulsion_energy = hydrogen_gas.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
+    double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
+    std::cout<<fci.get_eigenvector();
 
 
     std::cout<<test_fci_energy<< " HERE ";

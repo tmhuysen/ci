@@ -148,7 +148,7 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
     // Process the chrono time and output
     auto elapsed_time = stop - start;           // in nanoseconds
     auto seconds = elapsed_time.count() / 1e9;  // in seconds
-    //std::cout << dim << " : " << seconds << std::endl;
+    std::cout << dim << " : " << seconds << std::endl;
 }
 
 

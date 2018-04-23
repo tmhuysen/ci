@@ -90,9 +90,23 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
             this->constructHamiltonian(dense_solver);
 
             Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
-            t_0(0) = 1;  // in reverse lexical notation, the Hartree-Fock determinant has the highest address
+            size_t add = 0;
+            double energy = 99999999;
+            for(size_t i = 0; i<this->dim ; i++){
+                if(dense_solver->get_matrix()(i,i)<energy){
+                    energy = dense_solver->get_matrix()(i,i);
+                    add = i;
+                    std::cout<<" ADD "<<add<<" EN "<<energy<<std::endl;
+
+                }
+
+            }
+            t_0(0) = 1; //  lexical notation, the Hartree-Fock determinant has the highest address
+            std::cout<<dense_solver->get_matrix()(176,176); //  lexical notation, the Hartree-Fock determinant has the highest address
 
             this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(dense_solver->get_matrix(), t_0);
+
+
             this->eigensolver_ptr->solve();
             break;
         }
