@@ -30,7 +30,7 @@ int main () {
     std::string no = "NO.xyz";
     std ::cout<<std::setprecision(16);
     std::vector<size_t> AO_set{0,1,2,3,4};
-    std::string xyzfilename = "NO_10B.xyz";
+    std::string xyzfilename = "2NO.xyz";
     double threshold = 1.0e-012;
     std::string basis_name = "STO-3G";
     libwint::Molecule NO (xyzfilename,+1);
