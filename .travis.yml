@@ -117,7 +117,7 @@ install:
 
 
 # Run the build script
-script:
+script: travis_wait 120 
   - cd /home/travis/build/GQCG/ci
   - mkdir build && cd build
   - cmake ..
