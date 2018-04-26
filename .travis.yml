@@ -117,8 +117,8 @@ install:
 
 
 # Run the build script
-script: travis_wait 120 
+script:
   - cd /home/travis/build/GQCG/ci
   - mkdir build && cd build
   - cmake ..
-  - make && make test && sudo make install
+  - travis wait 120 make && make test && sudo make install
