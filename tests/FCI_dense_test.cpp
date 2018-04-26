@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
 }
 
 BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
-    // Cristina's H2 FCI energy/OO-DOCI energy
+    // Psi4 and Games's FCI energy
     double reference_fci_energy = -75.0129803939602;
 
     // Do a RHF calculation
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
     libwint::SOBasis so_basis (ao_basis,rhf.get_C_canonical());
 
     // Do a FCI calculation based on a given SObasis
-    ci::FCI fci(so_basis,1,1);
+    ci::FCI fci(so_basis,5,5);
     fci.solve(numopt::eigenproblem::SolverType::DENSE);
 
     // Calculate the total energy
