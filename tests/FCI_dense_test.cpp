@@ -85,3 +85,29 @@ BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
 
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }
+
+BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
+    // Cristina's H2 FCI energy/OO-DOCI energy
+    double reference_fci_energy = -75.0129803939602;
+
+    // Do a RHF calculation
+    const std::string xyzfilename = "../tests/reference_data/h2o_Psi4_Games.xyz";
+    double threshold = 1.0e-06;
+    std::string basis_name = "STO-3G";
+    libwint::Molecule water (xyzfilename);
+    libwint::AOBasis ao_basis (water, basis_name);
+    ao_basis.calculateIntegrals();
+    hf::rhf::RHF rhf (water, ao_basis, threshold);
+    rhf.solve();
+    libwint::SOBasis so_basis (ao_basis,rhf.get_C_canonical());
+
+    // Do a FCI calculation based on a given SObasis
+    ci::FCI fci(so_basis,1,1);
+    fci.solve(numopt::eigenproblem::SolverType::DENSE);
+
+    // Calculate the total energy
+    double internuclear_repulsion_energy = water.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
+    double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
+
+    BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
+}
