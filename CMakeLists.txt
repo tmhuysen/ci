@@ -31,6 +31,7 @@ message(STATUS "Building ${LIBRARY_NAME} for ${CMAKE_BUILD_TYPE}")
 
 
 # Find all required packages
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/FindPackages.cmake)
 
 
