@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE ( FCI_NO_Psi4_Games ) {
 
     // Do a FCI calculation based on a given SObasis
     ci::FCI fci(so_basis,7,7);
-    fci.solve(numopt::eigenproblem::SolverType::DENSE);
+    fci.solve(numopt::eigenproblem::SolverType::SPARSE);
 
     // Calculate the total energy
     double internuclear_repulsion_energy = NO.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
