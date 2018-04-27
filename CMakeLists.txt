@@ -30,7 +30,8 @@ message(STATUS "Building ${LIBRARY_NAME} for ${CMAKE_BUILD_TYPE}")
 
 
 
-# Find all required packages
+# Find all required packages. Update CMake's MODULE_PATH to let CMake know that we have supplied our own FindXXX.cmake files in the cmake directory
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/FindPackages.cmake)
 
 
