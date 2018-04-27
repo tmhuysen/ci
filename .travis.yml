@@ -121,4 +121,6 @@ script:
   - cd /home/travis/build/GQCG/ci
   - mkdir build && cd build
   - cmake ..
-  - travis_wait 120 make && make test && sudo make install
+  - make
+  - travis_wait 120 make test
+  - sudo make install
