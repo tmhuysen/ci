@@ -4,10 +4,16 @@
 
 #include "BaseCI.hpp"
 
-
+typedef numopt::eigenproblem::BaseMatrixSolver MatrixSolver;
 
 namespace ci {
 
+struct spin_evaluation{
+    int sign;
+    size_t p;
+    size_t q;
+    size_t address;
+};
 
 class FCI : public ci::BaseCI {
 private:
@@ -19,6 +25,8 @@ private:
     const bmqc::AddressingScheme addressing_scheme_alpha;
     const bmqc::AddressingScheme addressing_scheme_beta;
 
+    spin_evaluation** alpha_evaluation;
+    spin_evaluation** beta_evaluation;
 
     // OVERRIDDEN PRIVATE METHODS
     /**
@@ -36,6 +44,12 @@ private:
      */
     Eigen::VectorXd calculateDiagonal() override;
 
+    /**
+     * Alpha en Beta parts or branches of the FCI calculation
+     */
+    void alpha_branch(MatrixSolver* matrix_solver);
+    void beta_branch(MatrixSolver* matrix_solver);
+    void mixed_branch(MatrixSolver* matrix_solver);
 
 
 public:
