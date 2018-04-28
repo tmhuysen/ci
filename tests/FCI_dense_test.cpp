@@ -32,6 +32,7 @@ BOOST_AUTO_TEST_CASE ( FCI_He_Cristina ) {
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }
 
+
 BOOST_AUTO_TEST_CASE ( FCI_H2_Cristina ) {
     // Cristina's H2 FCI energy/OO-DOCI energy
     double reference_fci_energy = -1.1651486697;
@@ -54,7 +55,6 @@ BOOST_AUTO_TEST_CASE ( FCI_H2_Cristina ) {
     // Calculate the total energy
     double internuclear_repulsion_energy = hydrogen_gas.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
     double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
-    std::cout<<std::endl<<test_fci_energy<<std::endl;
 
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }
@@ -82,32 +82,6 @@ BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
     double internuclear_repulsion_energy = water.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
     double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
     std::cout<<std::endl<<test_fci_energy<<std::endl;
-
-    BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
-}
-
-BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
-    // Psi4 and Games's FCI energy
-    double reference_fci_energy = -75.0129803939602;
-
-    // Do a RHF calculation
-    const std::string xyzfilename = "../tests/reference_data/h2o_Psi4_Games.xyz";
-    double threshold = 1.0e-06;
-    std::string basis_name = "STO-3G";
-    libwint::Molecule water (xyzfilename);
-    libwint::AOBasis ao_basis (water, basis_name);
-    ao_basis.calculateIntegrals();
-    hf::rhf::RHF rhf (water, ao_basis, threshold);
-    rhf.solve();
-    libwint::SOBasis so_basis (ao_basis,rhf.get_C_canonical());
-
-    // Do a FCI calculation based on a given SObasis
-    ci::FCI fci(so_basis,5,5);
-    fci.solve(numopt::eigenproblem::SolverType::DENSE);
-
-    // Calculate the total energy
-    double internuclear_repulsion_energy = water.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
-    double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
 
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }

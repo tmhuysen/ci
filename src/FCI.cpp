@@ -25,7 +25,6 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
 void FCI::alpha_branch(MatrixSolver *matrix_solver) {
     alpha_evaluation = new spin_evaluation*[dim_alpha];
-
     // Create the first spin string.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<boost::dynamic_bitset<>> spin_string_alpha(0, this->addressing_scheme_alpha);  // spin string with address 0
@@ -224,6 +223,7 @@ size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
     // Check if the resulting dimension is appropriate to be stored in size_t
     return boost::numeric::converter<double, size_t>::convert(dim_double_total);
 }
+
 
 
 }  // namespace ci
