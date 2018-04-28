@@ -60,6 +60,7 @@ void FCI::alpha_branch(MatrixSolver *matrix_solver) {
                     // lol
                     // lol
                     // lol
+                    // lol
                     // alpha-alpha two-electron branch
                     sign_q = sign_p;  // sign for the operator acting on the q-th SO
                     if (spin_string_alpha.annihilate(q, sign_q)) {
