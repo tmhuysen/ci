@@ -9,9 +9,9 @@ A C++ library for performing configuration interaction (CI) calculations.
 [![libint2 Dependency](https://img.shields.io/badge/libint-2.3.1+-000000.svg)](https://github.com/evaleev/libint)
 [![Spectra Dependency](https://img.shields.io/badge/Spectra-0.6.1+-000000.svg)](https://github.com/yixuan/spectra/)
 
-[![bmqc Dependency](https://img.shields.io/badge/bmqc-1.0.1+-blue.svg)](https://github.com/GQCG/bmqc)
 [![cpputil Dependency](https://img.shields.io/badge/cpputil-1.3.0+-blue.svg)](https://github.com/GQCG/cpputil)
-[![libwint Dependency](https://img.shields.io/badge/libwrp-3.0.0+-blue.svg)](https://github.com/GQCG/libwint)
+[![bmqc Dependency](https://img.shields.io/badge/bmqc-1.2.0+-blue.svg)](https://github.com/GQCG/bmqc)
+[![libwint Dependency](https://img.shields.io/badge/libwint-3.0.0+-blue.svg)](https://github.com/GQCG/libwint)
 [![hf Dependency](https://img.shields.io/badge/hf-3.0.0+-blue.svg)](https://github.com/GQCG/hf)
 [![numopt Dependency](https://img.shields.io/badge/numopt-1.1.0+-blue.svg)](https://github.com/GQCG/numopt)
 
