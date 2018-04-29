@@ -201,9 +201,9 @@ namespace ci {
             - Eigen::VectorXd **matrixVectorProduct**() override
             - Eigen::VectorXd **calculateDiagonal**() override
         == constructors ==
-            **DOCI**(const libwint::SOBasis& so_basis, size_t N_A, size_t N_B)
+            **FCI**(const libwint::SOBasis& so_basis, size_t N_A, size_t N_B)
         == destructor ==
-            **~DOCI**()
+            **~FCI**()
         __ public methods __
             + {static} calculateDimension(size_t K, size_t N_A, size_t N_B)
     }
