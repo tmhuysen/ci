@@ -42,9 +42,9 @@ private:
     Eigen::VectorXd matrixVectorProduct(const Eigen::VectorXd& x) override;
 
     /**
-     *  @return the diagonal of the matrix representation of the FCI Hamiltonian.
+     *  @set the diagonal of the matrix representation of the Hamiltonian.
      */
-    Eigen::VectorXd calculateDiagonal() override;
+    void calculateDiagonal() override;
 
     /**
      * Alpha en Beta parts or branches of the FCI calculation

@@ -177,7 +177,7 @@ Eigen::VectorXd FCI::matrixVectorProduct(const Eigen::VectorXd& x) {
 /**
  *  @return the diagonal of the matrix representation of the FCI Hamiltonian.
  */
-Eigen::VectorXd FCI::calculateDiagonal() {
+void FCI::calculateDiagonal() {
 
 }
 
