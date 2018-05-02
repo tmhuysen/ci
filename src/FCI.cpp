@@ -18,34 +18,41 @@ namespace ci {
  *  Given a @param matrix_solver, construct the FCI Hamiltonian matrix in the solver's matrix representation.
  */
 void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) {
-    alpha_branch(matrix_solver);
-    beta_branch(matrix_solver);
-    mixed_branch(matrix_solver);
+    alpha_branch(matrix_solver);  // operators on alpha spin orbitals
+    beta_branch(matrix_solver);  // operators on beta spin orbitals
+    mixed_branch(matrix_solver);  // operators on both.
 }
 
+/**
+ * Performs all alpha related operations
+ */
 void FCI::alpha_branch(MatrixSolver *matrix_solver) {
-    alpha_evaluation = new spin_evaluation*[dim_alpha];
+    alpha_evaluation = new SpinEvaluations*[dim_alpha];
     // Create the first spin string.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<boost::dynamic_bitset<>> spin_string_alpha(0, this->addressing_scheme_alpha);  // spin string with address 0
-    for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {  // Ib loops over all the addresses of the alpha spin strings
-        alpha_evaluation[Ia] = new spin_evaluation[((K+1)-N_A)*N_A];
+    for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {  // Ia loops over all the addresses of the alpha spin strings
+        // (K+1-N_A) * N_A -> N_A annihilations followed by K+1-N_A creations (K-N_A available MO's +1 from the inplace excitation)
+        alpha_evaluation[Ia] = new SpinEvaluations[((K+1)-N_A)*N_A];  // stores all excitation operator evaluations for each spin string
         size_t eval_index = 0;
         for (size_t p = 0; p < this->K; p++) {  // SO iteration 1
             int sign_p = 1;  // sign for the operator acting on the p-th SO
-            if (spin_string_alpha.annihilate(p, sign_p)) {
+            if (spin_string_alpha.annihilate(p, sign_p)) {  // annihilate p
                 for (size_t q = 0; q < this->K; q++) {  // SO iteration 2
                     // alpha one-electron branch
                     int sign_q = sign_p;  // sign for the operator acting on the q-th SO
-                    if (spin_string_alpha.create(q, sign_q)) {
+                    if (spin_string_alpha.create(q, sign_q)) {  // create q
 
                         // Retrieve address of the transformed SpinString
                         size_t Ja = spin_string_alpha.address(this->addressing_scheme_alpha);
                         // If alpha is major relative address in the total basis is multiplied by all beta combinations
-                        alpha_evaluation[Ia][eval_index] = spin_evaluation{sign_q,p,q,Ja};
-                        for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
+
+                        for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {  // as beta portion of the FCI is not affected
+                                                                          // all equivalent alpha strings with different beta
+                                                                          // will yield the same operator evaluation
                             matrix_solver->addToMatrix(sign_q * this->so_basis.get_h_SO(p, q), Ia * dim_beta + Ib, Ja * dim_beta + Ib);
-                        }
+                        }  // Ib
+                        alpha_evaluation[Ia][eval_index] = SpinEvaluations{sign_q,p,q,Ja};
                         eval_index++;
                         spin_string_alpha.annihilate(q);  // undo
 
@@ -53,13 +60,13 @@ void FCI::alpha_branch(MatrixSolver *matrix_solver) {
 
                     // alpha-alpha two-electron branch
                     sign_q = sign_p;  // sign for the operator acting on the q-th SO
-                    if (spin_string_alpha.annihilate(q, sign_q)) {
+                    if (spin_string_alpha.annihilate(q, sign_q)) {  // anni q
                         for (size_t r = 0; r < this->K; r++) {
                             int sign_r = sign_q;  // sign for the operator acting on the r-th SO
-                            if (spin_string_alpha.create(r, sign_r)) {
+                            if (spin_string_alpha.create(r, sign_r)) {  // create r
                                 for (size_t s = 0; s < this->K; s++) {
                                     int sign_s = sign_r;  // sign for the operator acting on the s-th SO
-                                    if (spin_string_alpha.create(s, sign_s)) {
+                                    if (spin_string_alpha.create(s, sign_s)) {  // create s
 
                                         size_t Ja = spin_string_alpha.address(this->addressing_scheme_alpha);
                                         for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
@@ -73,28 +80,31 @@ void FCI::alpha_branch(MatrixSolver *matrix_solver) {
                         }  // r
                         spin_string_alpha.create(q);  // undo
                     }  // annihilate q alpha
-                }
-                spin_string_alpha.create(p);
+                }  // q
+                spin_string_alpha.create(p);  // undo
             }  // annihilate p
-        }
+        }  // p
         if(Ia < dim_alpha-1){  // prevent last permutation to occur.
             spin_string_alpha.nextPermutation();
         }
     }
 }
 
+/**
+ * Performs all beta related operations
+ */
 void FCI::beta_branch(MatrixSolver *matrix_solver) {
-    beta_evaluation = new spin_evaluation*[dim_beta];
+    beta_evaluation = new SpinEvaluations*[dim_beta];
     // Create the first spin string.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<boost::dynamic_bitset<>> spin_string_beta(0, this->addressing_scheme_beta);  // spin string with address 0
 
     for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
-        beta_evaluation[Ib] = new spin_evaluation[((K+1)-N_B)*N_B];
+        // (K+1-N_B) * N_B -> N_B annihilations followed by K+1-N_B creations (K-N_B available MO's +1 from the inplace excitation)
+        beta_evaluation[Ib] = new SpinEvaluations[((K+1)-N_B)*N_B];  // stores all excitation operator evaluations for each spin string
         size_t eval_index = 0;
         for (size_t p = 0; p < this->K; p++) {  // SO iteration 1
             int sign_p = 1;
-            // beta branch
             if (spin_string_beta.annihilate(p, sign_p)) {
                 for (size_t q = 0; q < this->K; q++) {
                     // beta one-electron branch
@@ -102,7 +112,7 @@ void FCI::beta_branch(MatrixSolver *matrix_solver) {
                     if (spin_string_beta.create(q, sign_q)) {
                         size_t Jb = spin_string_beta.address(this->addressing_scheme_beta);
 
-                        beta_evaluation[Ib][eval_index] = spin_evaluation{sign_q,p,q,Jb};
+                        beta_evaluation[Ib][eval_index] = SpinEvaluations{sign_q,p,q,Jb};
 
                         for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {
                             matrix_solver->addToMatrix(sign_q * this->so_basis.get_h_SO(p, q), Ia * dim_beta + Ib, Ia * dim_beta + Jb);
@@ -147,14 +157,25 @@ void FCI::beta_branch(MatrixSolver *matrix_solver) {
 
 }
 
+/**
+ * Recombines all alpha and beta single excitation related operations
+ * That were stored in the previous branches resulting
+ */
 void FCI::mixed_branch(MatrixSolver *matrix_solver) {
     for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {
+
         for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
-            for(size_t a = 0; a<((K+1)-N_A)*N_A; a++){
-                spin_evaluation alpha = alpha_evaluation[Ia][a];
-                for(size_t b = 0; b < ((K+1)-N_B)*N_B; b++){
-                    spin_evaluation beta = beta_evaluation[Ib][b];
+
+            for(size_t a = 0; a<((K+1)-N_A)*N_A; a++){  // iterate over dimensions of the amount possible single excitations for alpha string
+
+                SpinEvaluations alpha = alpha_evaluation[Ia][a];
+
+                for(size_t b = 0; b < ((K+1)-N_B)*N_B; b++){  // iterate over dimensions of the amount possible single excitations for beta string
+
+                    SpinEvaluations beta = beta_evaluation[Ib][b];
+
                     int sign = beta.sign*alpha.sign;
+                    //  Construct combined evaluations from single excitations to retrieve two-electron integrals from alpha-beta-beta-alpha operations.
                     matrix_solver->addToMatrix(sign*this->so_basis.get_g_SO(alpha.p, alpha.q, beta.p, beta.q), Ia * dim_beta + Ib, alpha.address * dim_beta + beta.address);
 
                 }

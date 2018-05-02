@@ -8,7 +8,7 @@ typedef numopt::eigenproblem::BaseMatrixSolver MatrixSolver;
 
 namespace ci {
 
-struct spin_evaluation{
+struct SpinEvaluations{
     int sign;
     size_t p;
     size_t q;
@@ -26,8 +26,9 @@ private:
     const bmqc::AddressingScheme addressing_scheme_alpha;
     const bmqc::AddressingScheme addressing_scheme_beta;
 
-    spin_evaluation** alpha_evaluation;
-    spin_evaluation** beta_evaluation;
+    // Rectangular Matrix of Spin Evaluations
+    SpinEvaluations** alpha_evaluation;  // Creation, annihilation pair evaluations of alpha spin strings.
+    SpinEvaluations** beta_evaluation;  // Creation, annihilation pair evaluations of beta spin strings.
 
 
     // OVERRIDDEN PRIVATE METHODS
@@ -46,11 +47,24 @@ private:
      */
     void calculateDiagonal() override;
 
+    /*
+     * Alpha en Beta branches of the FCI calculation
+     */
+
     /**
-     * Alpha en Beta parts or branches of the FCI calculation
+     * Performs all alpha related operations
      */
     void alpha_branch(MatrixSolver* matrix_solver);
+
+    /**
+     * Performs all beta related operations
+     */
     void beta_branch(MatrixSolver* matrix_solver);
+
+    /**
+     * Recombines all alpha and beta single excitation related operations
+     * That were stored in the previous branches resulting
+     */
     void mixed_branch(MatrixSolver* matrix_solver);
 
 
