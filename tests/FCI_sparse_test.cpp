@@ -6,7 +6,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test.hpp>
 
-
+/*
 BOOST_AUTO_TEST_CASE ( FCI_NO_Psi4_Games ) {
     // Psi4 and Games's NO+ FCI energy
     double reference_fci_energy = -127.4123904082415;
@@ -32,3 +32,4 @@ BOOST_AUTO_TEST_CASE ( FCI_NO_Psi4_Games ) {
 
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }
+*/
