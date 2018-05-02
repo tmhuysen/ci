@@ -81,6 +81,18 @@ public:
     ~FCI() override = default;
 
 
+    // OVERRIDDEN PUBLIC METHODS
+    /**
+     *  Calculate all the 1-RDMs for FCI.
+     */
+    void calculate1RDMs() override;
+
+    /**
+     *  Calculate all the 2-RDMS for FCI.
+     */
+    void calculate2RDMs() override;
+
+
     // STATIC PUBLIC METHODS
     /**
      *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
