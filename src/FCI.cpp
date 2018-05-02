@@ -90,9 +90,7 @@ void FCI::alpha_branch(MatrixSolver *matrix_solver) {
     }
 }
 
-/**
- * Performs all beta related operations
- */
+
 void FCI::beta_branch(MatrixSolver *matrix_solver) {
     beta_evaluation = new SpinEvaluations*[dim_beta];
     // Create the first spin string.
@@ -245,6 +243,13 @@ size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
     return boost::numeric::converter<double, size_t>::convert(dim_double_total);
 }
 
+void FCI::calculate2RDMs() {
+
+}
+
+void FCI::calculate1RDMs() {
+
+}
 
 
 }  // namespace ci
