@@ -21,6 +21,9 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
     alpha_branch(matrix_solver);  // operators on alpha spin orbitals
     beta_branch(matrix_solver);  // operators on beta spin orbitals
     mixed_branch(matrix_solver);  // operators on both.
+
+    this->calculateDiagonal();
+    std::cout << this->diagonal << std::endl;
 }
 
 /**
@@ -220,36 +223,35 @@ void FCI::calculateDiagonal() {
     bmqc::SpinString<unsigned long> spin_string_beta (0, this->addressing_scheme_beta);
 
     for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // I_alpha loops over addresses of alpha spin strings
-        for (size_t I_beta = 0;
-             I_beta < this->dim_beta; I_beta++) {  // I_beta loops over addresses of beta spin strings
+        for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {  // I_beta loops over addresses of beta spin strings
 
             for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
 
                 if (spin_string_alpha.isOccupied(p)) {  // p is in I_alpha
-                    this->diagonal(I_alpha * I_beta) += k_SO(p, p);
+                    this->diagonal(I_alpha * this->dim_beta + I_beta) += k_SO(p, p);
 
                     for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
                         if (spin_string_alpha.isOccupied(q)) {  // q is in I_alpha
-                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
+                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
                         } else {  // q is not in I_alpha
-                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
+                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
                         }
 
                         if (spin_string_beta.isOccupied(q)) {  // q is in I_beta
-                            this->diagonal(I_alpha * I_beta) += this->so_basis.get_g_SO(p, p, q, q);
+                            this->diagonal(I_alpha * this->dim_beta + I_beta) += this->so_basis.get_g_SO(p, p, q, q);
                         }
                     }  // q loop
                 }
 
 
                 if (spin_string_beta.isOccupied(p)) {  // p is in I_beta
-                    this->diagonal(I_alpha * I_beta) += k_SO(p, p);
+                    this->diagonal(I_alpha * this->dim_beta + I_beta) += k_SO(p, p);
 
                     for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
                         if (spin_string_beta.isOccupied(q)) {  // q is in I_beta
-                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
+                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
                         } else {  // q is not in I_beta
-                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
+                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
                         }
                     }  // q loop
                 }
