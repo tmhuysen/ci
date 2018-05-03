@@ -7,81 +7,93 @@
 #include <boost/test/included/unit_test.hpp>
 
 
-BOOST_AUTO_TEST_CASE ( FCI_He_Cristina ) {
-    // Cristina's He FCI energy
-    double reference_fci_energy = -2.902533599;
 
-    // Do a RHF calculation
-    const std::string xyzfilename = "../tests/reference_data/he_cristina.xyz";
-    double threshold = 1.0e-06;
-    std::string basis_name = "aug-cc-pVQZ";
-    libwint::Molecule helium (xyzfilename);
-    libwint::AOBasis ao_basis (helium, basis_name);
+// dim = 49
+BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_GAMESS ) {
+
+    // Psi4 and GAMESS' FCI energy
+    double reference_fci_energy = -75.0129803939602;
+
+
+    // Prepare the AO basis
+    libwint::Molecule water ("../tests/reference_data/h2o_Psi4_GAMESS.xyz");
+    libwint::AOBasis ao_basis (water, "STO-3G");
     ao_basis.calculateIntegrals();
-    hf::rhf::RHF rhf (helium, ao_basis, threshold);
+
+    // Prepare the SO basis from RHF coefficients
+    hf::rhf::RHF rhf (water, ao_basis, 1.0e-06);
     rhf.solve();
     libwint::SOBasis so_basis (ao_basis,rhf.get_C_canonical());
 
-    // Do a FCI calculation based on a given SObasis
-    ci::FCI fci(so_basis,1,1);
+
+    // Do a dense FCI calculation based on a given SO basis
+    ci::FCI fci (so_basis, 5, 5);  // N_alpha = 5, N_beta = 5
     fci.solve(numopt::eigenproblem::SolverType::DENSE);
 
+
     // Calculate the total energy
-    double internuclear_repulsion_energy = helium.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
+    double internuclear_repulsion_energy = water.calculateInternuclearRepulsionEnergy();
     double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }
 
 
+// dim = 100
 BOOST_AUTO_TEST_CASE ( FCI_H2_Cristina ) {
+
     // Cristina's H2 FCI energy/OO-DOCI energy
     double reference_fci_energy = -1.1651486697;
 
-    // Do a RHF calculation
-    const std::string xyzfilename = "../tests/reference_data/h2_cristina.xyz";
-    double threshold = 1.0e-06;
-    std::string basis_name = "6-31g**";
-    libwint::Molecule hydrogen_gas (xyzfilename);
-    libwint::AOBasis ao_basis (hydrogen_gas, basis_name);
+
+    // Prepare the AO basis
+    libwint::Molecule h2 ("../tests/reference_data/h2_cristina.xyz");
+    libwint::AOBasis ao_basis (h2, "6-31g**");
     ao_basis.calculateIntegrals();
-    hf::rhf::RHF rhf (hydrogen_gas, ao_basis, threshold);
+
+    // Prepare the SO basis from RHF coefficients
+    hf::rhf::RHF rhf (h2, ao_basis, 1.0e-06);
     rhf.solve();
     libwint::SOBasis so_basis (ao_basis,rhf.get_C_canonical());
 
-    // Do a FCI calculation based on a given SObasis
-    ci::FCI fci(so_basis,1,1);
+
+    // Do a dense FCI calculation based on a given SO basis
+    ci::FCI fci (so_basis, 1, 1);  // N_alpha = 1, N_beta = 1
     fci.solve(numopt::eigenproblem::SolverType::DENSE);
 
-    // Calculate the total energy
-    double internuclear_repulsion_energy = hydrogen_gas.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
+
+    // Calculate the total FCI energy
+    double internuclear_repulsion_energy = h2.calculateInternuclearRepulsionEnergy();
     double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
 
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }
 
-BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_Games ) {
-    // Psi4 and Games's FCI energy
-    double reference_fci_energy = -75.0129803939602;
 
-    // Do a RHF calculation
-    const std::string xyzfilename = "../tests/reference_data/h2o_Psi4_Games.xyz";
-    double threshold = 1.0e-06;
-    std::string basis_name = "STO-3G";
-    libwint::Molecule water (xyzfilename);
-    libwint::AOBasis ao_basis (water, basis_name);
+// dim = 2116
+BOOST_AUTO_TEST_CASE ( FCI_He_Cristina ) {
+
+    // Cristina's He FCI energy
+    double reference_fci_energy = -2.902533599;
+
+
+    // Prepare the AO basis
+    libwint::Molecule helium ("../tests/reference_data/he_cristina.xyz");
+    libwint::AOBasis ao_basis (helium, "aug-cc-pVQZ");
     ao_basis.calculateIntegrals();
-    hf::rhf::RHF rhf (water, ao_basis, threshold);
-    rhf.solve();
-    libwint::SOBasis so_basis (ao_basis,rhf.get_C_canonical());
 
-    // Do a FCI calculation based on a given SObasis
-    ci::FCI fci(so_basis,5,5);
+    // Prepare the SO basis from RHF coefficients
+    hf::rhf::RHF rhf (helium, ao_basis, 1.0e-06);
+    rhf.solve();
+    libwint::SOBasis so_basis (ao_basis, rhf.get_C_canonical());
+
+
+    // Do a dense FCI calculation based on a given SO basis
+    ci::FCI fci (so_basis, 1, 1);  // N_alpha = 1, N_beta = 1
     fci.solve(numopt::eigenproblem::SolverType::DENSE);
 
-    // Calculate the total energy
-    double internuclear_repulsion_energy = water.calculateInternuclearRepulsionEnergy();  // this comes straight out of the FCIDUMP file
-    double test_fci_energy = fci.get_eigenvalue() + internuclear_repulsion_energy;
-    std::cout<<std::endl<<test_fci_energy<<std::endl;
+
+    // Calculate (get) the total FCI energy
+    double test_fci_energy = fci.get_eigenvalue();  // no internuclear repulsion energy for atoms
 
     BOOST_CHECK(std::abs(test_fci_energy - (reference_fci_energy)) < 1.0e-06);
 }

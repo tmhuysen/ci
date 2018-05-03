@@ -43,13 +43,9 @@ private:
     Eigen::VectorXd matrixVectorProduct(const Eigen::VectorXd& x) override;
 
     /**
-     *  @set the diagonal of the matrix representation of the Hamiltonian.
+     *  @set the diagonal of the matrix representation of the FCI Hamiltonian.
      */
     void calculateDiagonal() override;
-
-    /*
-     * Alpha en Beta branches of the FCI calculation
-     */
 
     /**
      * Performs all alpha related operations
@@ -99,6 +95,18 @@ public:
      *  the FCI space.
      */
     static size_t calculateDimension(size_t K, size_t N_A, size_t N_B);
+
+
+    // PUBLIC METHODS
+    /**
+     *  Calculate all the 1-RDMs.
+     */
+    void calculate1RDMs() override;
+
+    /**
+     *  Calculate all the 2-RDMS.
+     */
+    void calculate2RDMs() override;
 };
 
 
