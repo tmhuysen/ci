@@ -170,15 +170,79 @@ void FCI::mixed_branch(MatrixSolver *matrix_solver) {
  *  @return the action of the FCI Hamiltonian of the coefficient vector @param x.
  */
 Eigen::VectorXd FCI::matrixVectorProduct(const Eigen::VectorXd& x) {
-
+    throw std::logic_error("This function hasn't been implemented yet.");
 }
 
 
 /**
- *  @return the diagonal of the matrix representation of the FCI Hamiltonian.
+ *  @set the diagonal of the matrix representation of the FCI Hamiltonian.
  */
-Eigen::VectorXd FCI::calculateDiagonal() {
+void FCI::calculateDiagonal() {
 
+    // Initialize the diagonal
+    this->diagonal = Eigen::VectorXd::Zero(this->dim);
+
+
+    // Calculate the effective one-electron integrals
+    // TODO: move this to libwint
+    Eigen::MatrixXd k_SO = this->so_basis.get_h_SO();
+    for (size_t p = 0; p < this->K; p++) {
+        for (size_t q = 0; q < this->K; q++) {
+            for (size_t r = 0; r < this->K; r++) {
+                k_SO(p,q) -= 0.5 * this->so_basis.get_g_SO(p,r,r,q);
+            }
+        }
+    }
+
+
+    // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
+    bmqc::SpinString<unsigned long> spin_string_alpha (0, this->addressing_scheme_alpha);
+    bmqc::SpinString<unsigned long> spin_string_beta (0, this->addressing_scheme_beta);
+
+    for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // I_alpha loops over addresses of alpha spin strings
+        for (size_t I_beta = 0;
+             I_beta < this->dim_beta; I_beta++) {  // I_beta loops over addresses of beta spin strings
+
+            for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
+
+                if (spin_string_alpha.isOccupied(p)) {  // p is in I_alpha
+                    this->diagonal(I_alpha * I_beta) += k_SO(p, p);
+
+                    for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
+                        if (spin_string_alpha.isOccupied(q)) {  // q is in I_alpha
+                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
+                        } else {  // q is not in I_alpha
+                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
+                        }
+
+                        if (spin_string_beta.isOccupied(q)) {  // q is in I_beta
+                            this->diagonal(I_alpha * I_beta) += this->so_basis.get_g_SO(p, p, q, q);
+                        }
+                    }  // q loop
+                }
+
+
+                if (spin_string_beta.isOccupied(p)) {  // p is in I_beta
+                    this->diagonal(I_alpha * I_beta) += k_SO(p, p);
+
+                    for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
+                        if (spin_string_beta.isOccupied(q)) {  // q is in I_beta
+                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
+                        } else {  // q is not in I_beta
+                            this->diagonal(I_alpha * I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
+                        }
+                    }  // q loop
+                }
+
+
+            }  // p loop
+
+
+            spin_string_beta.nextPermutation();
+        }  // beta address (I_beta) loop
+
+        spin_string_alpha.nextPermutation();
+    }  // alpha address (I_alpha) loop
 }
 
 
@@ -224,6 +288,27 @@ size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
     return boost::numeric::converter<double, size_t>::convert(dim_double_total);
 }
 
+
+
+/*
+ *  PUBLIC METHODS
+ */
+
+/**
+ *  Calculate all the 1-RDMs.
+ */
+void FCI::calculate1RDMs() {
+    throw std::logic_error("This function hasn't been implemented yet.");
+}
+
+
+/**
+ *  Calculate all the 2-RDMS.
+ */
+void FCI::calculate2RDMs() {
+    throw std::logic_error("This function hasn't been implemented yet.");
+
+}
 
 
 }  // namespace ci
