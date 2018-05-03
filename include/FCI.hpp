@@ -8,7 +8,7 @@ typedef numopt::eigenproblem::BaseMatrixSolver MatrixSolver;
 
 namespace ci {
 
-struct spin_evaluation{
+struct SpinEvaluations{
     int sign;
     size_t p;
     size_t q;
@@ -26,8 +26,9 @@ private:
     const bmqc::AddressingScheme addressing_scheme_alpha;
     const bmqc::AddressingScheme addressing_scheme_beta;
 
-    spin_evaluation** alpha_evaluation;
-    spin_evaluation** beta_evaluation;
+    // Rectangular Matrix of Spin Evaluations
+    SpinEvaluations** alpha_evaluation;  // Creation, annihilation pair evaluations of alpha spin strings.
+    SpinEvaluations** beta_evaluation;  // Creation, annihilation pair evaluations of beta spin strings.
 
 
     // OVERRIDDEN PRIVATE METHODS
@@ -42,15 +43,30 @@ private:
     Eigen::VectorXd matrixVectorProduct(const Eigen::VectorXd& x) override;
 
     /**
-     *  @set the diagonal of the matrix representation of the FCI Hamiltonian.
+     *  @set the diagonal of the matrix representation of the Hamiltonian.
      */
     void calculateDiagonal() override;
 
+
+    // PRIVATE METHODS
+    /*
+     * Alpha and beta branches of the FCI calculation
+     */
+
     /**
-     * Alpha en Beta parts or branches of the FCI calculation
+     * Performs all alpha related operations
      */
     void alpha_branch(MatrixSolver* matrix_solver);
+
+    /**
+     * Performs all beta related operations
+     */
     void beta_branch(MatrixSolver* matrix_solver);
+
+    /**
+     * Recombines all alpha and beta single excitation related operations
+     * That were stored in the previous branches resulting
+     */
     void mixed_branch(MatrixSolver* matrix_solver);
 
 
@@ -75,7 +91,7 @@ public:
     static size_t calculateDimension(size_t K, size_t N_A, size_t N_B);
 
 
-    // PUBLIC METHODS
+    // OVERRIDDEN PUBLIC METHODS
     /**
      *  Calculate all the 1-RDMs.
      */
@@ -92,4 +108,4 @@ public:
 
 
 
-#endif //CI_FCI_HPP
+#endif  // CI_FCI_HPP
