@@ -50,7 +50,7 @@ install:
   # Since compiling libint2 takes around 15 minutes on Travis, it is a good idea to cache it (see also below)
   - |
     if [ ! -d /tmp/libint/libint-2.3.1 ]; then
-       mkdir /tmp/libint && cd /tmp/libint
+       mkdir -p /tmp/libint && cd /tmp/libint
        curl -OL "https://github.com/evaleev/libint/archive/v2.3.1.tar.gz"
        tar -xvzf v2.3.1.tar.gz
        cd libint-2.3.1
