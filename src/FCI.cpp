@@ -22,8 +22,7 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
     beta_branch(matrix_solver);  // operators on beta spin orbitals
     mixed_branch(matrix_solver);  // operators on both.
 
-    this->calculateDiagonal();
-    std::cout << this->diagonal << std::endl;
+    assert(this->diagonal.isApprox(matrix_solver->get_diagonal()));  // TODO: this can be deleted later
 }
 
 /**
@@ -219,9 +218,9 @@ void FCI::calculateDiagonal() {
 
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<unsigned long> spin_string_alpha (0, this->addressing_scheme_alpha);
-    bmqc::SpinString<unsigned long> spin_string_beta (0, this->addressing_scheme_beta);
-
     for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // I_alpha loops over addresses of alpha spin strings
+
+        bmqc::SpinString<unsigned long> spin_string_beta (0, this->addressing_scheme_beta);
         for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {  // I_beta loops over addresses of beta spin strings
 
             for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
@@ -246,9 +245,11 @@ void FCI::calculateDiagonal() {
                 if (spin_string_beta.isOccupied(p)) {  // p is in I_beta
                     this->diagonal(I_alpha * this->dim_beta + I_beta) += k_SO(p, p);
 
+
                     for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
                         if (spin_string_beta.isOccupied(q)) {  // q is in I_beta
                             this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
+
                         } else {  // q is not in I_beta
                             this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
                         }
@@ -257,11 +258,14 @@ void FCI::calculateDiagonal() {
 
             }  // p loop
 
-
-            spin_string_beta.nextPermutation();
+            if (I_beta < this->dim_beta - 1) {  // prevent last permutation to occur
+                spin_string_beta.nextPermutation();
+            }
         }  // beta address (I_beta) loop
 
-        spin_string_alpha.nextPermutation();
+        if (I_alpha < this->dim_alpha - 1) {  // prevent last permutation to occur
+            spin_string_alpha.nextPermutation();
+        }
     }  // alpha address (I_alpha) loop
 }
 
