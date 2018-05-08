@@ -23,7 +23,7 @@ namespace eigenproblem {
         abstract class BaseMatrixSolver {
             == destructor ==
                 **~BaseMatrixSolver**() override = default
-            __ public pure {abstract} virtual methods __
+            __ public pure virtual methods __
                 + {abstract} virtual void **addToMatrix**(double value, size_t index1, size_t index2) = 0
         }
 
@@ -128,18 +128,18 @@ namespace ci {
 
             # Eigen::VectorXd diagonal
 
-            #bool are_computed_one_rdms = false
-            #bool are_computed_two_rdms = false
+            # bool are_computed_one_rdms = false
+            # bool are_computed_two_rdms = false
 
-            #Eigen::MatrixXd one_rdm_aa
-            #Eigen::MatrixXd one_rdm_bb
-            #Eigen::Tensor<double, 4> two_rdm_aaaa
-            #Eigen::Tensor<double, 4> two_rdm_aabb
-            #Eigen::Tensor<double, 4> two_rdm_bbaa
-            #Eigen::Tensor<double, 4> two_rdm_bbbb
+            # Eigen::MatrixXd one_rdm_aa
+            # Eigen::MatrixXd one_rdm_bb
+            # Eigen::Tensor<double, 4> two_rdm_aaaa
+            # Eigen::Tensor<double, 4> two_rdm_aabb
+            # Eigen::Tensor<double, 4> two_rdm_bbaa
+            # Eigen::Tensor<double, 4> two_rdm_bbbb
         == protected constructors ==
             # explicit **BaseCI**(libwint::SOBasis& so_basis)
-        __ protected pure {abstract} virtual methods __
+        __ protected pure virtual methods __
             # {abstract} virtual void **constructHamiltonian**(ci::solver::BaseMatrixSolver* matrix_solver) = 0
             # {abstract} virtual Eigen::VectorXd **matrixVectorProduct**() = 0
             # {abstract} virtual Eigen::VectorXd **calculateDiagonal**() = 0
@@ -183,19 +183,27 @@ namespace ci {
         == destructor ==
             **~DOCI**()
         __ public methods __
-            + void calculate1RDMs() override
-            + void calculate2RDMs() override
-            + {static} calculateDimension(size_t K, size_t N_P)
+            + {static} **calculateDimension**(size_t K, size_t N_P)
+            + void **calculate1RDMs**() override
+            + void **calculate2RDMs**() override
     }
 
     ci.FCI --|> ci.BaseCI
     class FCI {
         __ private members __
+            - const size_t dim_alpha
+            - const size_t dim_beta
+
             - const size_t K
+
             - const size_t N_alpha
             - const size_t N_beta
+
             - const bmqc::AddressingScheme addressing_scheme_alpha
             - const bmqc::AddressingScheme addressing_scheme_beta
+
+            - std::vector<std::vector<OneElectronCoupling>> alpha_one_electron_couplings
+            - std::vector<std::vector<OneElectronCoupling>> beta_one_electron_couplings
         __ private methods __
             - void **constructHamiltonian**(ci::solver::MatrixSolver* matrix_solver) override
             - Eigen::VectorXd **matrixVectorProduct**() override
@@ -205,11 +213,10 @@ namespace ci {
         == destructor ==
             **~FCI**()
         __ public methods __
-            + {static} calculateDimension(size_t K, size_t N_alpha, size_t N_beta)
+            + {static} **calculateDimension**(size_t K, size_t N_alpha, size_t N_beta)
+            + void **calculate1RDMs**() override
+            + void **calculate2RDMs**() override
     }
-
-
-
 }
 
 
