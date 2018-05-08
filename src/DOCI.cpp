@@ -44,6 +44,7 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
     bmqc::SpinString<unsigned long> spin_string(0, this->addressing_scheme);  // spin string with address 0
 
 
+
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
         // Diagonal contribution

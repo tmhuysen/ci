@@ -211,14 +211,12 @@ namespace ci {
         == constructors ==
             **FCI**(const libwint::SOBasis& so_basis, size_t N_alpha, size_t N_beta)
         == destructor ==
-            **~DOCI**()
+            **~FCI**()
         __ public methods __
             + {static} **calculateDimension**(size_t K, size_t N_alpha, size_t N_beta)
             + void **calculate1RDMs**() override
             + void **calculate2RDMs**() override
     }
-
-
 }
 
 

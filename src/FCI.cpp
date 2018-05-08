@@ -355,17 +355,10 @@ size_t FCI::calculateDimension(size_t K, size_t N_alpha, size_t N_beta) {
     return boost::numeric::converter<double, size_t>::convert(dim_double);
 }
 
-void FCI::calculate2RDMs() {
-
-}
-
-void FCI::calculate1RDMs() {
-
-}
 
 
 /*
- *  PUBLIC METHODS
+ *  OVERRIDDEN PUBLIC METHODS
  */
 
 /**

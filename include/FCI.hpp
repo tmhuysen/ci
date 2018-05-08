@@ -106,18 +106,6 @@ public:
     ~FCI() override = default;
 
 
-    // OVERRIDDEN PUBLIC METHODS
-    /**
-     *  Calculate all the 1-RDMs for FCI.
-     */
-    void calculate1RDMs() override;
-
-    /**
-     *  Calculate all the 2-RDMS for FCI.
-     */
-    void calculate2RDMs() override;
-
-
     // STATIC PUBLIC METHODS
     /**
      *  Given a number of spatial orbitals @param K, a number of alpha electrons @param N_A, and a number of beta electrons
@@ -126,7 +114,7 @@ public:
     static size_t calculateDimension(size_t K, size_t N_alpha, size_t N_beta);
 
 
-    // PUBLIC METHODS
+    // OVERRIDDEN PUBLIC METHODS
     /**
      *  Calculate all the 1-RDMs.
      */
@@ -143,4 +131,4 @@ public:
 
 
 
-#endif //CI_FCI_HPP
+#endif  // CI_FCI_HPP
