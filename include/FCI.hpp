@@ -25,14 +25,6 @@
 namespace ci {
 
 
-// TODO: add comments
-struct SpinEvaluations {
-    int sign;
-    size_t p;
-    size_t q;
-    size_t address;
-};
-
 
 class FCI : public ci::BaseCI {
 private:
@@ -48,8 +40,38 @@ private:
     const bmqc::AddressingScheme addressing_scheme_beta;
 
     // Rectangular matrix of SpinEvaluations
-    SpinEvaluations** alpha_evaluation;  // creation and annihilation pair evaluations of alpha spin strings
-    SpinEvaluations** beta_evaluation;  // creation and annihilation pair evaluations of beta spin strings
+    /**
+     *  A small struct that is used to hold in memory the @param address of spin strings differing in one electron
+     *  excitation (an annihilation on orbital @param p and a creation on orbital @param q) that are coupled through the
+     *  Hamiltonian.
+     *
+     *  During the construction of the FCI Hamiltonian, the one-electron excited coupling strings are both needed in the
+     *  alpha, beta, and alpha-beta parts. When a spin string is found that couples to another spin string (with address
+     *  I), the address of the coupling spin string is hold in memory, in the following way: in a
+     *  std::vector<std::vector<OneElectronCoupling>> (with dimension Ia * N_A * (K + 1 - N_A)), at every outer index
+     *  Ia, a std::vector of OneElectronCouplings is kept, each coupling through the Hamiltonian to that particular
+     *  spin string with address Ia. Of course, the beta case is similar.
+     *
+     *  The @param sign of the matrix element, i.e. <Ia | H | address> is also stored as a parameter.
+     *
+     *
+     *  We can keep this many addresses in memory because the resulting dimension (cfr. Ia * N_A * (K + 1 - N_A)) is
+     *  significantly less than the dimension of the FCI space (cfr. Ia * Ib).
+     *
+     *  The number of coupling spin strings for an alpha string is equal to N_A * (K + 1 - N_A), since we have to pick
+     *  one out of N_A occupied indices to annihilate, and afterwards (after the annihilation) we have (K + 1 - N_A)
+     *  choices to pick an index to create on.
+     */
+    struct OneElectronCoupling {
+        int sign;
+        size_t p;
+        size_t q;
+        size_t address;
+    };
+
+
+    OneElectronCoupling** alpha_one_electron_couplings;  // creation and annihilation pair evaluations of alpha spin strings
+    OneElectronCoupling** beta_one_electron_couplings;  // creation and annihilation pair evaluations of beta spin strings
 
 
 
@@ -74,7 +96,8 @@ private:
 public:
     // CONSTRUCTORS
     /**
-     *  Constructor based on a given @param so_basis and a number of alpha electron and beta electrons @param N_A and N_B respectively.
+     *  Constructor based on a given @param so_basis, a number of alpha electrons @param N_A and a number of beta electrons
+     *  @param N_B.
      */
     FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B);
 
@@ -85,8 +108,8 @@ public:
 
     // STATIC PUBLIC METHODS
     /**
-     *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
-     *  the FCI space.
+     *  Given a number of spatial orbitals @param K, a number of alpha electrons @param N_A, and a number of beta electrons
+     *  @param N_B, @return the dimension of the FCI space.
      */
     static size_t calculateDimension(size_t K, size_t N_A, size_t N_B);
 
@@ -98,7 +121,7 @@ public:
     void calculate1RDMs() override;
 
     /**
-     *  Calculate all the 2-RDMS.
+     *  Calculate all the 2-RDMs.
      */
     void calculate2RDMs() override;
 };
