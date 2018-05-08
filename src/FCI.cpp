@@ -45,8 +45,8 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
     for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // I_alpha loops over all the addresses of the alpha spin strings
 
-        // (K+1-N_alpha) * N_alpha -> N_alpha annihilations followed by K+1-N_alpha creations (K-N_alpha available MO's +1 from the inplace excitation)
-        size_t eval_index = 0;
+        size_t coupling_address_index = 0;  // index of |J_alpha> in the (N_alpha * (K + 1 - N_alpha))-long std::vector
+                                            // located at alpha_one_electron_couplings[I_alpha]
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
             int sign_p = 1;  // sign for the annihilation operator (a_p)
@@ -65,11 +65,13 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                         // We are storing the alpha addresses as 'major', i.e. the total address I_alpha I_beta = I_alpha * dim_beta + I_beta
                         for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {
                             double value = sign_pq * this->so_basis.get_h_SO(p,q);
-                            matrix_solver->addToMatrix(value, I_alpha * dim_beta + I_beta, J_alpha * dim_beta + I_beta);
+                            matrix_solver->addToMatrix(value, I_alpha * this->dim_beta + I_beta, J_alpha * this->dim_beta + I_beta);
                         }
 
-                        alpha_one_electron_couplings[I_alpha][eval_index] = OneElectronCoupling{sign_pq,p,q,J_alpha};
-                        eval_index++;
+                        // We have found a spin string that is one electron excitation away from |I_alpha>
+                        // We will store it, since these strings are also needed in the alpha-beta part
+                        this->alpha_one_electron_couplings[I_alpha][coupling_address_index] = OneElectronCoupling{sign_pq, p, q, J_alpha};
+                        coupling_address_index++;
                         spin_string_alpha.annihilate(q);  // undo the previous creation on q
                     }  // create on q (alpha)
 
@@ -94,10 +96,10 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                                         // For the 'diagonal beta contributions', i.e. Ib = Jb, the two-electron alpha
                                         // contributions are the same
 
-                                        // We are storing the alpha addresses as 'major', i.e. the total address IaIb = I_alpha * dim_b + I_b
+                                        // We are storing the alpha addresses as 'major', i.e. the total address I_alpha I_beta = I_alpha * dim_b + I_b
                                         for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
-                                            double value = sign_pqrs * 0.5 * this->so_basis.get_g_SO(p,s,q,r);
-                                            matrix_solver->addToMatrix(value, I_alpha * dim_beta + Ib, Ja * dim_beta + Ib);
+                                            double value = sign_pqrs * 0.5 * this->so_basis.get_g_SO(s,p,r,q);
+                                            matrix_solver->addToMatrix(value, I_alpha * this->dim_beta + Ib, Ja * this->dim_beta + Ib);
                                         }
 
                                         spin_string_alpha.annihilate(s);  // undo the previous creation on s
@@ -117,7 +119,7 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
         }  // loop over p
 
 
-        if (I_alpha < dim_alpha - 1) {  // prevent the last permutation to occur
+        if (I_alpha < this->dim_alpha - 1) {  // prevent the last permutation to occur
             spin_string_alpha.nextPermutation();
         }
     }  // loop over alpha addresses (I_alpha)
@@ -129,8 +131,8 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
     for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {  // I_beta loops over addresses of all beta spin strings
 
-        // (K+1-N_beta) * N_beta -> N_beta annihilations followed by K+1-N_beta creations (K-N_beta available MO's +1 from the inplace excitation)
-        size_t eval_index = 0;
+        size_t coupling_address_index = 0;  // index of |J_beta> in the (N_beta * (K + 1 - N_beta))-long std::vector
+                                            // located at alpha_one_electron_couplings[I_alpha]
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
             int sign_p = 1;
@@ -150,12 +152,13 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
                         for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {
                             double value = sign_pq * this->so_basis.get_h_SO(p,q);
-                            matrix_solver->addToMatrix(value, I_alpha * dim_beta + I_beta, I_alpha * dim_beta + J_beta);
+                            matrix_solver->addToMatrix(value, I_alpha * this->dim_beta + I_beta, I_alpha * this->dim_beta + J_beta);
                         }
 
-                        beta_one_electron_couplings[I_beta][eval_index] = OneElectronCoupling{sign_pq,p,q,J_beta};
-
-                        eval_index++;
+                        // We have found a spin string that is one electron excitation away from |I_alpha>
+                        // We will store it, since these strings are also needed in the alpha-beta part
+                        this->beta_one_electron_couplings[I_beta][coupling_address_index] = OneElectronCoupling{sign_pq, p, q, J_beta};
+                        coupling_address_index++;
                         spin_string_beta.annihilate(q);  // undo the previous creation on q
                     }  // create on q (beta)
 
@@ -182,7 +185,7 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
                                         // We are storing the alpha addresses as 'major', i.e. the total address IaIb = Ia * dim_b + I_b
                                         for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {
-                                            double value = sign_pqrs * 0.5 * this->so_basis.get_g_SO(p,s,q,r);
+                                            double value = sign_pqrs * 0.5 * this->so_basis.get_g_SO(s,p,r,q);
                                             matrix_solver->addToMatrix(value, Ia * dim_beta + I_beta, Ia * dim_beta + Jb);
                                         }
 
@@ -212,20 +215,14 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
     for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // loop over alpha addresses
         for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {  // loop over beta addresses
 
-            for(size_t a = 0; a<((K+1)-N_alpha)*N_alpha; a++){  // iterate over dimensions of the amount possible single excitations for alpha string
-                OneElectronCoupling alpha = alpha_one_electron_couplings[I_alpha][a];
+            for (const auto& alpha : this->alpha_one_electron_couplings[I_alpha]) {  // traverse all OneElectronCouplings for I_alpha
+                for (const auto& beta : this->beta_one_electron_couplings[I_beta]) {  // traverse all OneElectronCouplings for I_beta
 
-                for(size_t b = 0; b < ((K+1)-N_beta)*N_beta; b++){  // iterate over dimensions of the amount possible single excitations for beta string
-                    OneElectronCoupling beta = beta_one_electron_couplings[I_beta][b];
-
-
-                    // Construct combined evaluations from single excitations to retrieve two-electron integrals from alpha-beta-beta-alpha operations.
-                    int sign = beta.sign * alpha.sign;
+                    int sign = alpha.sign * beta.sign;
                     double value = sign * this->so_basis.get_g_SO(alpha.p,alpha.q,beta.p,beta.q);
-
-                    matrix_solver->addToMatrix(value, I_alpha * dim_beta + I_beta, alpha.address * dim_beta + beta.address);
-                }
-            }
+                    matrix_solver->addToMatrix(value, I_alpha * this->dim_beta + I_beta, alpha.address * this->dim_beta + beta.address);  // alpha is the major index
+                }  // beta OneElectronCouplings
+            }  // alpha OneElectronCouplings
 
         }  // loop over beta addresses (I_beta)
     }  // loop over alpha addresses (I_alpha)
