@@ -33,8 +33,8 @@ private:
 
     const size_t K;  // number of spatial orbitals
 
-    const size_t N_A;  // number of alpha electrons
-    const size_t N_B;  // number of beta electrons
+    const size_t N_alpha;  // number of alpha electrons
+    const size_t N_beta;  // number of beta electrons
 
     const bmqc::AddressingScheme addressing_scheme_alpha;
     const bmqc::AddressingScheme addressing_scheme_beta;
@@ -48,18 +48,18 @@ private:
      *  During the construction of the FCI Hamiltonian, the one-electron excited coupling strings are both needed in the
      *  alpha, beta, and alpha-beta parts. When a spin string is found that couples to another spin string (with address
      *  I), the address of the coupling spin string is hold in memory, in the following way: in a
-     *  std::vector<std::vector<OneElectronCoupling>> (with dimension Ia * N_A * (K + 1 - N_A)), at every outer index
-     *  Ia, a std::vector of OneElectronCouplings is kept, each coupling through the Hamiltonian to that particular
-     *  spin string with address Ia. Of course, the beta case is similar.
+     *  std::vector<std::vector<OneElectronCoupling>> (with dimension I_alpha * N_alpha * (K + 1 - N_alpha)), at every outer index
+     *  I_alpha, a std::vector of OneElectronCouplings is kept, each coupling through the Hamiltonian to that particular
+     *  spin string with address I_alpha. Of course, the beta case is similar.
      *
-     *  The @param sign of the matrix element, i.e. <Ia | H | address> is also stored as a parameter.
+     *  The @param sign of the matrix element, i.e. <I_alpha | H | address> is also stored as a parameter.
      *
      *
-     *  We can keep this many addresses in memory because the resulting dimension (cfr. Ia * N_A * (K + 1 - N_A)) is
-     *  significantly less than the dimension of the FCI space (cfr. Ia * Ib).
+     *  We can keep this many addresses in memory because the resulting dimension (cfr. dim_alpha * N_alpha * (K + 1 - N_alpha)) is
+     *  significantly less than the dimension of the FCI space (cfr. I_alpha * I_beta).
      *
-     *  The number of coupling spin strings for an alpha string is equal to N_A * (K + 1 - N_A), since we have to pick
-     *  one out of N_A occupied indices to annihilate, and afterwards (after the annihilation) we have (K + 1 - N_A)
+     *  The number of coupling spin strings for an alpha string is equal to N_alpha * (K + 1 - N_alpha), since we have to pick
+     *  one out of N_alpha occupied indices to annihilate, and afterwards (after the annihilation) we have (K + 1 - N_A)
      *  choices to pick an index to create on.
      */
     struct OneElectronCoupling {
@@ -68,10 +68,11 @@ private:
         size_t q;
         size_t address;
     };
-
-
-    OneElectronCoupling** alpha_one_electron_couplings;  // creation and annihilation pair evaluations of alpha spin strings
-    OneElectronCoupling** beta_one_electron_couplings;  // creation and annihilation pair evaluations of beta spin strings
+    
+    // The following are rectangular arrays of dimension (dim_alpha * N_alpha * (K + 1 - N_alpha)) and similarly for beta,
+    // storing one-electron excited coupling addresses (cfr. the documentation about the OneElectronCoupling struct)
+    std::vector<std::vector<OneElectronCoupling>> alpha_one_electron_couplings;  
+    std::vector<std::vector<OneElectronCoupling>> beta_one_electron_couplings;
 
 
 
@@ -96,10 +97,10 @@ private:
 public:
     // CONSTRUCTORS
     /**
-     *  Constructor based on a given @param so_basis, a number of alpha electrons @param N_A and a number of beta electrons
-     *  @param N_B.
+     *  Constructor based on a given @param so_basis, a number of alpha electrons @param N_alpha and a number of beta electrons
+     *  @param N_beta.
      */
-    FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B);
+    FCI(libwint::SOBasis& so_basis, size_t N_alpha, size_t N_beta);
 
 
     // DESTRUCTOR
@@ -111,7 +112,7 @@ public:
      *  Given a number of spatial orbitals @param K, a number of alpha electrons @param N_A, and a number of beta electrons
      *  @param N_B, @return the dimension of the FCI space.
      */
-    static size_t calculateDimension(size_t K, size_t N_A, size_t N_B);
+    static size_t calculateDimension(size_t K, size_t N_alpha, size_t N_beta);
 
 
     // OVERRIDDEN PUBLIC METHODS

@@ -39,16 +39,13 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
 
     // 1. ALPHA-ALPHA
-    alpha_one_electron_couplings = new OneElectronCoupling*[dim_alpha];
-
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<boost::dynamic_bitset<>> spin_string_alpha (0, this->addressing_scheme_alpha);  // alpha spin string with address 0
 
 
-    for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {  // Ia loops over all the addresses of the alpha spin strings
+    for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // I_alpha loops over all the addresses of the alpha spin strings
 
-        // (K+1-N_A) * N_A -> N_A annihilations followed by K+1-N_A creations (K-N_A available MO's +1 from the inplace excitation)
-        alpha_one_electron_couplings[Ia] = new OneElectronCoupling[((K+1)-N_A)*N_A];  // stores all excitation operator evaluations for each spin string
+        // (K+1-N_alpha) * N_alpha -> N_alpha annihilations followed by K+1-N_alpha creations (K-N_alpha available MO's +1 from the inplace excitation)
         size_t eval_index = 0;
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
@@ -61,17 +58,17 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                     int sign_pq = sign_p;  // sign for the total excitation operator (a^\dagger_q a_p)
                     if (spin_string_alpha.create(q, sign_pq)) {
 
-                        size_t Ja = spin_string_alpha.address(this->addressing_scheme_alpha);
+                        size_t J_alpha = spin_string_alpha.address(this->addressing_scheme_alpha);
 
-                        // For the 'diagonal beta contributions', i.e. Ib = Jb, the one-electron alpha contributions
+                        // For the 'diagonal beta contributions', i.e. I_beta = J_beta, the one-electron alpha contributions
                         // are the same
-                        // We are storing the alpha addresses as 'major', i.e. the total address IaIb = Ia * dim_b + I_b
-                        for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
+                        // We are storing the alpha addresses as 'major', i.e. the total address I_alpha I_beta = I_alpha * dim_beta + I_beta
+                        for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {
                             double value = sign_pq * this->so_basis.get_h_SO(p,q);
-                            matrix_solver->addToMatrix(value, Ia * dim_beta + Ib, Ja * dim_beta + Ib);
+                            matrix_solver->addToMatrix(value, I_alpha * dim_beta + I_beta, J_alpha * dim_beta + I_beta);
                         }
 
-                        alpha_one_electron_couplings[Ia][eval_index] = OneElectronCoupling{sign_pq,p,q,Ja};
+                        alpha_one_electron_couplings[I_alpha][eval_index] = OneElectronCoupling{sign_pq,p,q,J_alpha};
                         eval_index++;
                         spin_string_alpha.annihilate(q);  // undo the previous creation on q
                     }  // create on q (alpha)
@@ -97,10 +94,10 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                                         // For the 'diagonal beta contributions', i.e. Ib = Jb, the two-electron alpha
                                         // contributions are the same
 
-                                        // We are storing the alpha addresses as 'major', i.e. the total address IaIb = Ia * dim_b + I_b
+                                        // We are storing the alpha addresses as 'major', i.e. the total address IaIb = I_alpha * dim_b + I_b
                                         for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
                                             double value = sign_pqrs * 0.5 * this->so_basis.get_g_SO(p,s,q,r);
-                                            matrix_solver->addToMatrix(value, Ia * dim_beta + Ib, Ja * dim_beta + Ib);
+                                            matrix_solver->addToMatrix(value, I_alpha * dim_beta + Ib, Ja * dim_beta + Ib);
                                         }
 
                                         spin_string_alpha.annihilate(s);  // undo the previous creation on s
@@ -120,24 +117,19 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
         }  // loop over p
 
 
-        if (Ia < dim_alpha - 1) {  // prevent the last permutation to occur
+        if (I_alpha < dim_alpha - 1) {  // prevent the last permutation to occur
             spin_string_alpha.nextPermutation();
         }
-    }  // loop over alpha addresses (Ia)
+    }  // loop over alpha addresses (I_alpha)
 
 
     // 2. BETA-BETA
-
-    beta_one_electron_couplings = new OneElectronCoupling*[dim_beta];
-
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
-
     bmqc::SpinString<boost::dynamic_bitset<>> spin_string_beta (0, this->addressing_scheme_beta);  // beta spin string with address 0
 
-    for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {  // Ib loops over addresses of all beta spin strings
+    for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {  // I_beta loops over addresses of all beta spin strings
 
-        // (K+1-N_B) * N_B -> N_B annihilations followed by K+1-N_B creations (K-N_B available MO's +1 from the inplace excitation)
-        beta_one_electron_couplings[Ib] = new OneElectronCoupling[((K+1)-N_B)*N_B];  // stores all excitation operator evaluations for each spin string
+        // (K+1-N_beta) * N_beta -> N_beta annihilations followed by K+1-N_beta creations (K-N_beta available MO's +1 from the inplace excitation)
         size_t eval_index = 0;
 
         for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
@@ -150,18 +142,18 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                     int sign_pq = sign_p;  // sign for the total excitation operator (a^\dagger_q a_p)
                     if (spin_string_beta.create(q, sign_pq)) {
 
-                        size_t Jb = spin_string_beta.address(this->addressing_scheme_beta);
+                        size_t J_beta = spin_string_beta.address(this->addressing_scheme_beta);
 
-                        // For the 'diagonal alpha contributions', i.e. Ia = Ja, the one-electron beta contributions are
+                        // For the 'diagonal alpha contributions', i.e. I_alpha = J_alpha, the one-electron beta contributions are
                         // the same
-                        // We are storing the alpha addresses as 'major', i.e. the total address IaIb = Ia * dim_b + I_b
+                        // We are storing the alpha addresses as 'major', i.e. the total address I_alpha I_beta = I_alpha * dim_beta + I_beta
 
-                        for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {
+                        for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {
                             double value = sign_pq * this->so_basis.get_h_SO(p,q);
-                            matrix_solver->addToMatrix(value, Ia * dim_beta + Ib, Ia * dim_beta + Jb);
+                            matrix_solver->addToMatrix(value, I_alpha * dim_beta + I_beta, I_alpha * dim_beta + J_beta);
                         }
 
-                        beta_one_electron_couplings[Ib][eval_index] = OneElectronCoupling{sign_pq,p,q,Jb};
+                        beta_one_electron_couplings[I_beta][eval_index] = OneElectronCoupling{sign_pq,p,q,J_beta};
 
                         eval_index++;
                         spin_string_beta.annihilate(q);  // undo the previous creation on q
@@ -191,7 +183,7 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
                                         // We are storing the alpha addresses as 'major', i.e. the total address IaIb = Ia * dim_b + I_b
                                         for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {
                                             double value = sign_pqrs * 0.5 * this->so_basis.get_g_SO(p,s,q,r);
-                                            matrix_solver->addToMatrix(value, Ia * dim_beta + Ib, Ia * dim_beta + Jb);
+                                            matrix_solver->addToMatrix(value, Ia * dim_beta + I_beta, Ia * dim_beta + Jb);
                                         }
 
                                         spin_string_beta.annihilate(s);  // undo the previous creation on s
@@ -210,30 +202,33 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
             } // annihilate on p (beta)
         }  // loop over p
 
-        if (Ib < dim_beta - 1) {  // prevent last permutation to occur
+        if (I_beta < dim_beta - 1) {  // prevent last permutation to occur
             spin_string_beta.nextPermutation();
         }
-    }  // loop over beta addresses (Ib)
+    }  // loop over beta addresses (I_beta)
 
 
     // 3. ALPHA-BETA
-    for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {  // loop over alpha addresses
-        for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {  // loop over beta addresses
+    for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // loop over alpha addresses
+        for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {  // loop over beta addresses
 
-            for(size_t a = 0; a<((K+1)-N_A)*N_A; a++){  // iterate over dimensions of the amount possible single excitations for alpha string
-                OneElectronCoupling alpha = alpha_one_electron_couplings[Ia][a];
+            for(size_t a = 0; a<((K+1)-N_alpha)*N_alpha; a++){  // iterate over dimensions of the amount possible single excitations for alpha string
+                OneElectronCoupling alpha = alpha_one_electron_couplings[I_alpha][a];
 
-                for(size_t b = 0; b < ((K+1)-N_B)*N_B; b++){  // iterate over dimensions of the amount possible single excitations for beta string
-                    OneElectronCoupling beta = beta_one_electron_couplings[Ib][b];
+                for(size_t b = 0; b < ((K+1)-N_beta)*N_beta; b++){  // iterate over dimensions of the amount possible single excitations for beta string
+                    OneElectronCoupling beta = beta_one_electron_couplings[I_beta][b];
 
-                    int sign = beta.sign*alpha.sign;
-                    //  Construct combined evaluations from single excitations to retrieve two-electron integrals from alpha-beta-beta-alpha operations.
-                    matrix_solver->addToMatrix(sign*this->so_basis.get_g_SO(alpha.p, alpha.q, beta.p, beta.q), Ia * dim_beta + Ib, alpha.address * dim_beta + beta.address);
+
+                    // Construct combined evaluations from single excitations to retrieve two-electron integrals from alpha-beta-beta-alpha operations.
+                    int sign = beta.sign * alpha.sign;
+                    double value = sign * this->so_basis.get_g_SO(alpha.p,alpha.q,beta.p,beta.q);
+
+                    matrix_solver->addToMatrix(value, I_alpha * dim_beta + I_beta, alpha.address * dim_beta + beta.address);
                 }
             }
 
-        }  // loop over beta addresses (Ib)
-    }  // loop over alpha addresses (Ia)
+        }  // loop over beta addresses (I_beta)
+    }  // loop over alpha addresses (I_alpha)
 }
 
 
@@ -325,25 +320,27 @@ void FCI::calculateDiagonal() {
  *  CONSTRUCTORS
  */
 /**
- *  Constructor based on a given @param so_basis, a number of alpha electrons @param N_A and a number of beta electrons
- *  @param N_B.
+ *  Constructor based on a given @param so_basis, a number of alpha electrons @param N_alpha and a number of beta electrons
+ *  @param N_beta.
  */
-FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
-        BaseCI(so_basis, ci::FCI::calculateDimension(so_basis.get_K(), N_A, N_B)),
+FCI::FCI(libwint::SOBasis& so_basis, size_t N_alpha, size_t N_beta) :
+        BaseCI(so_basis, ci::FCI::calculateDimension(so_basis.get_K(), N_alpha, N_beta)),
         K (so_basis.get_K()),
-        N_A (N_A),
-        N_B (N_B),
-        addressing_scheme_alpha (bmqc::AddressingScheme(this->K, this->N_A)),
-        addressing_scheme_beta (bmqc::AddressingScheme(this->K, this->N_B)),
-        dim_alpha (ci::FCI::calculateDimension(so_basis.get_K(), N_A, 0)),
-        dim_beta (ci::FCI::calculateDimension(so_basis.get_K(), 0, N_B))
+        N_alpha (N_alpha),
+        N_beta (N_beta),
+        addressing_scheme_alpha (bmqc::AddressingScheme(this->K, this->N_alpha)),
+        addressing_scheme_beta (bmqc::AddressingScheme(this->K, this->N_beta)),
+        dim_alpha (ci::FCI::calculateDimension(so_basis.get_K(), N_alpha, 0)),
+        dim_beta (ci::FCI::calculateDimension(so_basis.get_K(), 0, N_beta)),
+        alpha_one_electron_couplings (this->dim_alpha, std::vector<OneElectronCoupling>(this->N_alpha * (this->K + 1 - this->N_alpha))),
+        beta_one_electron_couplings (this->dim_beta, std::vector<OneElectronCoupling>(this->N_beta * (this->K + 1 - this->N_beta)))
 {
     // Do some input checks
-    if (this->K < this->N_A) {
+    if (this->K < this->N_alpha) {
         throw std::invalid_argument("Too many alpha-electrons to place in the number of spatial orbitals.");
     }
 
-    if (this->K < this->N_B) {
+    if (this->K < this->N_beta) {
         throw std::invalid_argument("Too many beta-electrons to place in the number of spatial orbitals.");
     }
 }
@@ -358,11 +355,11 @@ FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
  *  Given a number of spatial orbitals @param K, a number of alpha electrons @param N_A, and a number of beta electrons
  *  @param N_B, @return the dimension of the FCI space.
  */
-size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
+size_t FCI::calculateDimension(size_t K, size_t N_alpha, size_t N_beta) {
 
-    // K, N_A, N_B are expected to be small, so static-casting them to unsigned (what boost needs) is permitted.
-    auto dim_double_alpha = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_A));
-    auto dim_double_beta = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_B));
+    // K, N_alpha, N_beta are expected to be small, so static-casting them to unsigned (what boost needs) is permitted.
+    auto dim_double_alpha = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_alpha));
+    auto dim_double_beta = boost::math::binomial_coefficient<double>(static_cast<unsigned>(K), static_cast<unsigned>(N_beta));
     auto dim_double = dim_double_alpha * dim_double_beta;
 
     // Check if the resulting dimension is appropriate to be stored in size_t
