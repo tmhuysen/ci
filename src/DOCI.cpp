@@ -175,10 +175,6 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
     if ((N % 2) != 0) {
         throw std::invalid_argument("You gave an odd amount of electrons, which is not suitable for DOCI.");
     }
-
-    if (this->K < this->N_P) {
-        throw std::invalid_argument("Too many electrons to place into the given number of spatial orbitals.");
-    }
 }
 
 
