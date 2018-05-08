@@ -192,8 +192,8 @@ namespace ci {
     class FCI {
         __ private members __
             - const size_t K
-            - const size_t N_A
-            - const size_t N_B
+            - const size_t N_alpha
+            - const size_t N_beta
             - const bmqc::AddressingScheme addressing_scheme_alpha
             - const bmqc::AddressingScheme addressing_scheme_beta
         __ private methods __
@@ -201,11 +201,11 @@ namespace ci {
             - Eigen::VectorXd **matrixVectorProduct**() override
             - Eigen::VectorXd **calculateDiagonal**() override
         == constructors ==
-            **DOCI**(const libwint::SOBasis& so_basis, size_t N_A, size_t N_B)
+            **FCI**(const libwint::SOBasis& so_basis, size_t N_alpha, size_t N_beta)
         == destructor ==
             **~DOCI**()
         __ public methods __
-            + {static} calculateDimension(size_t K, size_t N_A, size_t N_B)
+            + {static} calculateDimension(size_t K, size_t N_alpha, size_t N_beta)
     }
 
 
