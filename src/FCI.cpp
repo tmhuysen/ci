@@ -34,25 +34,20 @@ namespace ci {
  *  Given a @param matrix_solver, construct the FCI Hamiltonian matrix in the solver's matrix representation.
  */
 void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) {
-    alpha_branch(matrix_solver);  // operators on alpha spin orbitals
-    beta_branch(matrix_solver);  // operators on beta spin orbitals
-    mixed_branch(matrix_solver);  // operators on both.
 
-    assert(this->diagonal.isApprox(matrix_solver->get_diagonal()));  // TODO: this can be deleted later
-}
-
-/**
- * Performs all alpha related operations
- */
-void FCI::alpha_branch(MatrixSolver *matrix_solver) {
+    // ALPHA-ALPHA
     alpha_evaluation = new SpinEvaluations*[dim_alpha];
-    // Create the first spin string.
+
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
-    bmqc::SpinString<boost::dynamic_bitset<>> spin_string_alpha(0, this->addressing_scheme_alpha);  // spin string with address 0
+    bmqc::SpinString<boost::dynamic_bitset<>> spin_string_alpha (0, this->addressing_scheme_alpha);  // spin string with address 0
+
+
     for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {  // Ia loops over all the addresses of the alpha spin strings
+
         // (K+1-N_A) * N_A -> N_A annihilations followed by K+1-N_A creations (K-N_A available MO's +1 from the inplace excitation)
         alpha_evaluation[Ia] = new SpinEvaluations[((K+1)-N_A)*N_A];  // stores all excitation operator evaluations for each spin string
         size_t eval_index = 0;
+        
         for (size_t p = 0; p < this->K; p++) {  // SO iteration 1
             int sign_p = 1;  // sign for the operator acting on the p-th SO
             if (spin_string_alpha.annihilate(p, sign_p)) {  // annihilate p
@@ -66,8 +61,8 @@ void FCI::alpha_branch(MatrixSolver *matrix_solver) {
                         // If alpha is major relative address in the total basis is multiplied by all beta combinations
 
                         for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {  // as beta portion of the FCI is not affected
-                                                                          // all equivalent alpha strings with different beta
-                                                                          // will yield the same operator evaluation
+                            // all equivalent alpha strings with different beta
+                            // will yield the same operator evaluation
                             matrix_solver->addToMatrix(sign_q * this->so_basis.get_h_SO(p, q), Ia * dim_beta + Ib, Ja * dim_beta + Ib);
                         }  // Ib
                         alpha_evaluation[Ia][eval_index] = SpinEvaluations{sign_q,p,q,Ja};
@@ -106,10 +101,9 @@ void FCI::alpha_branch(MatrixSolver *matrix_solver) {
             spin_string_alpha.nextPermutation();
         }
     }
-}
 
 
-void FCI::beta_branch(MatrixSolver *matrix_solver) {
+    // BETA-BETA
     beta_evaluation = new SpinEvaluations*[dim_beta];
     // Create the first spin string.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
@@ -170,14 +164,7 @@ void FCI::beta_branch(MatrixSolver *matrix_solver) {
     }
 
 
-
-}
-
-/**
- * Recombines all alpha and beta single excitation related operations
- * That were stored in the previous branches resulting
- */
-void FCI::mixed_branch(MatrixSolver *matrix_solver) {
+    // ALPHA-BETA
     for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {
 
         for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {
@@ -234,55 +221,55 @@ void FCI::calculateDiagonal() {
 
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
     bmqc::SpinString<unsigned long> spin_string_alpha (0, this->addressing_scheme_alpha);
-    for (size_t I_alpha = 0; I_alpha < this->dim_alpha; I_alpha++) {  // I_alpha loops over addresses of alpha spin strings
+    for (size_t Ia = 0; Ia < this->dim_alpha; Ia++) {  // Ia loops over addresses of alpha spin strings
 
         bmqc::SpinString<unsigned long> spin_string_beta (0, this->addressing_scheme_beta);
-        for (size_t I_beta = 0; I_beta < this->dim_beta; I_beta++) {  // I_beta loops over addresses of beta spin strings
+        for (size_t Ib = 0; Ib < this->dim_beta; Ib++) {  // Ib loops over addresses of beta spin strings
 
             for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
 
-                if (spin_string_alpha.isOccupied(p)) {  // p is in I_alpha
-                    this->diagonal(I_alpha * this->dim_beta + I_beta) += k_SO(p, p);
+                if (spin_string_alpha.isOccupied(p)) {  // p is in Ia
+                    this->diagonal(Ia * this->dim_beta + Ib) += k_SO(p, p);
 
                     for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
-                        if (spin_string_alpha.isOccupied(q)) {  // q is in I_alpha
-                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
+                        if (spin_string_alpha.isOccupied(q)) {  // q is in Ia
+                            this->diagonal(Ia * this->dim_beta + Ib) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
                         } else {  // q is not in I_alpha
-                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
+                            this->diagonal(Ia * this->dim_beta + Ib) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
                         }
 
-                        if (spin_string_beta.isOccupied(q)) {  // q is in I_beta
-                            this->diagonal(I_alpha * this->dim_beta + I_beta) += this->so_basis.get_g_SO(p, p, q, q);
+                        if (spin_string_beta.isOccupied(q)) {  // q is in Ib
+                            this->diagonal(Ia * this->dim_beta + Ib) += this->so_basis.get_g_SO(p, p, q, q);
                         }
                     }  // q loop
                 }
 
 
-                if (spin_string_beta.isOccupied(p)) {  // p is in I_beta
-                    this->diagonal(I_alpha * this->dim_beta + I_beta) += k_SO(p, p);
+                if (spin_string_beta.isOccupied(p)) {  // p is in Ib
+                    this->diagonal(Ia * this->dim_beta + Ib) += k_SO(p, p);
 
 
                     for (size_t q = 0; q < this->K; q++) {  // q loops over SOs
-                        if (spin_string_beta.isOccupied(q)) {  // q is in I_beta
-                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
+                        if (spin_string_beta.isOccupied(q)) {  // q is in Ib
+                            this->diagonal(Ia * this->dim_beta + Ib) += 0.5 * this->so_basis.get_g_SO(p, p, q, q);
 
                         } else {  // q is not in I_beta
-                            this->diagonal(I_alpha * this->dim_beta + I_beta) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
+                            this->diagonal(Ia * this->dim_beta + Ib) += 0.5 * this->so_basis.get_g_SO(p, q, q, p);
                         }
                     }  // q loop
                 }
 
             }  // p loop
 
-            if (I_beta < this->dim_beta - 1) {  // prevent last permutation to occur
+            if (Ib < this->dim_beta - 1) {  // prevent last permutation to occur
                 spin_string_beta.nextPermutation();
             }
-        }  // beta address (I_beta) loop
+        }  // beta address (Ib) loop
 
-        if (I_alpha < this->dim_alpha - 1) {  // prevent last permutation to occur
+        if (Ia < this->dim_alpha - 1) {  // prevent last permutation to occur
             spin_string_alpha.nextPermutation();
         }
-    }  // alpha address (I_alpha) loop
+    }  // alpha address (Ia) loop
 }
 
 
@@ -314,10 +301,10 @@ FCI::FCI(libwint::SOBasis& so_basis, size_t N_A, size_t N_B) :
  *  STATIC PUBLIC METHODS
  */
 
-    /**
-     *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
-     *  the FCI space.
-     */
+/**
+ *  Given a number of spatial orbitals @param K and a number of alpha electrons @param N_A and beta electrons @param N_B, @return the dimension of
+ *  the FCI space.
+ */
 size_t FCI::calculateDimension(size_t K, size_t N_A, size_t N_B) {
 
     // K N_A, N_B are expected to be small, so static-casting them to unsigned (what boost needs) is permitted.
@@ -349,6 +336,7 @@ void FCI::calculate2RDMs() {
     throw std::logic_error("This function hasn't been implemented yet.");
 
 }
+
 
 
 }  // namespace ci
