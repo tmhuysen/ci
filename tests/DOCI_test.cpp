@@ -9,9 +9,16 @@
 
 
 
-BOOST_AUTO_TEST_CASE ( dimension ) {
+BOOST_AUTO_TEST_CASE ( DOCI_dimension ) {
 
     BOOST_CHECK_EQUAL(ci::DOCI::calculateDimension(10, 1), 10);
     BOOST_CHECK_EQUAL(ci::DOCI::calculateDimension(6, 2), 15);
     BOOST_CHECK_EQUAL(ci::DOCI::calculateDimension(8, 3), 56);
+}
+
+
+BOOST_AUTO_TEST_CASE ( DOCI_constructor ) {
+
+    libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+    BOOST_CHECK_NO_THROW(ci::DOCI (so_basis, 4));  // non-faulty constructor
 }

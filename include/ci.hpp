@@ -22,6 +22,7 @@
 // This header files acts as a collective include file
 #include "BaseCI.hpp"
 #include "DOCI.hpp"
+#include "FCI.hpp"
 
 #include "version.hpp"
 

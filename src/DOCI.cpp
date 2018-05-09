@@ -44,6 +44,7 @@ void DOCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_s
     bmqc::SpinString<unsigned long> spin_string(0, this->addressing_scheme);  // spin string with address 0
 
 
+
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
 
         // Diagonal contribution
@@ -175,10 +176,6 @@ DOCI::DOCI(libwint::SOBasis& so_basis, size_t N) :
     if ((N % 2) != 0) {
         throw std::invalid_argument("You gave an odd amount of electrons, which is not suitable for DOCI.");
     }
-
-    if (this->K < this->N_P) {
-        throw std::invalid_argument("Too many electrons to place into the given number of spatial orbitals.");
-    }
 }
 
 
@@ -226,7 +223,7 @@ void DOCI::calculate1RDMs() {
 
     // Create the first spin string. Since in DOCI, alpha == beta, we can just treat them as one.
     // TODO: determine when to switch from unsigned to unsigned long, unsigned long long or boost::dynamic_bitset<>
-    bmqc::SpinString<unsigned long> spin_string (0, this->addressing_scheme);  // spin string with address 0
+    bmqc::SpinString<unsigned long>spin_string (0, this->addressing_scheme);  // spin string with address 0
 
 
     for (size_t I = 0; I < this->dim; I++) {  // I loops over all the addresses of the spin strings
