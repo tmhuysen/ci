@@ -1,3 +1,19 @@
+// This file is part of GQCG-ci.
+// 
+// Copyright (C) 2017-2018  the GQCG developers
+// 
+// GQCG-ci is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// GQCG-ci is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with GQCG-ci.  If not, see <http://www.gnu.org/licenses/>.
 #include "BaseCI.hpp"
 
 #include <numopt.hpp>
@@ -20,7 +36,8 @@ namespace ci {
  */
 BaseCI::BaseCI(libwint::SOBasis& so_basis, size_t dim) :
     so_basis (so_basis),
-    dim (dim)
+    dim (dim),
+    diagonal (Eigen::VectorXd::Zero(this->dim))
 {}
 
 
@@ -61,6 +78,10 @@ BaseCI::~BaseCI() {
  */
 void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
 
+    // Before solving anything, we should calculate the diagonal
+    this->calculateDiagonal();
+
+
     // Depending on how the user wants to solve the eigenvalue problem, construct the appropriate solver
     switch (solver_type) {
 
@@ -83,13 +104,17 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
         }
 
         case numopt::eigenproblem::SolverType::DAVIDSON: {
+
             numopt::VectorFunction matrixVectorProduct = [this] (const Eigen::VectorXd& x) { return this->matrixVectorProduct(x); };
-            Eigen::VectorXd diagonal = this->calculateDiagonal();
 
+            // HARTREE-FOCK INITIAL GUESS
             Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
-            t_0(this->dim) = 1;  // in reverse lexical notation, the Hartree-Fock determinant has the highest address
+            t_0(0) = 1;  // in lexical notation, the Hartree-Fock determinant has the lowest address
 
-            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, t_0, diagonal);
+            // RANDOM INITIAL GUESS
+//            Eigen::VectorXd t_0 = Eigen::VectorXd::Random(this->dim);
+
+            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(matrixVectorProduct, this->diagonal, t_0);  // the diagonal has been calculated in the beginning of this method
             this->eigensolver_ptr->solve();
             break;
         }
@@ -97,6 +122,76 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
     }
 
 }
+
+
+
+/*
+ * GETTERS
+ */
+
+Eigen::MatrixXd BaseCI::get_one_rdm_aa() const {
+    if (!this->are_computed_one_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this->one_rdm_aa;
+}
+
+
+Eigen::MatrixXd BaseCI::get_one_rdm_bb() const {
+    if (!this->are_computed_one_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this-> one_rdm_bb;
+}
+
+
+Eigen::MatrixXd BaseCI::get_one_rdm() const {
+    if (!this->are_computed_one_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this-> one_rdm;
+}
+
+
+Eigen::Tensor<double, 4> BaseCI::get_two_rdm_aaaa() const {
+    if (!this->are_computed_two_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this->two_rdm_aaaa;
+}
+
+
+Eigen::Tensor<double, 4> BaseCI::get_two_rdm_aabb() const {
+    if (!this->are_computed_two_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this->two_rdm_aabb;
+}
+
+
+Eigen::Tensor<double, 4> BaseCI::get_two_rdm_bbaa() const {
+    if (!this->are_computed_two_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this->two_rdm_bbaa;
+}
+
+
+Eigen::Tensor<double, 4> BaseCI::get_two_rdm_bbbb() const {
+    if (!this->are_computed_two_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this->two_rdm_bbbb;
+}
+
+
+Eigen::Tensor<double, 4> BaseCI::get_two_rdm() const {
+    if (!this->are_computed_two_rdms) {
+        throw std::logic_error("The requested reduced density matrix is not computed yet.");
+    }
+    return this->two_rdm;
+}
+
 
 
 }  // namespace ci

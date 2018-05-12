@@ -47,23 +47,26 @@ install:
 
 
   # We can't install libint2 (2.2.0+) through APT.
-  # Installing libint consists of two parts: compiling the libint compiler and compiling the libint library.
-  #   1. Compile the libint compiler
-  - mkdir /tmp/libint && cd /tmp/libint
-  - curl -OL "https://github.com/evaleev/libint/archive/v2.3.1.tar.gz"
-  - tar -xvzf v2.3.1.tar.gz
-  - cd libint-2.3.1
-  - ./autogen.sh
-  - mkdir build && cd build
-  - ../configure CXXFLAGS=-I${BOOST_ROOT}
-
-  #   2. Generate and compile the libint library
-  - make export
-  - tar -xvzf libint-2.3.1.tgz
-  - cd libint-2.3.1
-  - ./configure CXXFLAGS=-I${BOOST_ROOT}
-  - make
-  - sudo make install
+  # Since compiling libint2 takes around 15 minutes on Travis, it is a good idea to cache it (see also below)
+  - |
+    if [ ! -d /tmp/libint/libint-2.3.1 ]; then
+       mkdir -p /tmp/libint && cd /tmp/libint
+       curl -OL "https://github.com/evaleev/libint/archive/v2.3.1.tar.gz"
+       tar -xvzf v2.3.1.tar.gz
+       cd libint-2.3.1
+       ./autogen.sh
+       mkdir build && cd build
+       ../configure CXXFLAGS=-I${BOOST_ROOT}
+       make export
+       tar -xvzf libint-2.3.1.tgz
+       cd libint-2.3.1
+       ./configure CXXFLAGS=-I${BOOST_ROOT}
+       make
+       sudo make install
+    else
+      cd /tmp/libint/libint-2.3.1/build/libint-2.3.1
+      sudo make install
+    fi
 
   # Finally, since libint often complains about reading the basis sets, specify a LIBINT_DATA_PATH to help libint find the files.
   - export LIBINT_DATA_PATH=/usr/local/libint/2.3.1/share/libint/2.3.1/basis
@@ -89,7 +92,6 @@ install:
   - mkdir /tmp/hf && cd /tmp/hf
   - git clone https://github.com/GQCG/hf.git --branch master --single-branch
   - cd hf
-  - sudo cp docs/sto-6g.g94 ${LIBINT_DATA_PATH}  # copy the extra basis set
   - mkdir build && cd build
   - cmake .. && make && make test && sudo make install
 
@@ -121,4 +123,10 @@ script:
   - cd /home/travis/build/GQCG/ci
   - mkdir build && cd build
   - cmake ..
-  - make && make test && sudo make install
+  - make
+  - travis_wait 120 make test
+  - sudo make install
+
+cache:
+  directories:  # add the libint compilation to the cache
+    - /tmp/libint
