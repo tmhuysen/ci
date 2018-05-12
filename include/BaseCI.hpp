@@ -33,8 +33,9 @@ namespace ci {
 class BaseCI {
 protected:
 
-    libwint::SOBasis& so_basis;
+    libwint::SOMullikenBasis& so_basis;
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
+    double population_set;
 
     const size_t dim;  // the dimension of the CI space
 
@@ -58,7 +59,7 @@ protected:
     /**
      *  Protected constructor given a @param so_basis and a dimension @dim.
      */
-    explicit BaseCI(libwint::SOBasis& so_basis, size_t dim);
+    explicit BaseCI(libwint::SOMullikenBasis& so_basis, size_t dim);
 
 
     // PURE VIRTUAL PROTECTED METHODS
@@ -96,6 +97,8 @@ public:
     size_t get_dim() const { return this->dim; }
     double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
     Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
+    double get_population_set() const { return this->population_set; }
+    libwint::SOMullikenBasis get_basis() { return this->so_basis;}
 
     Eigen::MatrixXd get_one_rdm_aa() const;
     Eigen::MatrixXd get_one_rdm_bb() const;
@@ -108,11 +111,23 @@ public:
     Eigen::Tensor<double, 4> get_two_rdm() const;
 
 
+    //SETTERS
+
+
+    //void set_constraint_base(libwint::SOMullikenBasis& so_basis){this->so_basis=so_basis;};
+
+
     // PUBLIC METHODS
     /**
      *  Find the lowest energy eigenpair of the Hamiltonian, using a @param solver_type.
      */
     void solve(numopt::eigenproblem::SolverType solver_type);
+
+    /**
+     *  Solves the eigenvalue problem with a for a lagrange multiplier mulliken constraint and returns the energy.
+     */
+    double solveConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double multiplier);
+
 
     /**
      *  Calculate all the 1-RDMs.

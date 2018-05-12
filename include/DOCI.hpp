@@ -20,7 +20,7 @@
 
 
 #include "BaseCI.hpp"
-
+#include "NormalGenerator.hpp"
 
 
 namespace ci {
@@ -56,18 +56,18 @@ public:
     /**
      *  Constructor based on a given @param so_basis and a number of electrons @param N.
      */
-    DOCI(libwint::SOBasis& so_basis, size_t N);
+    DOCI(libwint::SOMullikenBasis& so_basis, size_t N);
 
     /**
-     *  Constructor based on a given @param so_basis and a @param molecule.
+     *  Constructor based on a given @param so_basis and a @param molecwule.
      */
-    DOCI(libwint::SOBasis& so_basis, const libwint::Molecule& molecule);
+    DOCI(libwint::SOMullikenBasis& so_basis, const libwint::Molecule& molecule);
 
 
     // DESTRUCTOR
     ~DOCI() override = default;
 
-
+    void optimizeBasis(numopt::eigenproblem::SolverType solver_type, size_t max_iterations, size_t max_fails);
     // STATIC PUBLIC METHODS
     /**
      *  Given a number of spatial orbitals @param K and a number of electron pairs @param N_P, @return the dimension of

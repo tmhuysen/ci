@@ -321,7 +321,7 @@ void FCI::calculateDiagonal() {
  *  Constructor based on a given @param so_basis, a number of alpha electrons @param N_alpha and a number of beta electrons
  *  @param N_beta.
  */
-FCI::FCI(libwint::SOBasis& so_basis, size_t N_alpha, size_t N_beta) :
+FCI::FCI(libwint::SOMullikenBasis& so_basis, size_t N_alpha, size_t N_beta) :
         BaseCI(so_basis, ci::FCI::calculateDimension(so_basis.get_K(), N_alpha, N_beta)),
         K (so_basis.get_K()),
         N_alpha (N_alpha),

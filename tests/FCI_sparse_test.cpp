@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE ( FCI_H2O_Psi4_GAMESS_sparse ) {
     // Prepare the SO basis from RHF coefficients
     hf::rhf::RHF rhf (water, ao_basis, 1.0e-06);
     rhf.solve();
-    libwint::SOBasis so_basis (ao_basis, rhf.get_C_canonical());
+    libwint::SOMullikenBasis so_basis (ao_basis, rhf.get_C_canonical());
 
 
     // Do a dense FCI calculation based on a given SO basis
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE ( FCI_H2_Cristina_sparse ) {
     // Prepare the SO basis from RHF coefficients
     hf::rhf::RHF rhf (h2, ao_basis, 1.0e-06);
     rhf.solve();
-    libwint::SOBasis so_basis (ao_basis, rhf.get_C_canonical());
+    libwint::SOMullikenBasis so_basis (ao_basis, rhf.get_C_canonical());
 
 
     // Do a dense FCI calculation based on a given SO basis

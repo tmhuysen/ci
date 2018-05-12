@@ -29,6 +29,6 @@ BOOST_AUTO_TEST_CASE ( FCI_constructor ) {
     // Prepare the SO basis from RHF coefficients
     hf::rhf::RHF rhf (water, ao_basis, 1.0e-06);
     rhf.solve();
-    libwint::SOBasis so_basis (ao_basis, rhf.get_C_canonical());
+    libwint::SOMullikenBasis so_basis (ao_basis, rhf.get_C_canonical());
     BOOST_CHECK_NO_THROW(ci::FCI (so_basis, 5, 5));  // N_alpha = 5, N_beta = 5
 }

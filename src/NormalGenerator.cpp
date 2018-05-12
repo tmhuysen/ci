@@ -18,8 +18,14 @@ double NormalGenerator::generate() {
 }
 
 void NormalGenerator::transform(double magnitude) {
-    this->min_bound *= magnitude;
-    this->max_bound *= magnitude;
+    double interval = this->mean - this->min_bound;
+    interval *= magnitude;
+    this->min_bound = mean - interval;
+
+    double interval_max = this->max_bound - this->mean;
+    interval_max *= magnitude;
+    this->max_bound = mean + interval_max;
+
     this->std_dev *= magnitude;
     this->distribution = std::normal_distribution<double>(this->mean,this->std_dev);
 }

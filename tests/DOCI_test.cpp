@@ -17,8 +17,8 @@ BOOST_AUTO_TEST_CASE ( DOCI_dimension ) {
 }
 
 
-BOOST_AUTO_TEST_CASE ( DOCI_constructor ) {
-
-    libwint::SOBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
-    BOOST_CHECK_NO_THROW(ci::DOCI (so_basis, 4));  // non-faulty constructor
-}
+//BOOST_AUTO_TEST_CASE ( DOCI_constructor ) {
+//
+//    libwint::SOMullikenBasis so_basis ("../tests/reference_data/beh_cation_631g_caitlin.FCIDUMP", 16);  // 16 SOs
+//    BOOST_CHECK_NO_THROW(ci::DOCI (so_basis, 4));  // non-faulty constructor
+//}

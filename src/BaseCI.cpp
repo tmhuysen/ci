@@ -34,7 +34,7 @@ namespace ci {
 /**
  *  Protected constructor given a @param so_basis and a dimension @dim.
  */
-BaseCI::BaseCI(libwint::SOBasis& so_basis, size_t dim) :
+BaseCI::BaseCI(libwint::SOMullikenBasis& so_basis, size_t dim) :
     so_basis (so_basis),
     dim (dim),
     diagonal (Eigen::VectorXd::Zero(this->dim))
@@ -121,6 +121,21 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
 
     }
 
+}
+
+
+
+/**
+ *  Solves the eigenvalue problem with a for a langrange multiplier mulliken constraint and returns the energy.
+ */
+double BaseCI::solveConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double multiplier){
+    this->so_basis.calculateMullikenMatrix(AO_set);
+    this->so_basis.set_lagrange_multiplier(multiplier);
+    this->solve(solver_type);
+    this->calculate1RDMs();
+    this->population_set = this->so_basis.mullikenPopulationCI(this->one_rdm_aa, this->one_rdm_bb);
+    double energy = this->get_eigenvalue()+multiplier*population_set;
+    return energy;
 }
 
 
