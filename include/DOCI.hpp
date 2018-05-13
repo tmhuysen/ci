@@ -67,7 +67,6 @@ public:
     // DESTRUCTOR
     ~DOCI() override = default;
 
-    void optimizeBasis(numopt::eigenproblem::SolverType solver_type, size_t max_iterations, size_t max_fails);
     // STATIC PUBLIC METHODS
     /**
      *  Given a number of spatial orbitals @param K and a number of electron pairs @param N_P, @return the dimension of

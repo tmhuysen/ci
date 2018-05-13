@@ -32,8 +32,8 @@ namespace ci {
 
 class BaseCI {
 protected:
-
     libwint::SOMullikenBasis& so_basis;
+
     numopt::eigenproblem::BaseEigenproblemSolver* eigensolver_ptr = nullptr;
     double population_set;
 
@@ -98,7 +98,7 @@ public:
     double get_eigenvalue() const { return this->eigensolver_ptr->get_eigenvalue(); }
     Eigen::VectorXd get_eigenvector() const { return this->eigensolver_ptr->get_eigenvector(); }
     double get_population_set() const { return this->population_set; }
-    libwint::SOMullikenBasis get_basis() { return this->so_basis;}
+    //libwint::SOMullikenBasis get_basis() { return this->so_basis;}
 
     Eigen::MatrixXd get_one_rdm_aa() const;
     Eigen::MatrixXd get_one_rdm_bb() const;

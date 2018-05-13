@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with GQCG-ci.  If not, see <http://www.gnu.org/licenses/>.
 #include "DOCI.hpp"
-
+#include "NormalGenerator.hpp"
 
 
 #include <boost/numeric/conversion/converter.hpp>
@@ -316,77 +316,6 @@ void DOCI::calculate2RDMs(){
 }
 
 
-void DOCI::optimizeBasis(numopt::eigenproblem::SolverType solver_type, size_t max_iterations = 20000, size_t max_fails = 1000) {
-    if(max_iterations<max_fails){
-        std::__throw_logic_error("maximum amount of allowed consecutive failure should be lower than the maximum total iterations");
-    }
-    this->solve(solver_type);
-    // We need random generation to pick which two spatial orbitals we are gonna rotate.
-    // random device class instance, source of 'true' randomness for initializing random seed
-    std::random_device random_device;
-
-    // Mersenne twister PRNG, initialized with seed from previous random device instance
-    std::mt19937 random_generator(random_device());
-    // Define range for SO's random selection.
-    std::uniform_int_distribution<> distribution(0, this->K-1);
-    // Define range higher energy leniency
-    std::uniform_real_distribution<> double_distribution(0.0,1);
-
-
-    double narrowing_factor_temperature = 0.99;
-    double narrowing_factor_intervals = 0.9999;
-
-    size_t failures = 0; //counts the amount of consecutive non accepted rotations
-    size_t iterations = 0; //counts the amount of iterations
-    NormalGenerator normal_generator(0,25,-80.214,80.214); //random generator around 0 with standard deviation of 25 and max and min values of 80.214.
-
-    double temperature = std::abs(this->get_eigenvalue()/2); //indicator of how lenient we accept a new energy that is to high.
-    libwint::SOMullikenBasis basis = this->so_basis; //copy the old basis so we do not modify it outside of the CI class.
-    while(iterations < max_iterations and failures < max_fails){
-        //CI_basis old_basis;
-        //old_basis = *basis; //copy current basis
-        size_t so_index1 = 0; //spatial orbital index
-        size_t so_index2 = 0; //spatial orbital index
-        while(so_index1 == so_index2){ //if they are the same we need to re-pick
-            so_index1 = distribution(random_generator);
-            so_index2 = distribution(random_generator);
-            if(so_index1>so_index2){
-                size_t temp = so_index1;
-                so_index1 = so_index2;
-                so_index2 = temp;
-            }
-        }
-
-        double angle = normal_generator.generate(); //generate random angle normal distributed
-        this->so_basis.rotateJacobi(so_index1,so_index2,angle);
-        delete this->eigensolver_ptr;
-        this->solve(solver_type);
-        double energy_diff = lowestEigenState.getEval() - hamiltonian->getGroundstates().at(0).getEval();
-
-        if (energy_diff<0) {
-            //Algorithm in thesis of mario : annealing (pg 54)
-            double random_number = double_distribution(random_generator);
-            double exp_value = exp(energy_diff/temperature);
-            double compare_value = exp_value/(exp_value+1);
-
-
-            if(random_number>compare_value){
-                delete basis;
-                basis = new CI_basis(old_basis); // return to the old state.
-                failures++;
-            } else{
-                this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
-                failures = 0;
-            }
-        } else{
-            this->lowestEigenState = this->hamiltonian->getGroundstates().at(0);
-        }
-        temperature *= narrowing_factor_temperature;
-        normal_generator.transform(narrowing_factor_intervals);
-        iterations++;
-    }
-    mùmm÷≠≠≠l=
-}
 
 
 }  // namespace ci
