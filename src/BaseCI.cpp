@@ -119,6 +119,36 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
             break;
         }
 
+        case numopt::eigenproblem::SolverType::DAVIDSONLEMMENS: {
+
+            auto dense_solver = new numopt::eigenproblem::DenseSolver(this->dim);
+            this->constructHamiltonian(dense_solver);
+
+            Eigen::VectorXd t_0 = Eigen::VectorXd::Zero(this->dim);
+            t_0(0) = 1; //  lexical notation, the Hartree-Fock determinant has the highest address
+            this->eigensolver_ptr = new numopt::eigenproblem::DavidsonSolver(dense_solver->get_matrix(), t_0,5000);
+
+            try{
+                this->eigensolver_ptr->solve();
+
+            }catch(const std::exception& e){
+                delete dense_solver;
+                throw e;
+            }
+            delete dense_solver;
+            break;
+        }
+
+        case numopt::eigenproblem::SolverType::ARMADENSE: {
+            auto dense_solver = new numopt::eigenproblem::ArmaDenseSolver(this->dim);
+            this->solveMatrixEigenvalueProblem(dense_solver);
+            this->eigensolver_ptr = dense_solver;  // prevent data from going out of scope
+            // we are only assigning this->eigensolver_ptr now, because
+            // this->solveMatrixEigenvalueProblem only accepts BaseMatrixSolver*
+            break;
+        }
+
+
     }
 
 }
@@ -129,6 +159,7 @@ void BaseCI::solve(numopt::eigenproblem::SolverType solver_type) {
  *  Solves the eigenvalue problem with a for a langrange multiplier mulliken constraint and returns the energy.
  */
 double BaseCI::solveConstrained(numopt::eigenproblem::SolverType solver_type, std::vector<size_t> AO_set, double multiplier){
+    this->so_basis.set_P(false);
     this->so_basis.calculateMullikenMatrix(AO_set);
     this->so_basis.set_lagrange_multiplier(multiplier);
     this->solve(solver_type);

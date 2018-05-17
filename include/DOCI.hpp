@@ -65,7 +65,7 @@ public:
 
 
     // DESTRUCTOR
-    ~DOCI() override = default;
+    virtual ~DOCI() = default;
 
     // STATIC PUBLIC METHODS
     /**

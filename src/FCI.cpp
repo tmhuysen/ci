@@ -36,6 +36,7 @@ namespace ci {
 void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_solver) {
 
     // The construction of the FCI Hamiltonian is implemented in three parts: alpha-alpha, beta-beta, and alpha-beta
+    auto start = std::chrono::high_resolution_clock::now();
 
 
     // 1. ALPHA-ALPHA
@@ -226,6 +227,13 @@ void FCI::constructHamiltonian(numopt::eigenproblem::BaseMatrixSolver* matrix_so
 
         }  // loop over beta addresses (I_beta)
     }  // loop over alpha addresses (I_alpha)
+
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    // Process the chrono time and output
+    auto elapsed_time = stop - start;           // in nanoseconds
+    auto seconds = elapsed_time.count() / 1e9;  // in seconds
+    std::cout << dim << " : " << seconds << std::endl;
 }
 
 
@@ -365,7 +373,80 @@ size_t FCI::calculateDimension(size_t K, size_t N_alpha, size_t N_beta) {
  *  Calculate all the 1-RDMs.
  */
 void FCI::calculate1RDMs() {
-    throw std::logic_error("This function hasn't been implemented yet.");
+    //initialize as zero matrix.
+    this->one_rdm_aa = Eigen::MatrixXd::Zero(this->K,this->K);
+    this->one_rdm_bb = Eigen::MatrixXd::Zero(this->K,this->K);
+
+    bmqc::SpinString<boost::dynamic_bitset<>> spin_string_alpha (0, this->addressing_scheme_alpha);  // spin string with address 0
+    for (size_t I = 0; I < this->dim_alpha; I++) {  // I loops over all the addresses of the spin strings
+        if (I > 0) {
+            spin_string_alpha.nextPermutation();
+        }for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
+            int sign_p = 1;
+            if(spin_string_alpha.annihilate(p,sign_p)){
+                double coefficient =  0;
+                for(size_t i = 0;i<dim_beta;i++){
+                    coefficient += this->eigensolver_ptr->get_eigenvector()(I*dim_beta+i)*this->eigensolver_ptr->get_eigenvector()(I*dim_beta+i);
+                }  // dim_beta loop
+                this->one_rdm_aa(p,p) += coefficient;
+                for(size_t q = 0; q < p;q++){
+                    int sign_q = sign_p;
+                    if(spin_string_alpha.create(q,sign_q)){
+                        size_t J = spin_string_alpha.address(this->addressing_scheme_alpha);
+
+                        double coefficient = 0;
+                        for(size_t i = 0;i<dim_beta;i++){
+                            coefficient += this->eigensolver_ptr->get_eigenvector()(I*dim_beta+i)
+                                           *this->eigensolver_ptr->get_eigenvector()(J*dim_beta+i);
+                        }  // dim_beta loop
+                        one_rdm_aa(q,p) += sign_q*coefficient;
+                        one_rdm_aa(p,q) += sign_q*coefficient;
+
+                        spin_string_alpha.annihilate(q);
+
+                    }  // create q
+                }  // q
+                spin_string_alpha.create(p);
+            }  // anni p
+        }  // p
+    }  // I
+    bmqc::SpinString<boost::dynamic_bitset<>> spin_string_beta (0, this->addressing_scheme_beta);  // spin string with address 0
+    for (size_t I = 0; I < this->dim_beta; I++) {  // I loops over all the addresses of the spin strings
+        if (I > 0) {
+            spin_string_beta.nextPermutation();
+        }for (size_t p = 0; p < this->K; p++) {  // p loops over SOs
+            int sign_p = 1;
+            if(spin_string_beta.annihilate(p,sign_p)){
+
+                double coefficient =  0;
+                for(size_t i = 0;i<dim_alpha;i++){
+                    coefficient += this->eigensolver_ptr->get_eigenvector()(i*dim_beta+I)*this->eigensolver_ptr->get_eigenvector()(i*dim_beta+I);
+                }  // dim_alpha
+                this->one_rdm_bb(p,p) += coefficient;
+                for(size_t q = 0; q < p;q++){
+                    int sign_q = sign_p;
+                    if(spin_string_beta.create(q,sign_q)){
+                        size_t J = spin_string_beta.address(this->addressing_scheme_beta);
+
+                        double coefficient = 0;
+                        for(size_t i = 0;i<dim_alpha;i++){
+                            coefficient += this->eigensolver_ptr->get_eigenvector()(i*dim_beta+I)
+                                           *this->eigensolver_ptr->get_eigenvector()(i*dim_beta+J);
+                        }
+                        one_rdm_bb(q,p) += sign_q*coefficient;
+                        one_rdm_bb(p,q) += sign_q*coefficient;
+                        spin_string_beta.annihilate(q);
+
+                    }  // create q
+
+
+                }  // q
+                spin_string_beta.create(p);
+            }  // anni p
+        }  // p
+    }  // I
+    this->one_rdm = this->one_rdm_aa + this->one_rdm_bb;
+    this->are_computed_one_rdms = true;
 }
 
 

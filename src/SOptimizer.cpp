@@ -25,7 +25,7 @@ void SOptimizer::optimize(size_t max_iterations, size_t max_fails, double theta_
     NormalGenerator normal_generator(0, std_dev, -theta_interval,
                                      theta_interval); //random generator around 0 with standard deviation of 25 and max and min values of 80.214.
 
-    double temperature = std::abs(current_energy / 2); //indicator of how lenient we accept a new energy that is to high.
+    double temperature = std::abs(current_energy / this->temp_mod); //indicator of how lenient we accept a new energy that is to high.
 
     libwint::SOMullikenBasis basis_best = this->so_basis; //copy the old basis
     libwint::SOMullikenBasis basis_prev = this->so_basis; //copy the old basis

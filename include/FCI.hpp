@@ -103,7 +103,7 @@ public:
 
 
     // DESTRUCTOR
-    ~FCI() override = default;
+    virtual ~FCI(){};
 
 
     // STATIC PUBLIC METHODS
